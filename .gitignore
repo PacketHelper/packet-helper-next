@@ -3,6 +3,9 @@ node_modules
 db.sqlite3
 /dist
 /venv
+/tmp
+/.idea
+/.vscode
 __pycache__
 
 # local env files
@@ -22,3 +25,12 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
+
+# Additional files
+
+
+*.pcap
+**/*/*.pcap
+
+*.pyc
+**/*/*.pyc
