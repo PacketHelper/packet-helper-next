@@ -1,27 +1,10 @@
 name: Build and publish image to the Heroku
 on:
-  pull_request:
+  push:
     branches:
       - master
 
 jobs:
-# Disable test due to problem with environment (missing elements on GH's runners)
-#  django_tests:
-#    name: Run Django tests
-#    runs-on: ubuntu-20.04
-#    steps:
-#      - name: Checkout repository
-#        uses: actions/checkout@v2
-#      - uses: actions/setup-python@v2
-#        with:
-#          python-version: 3.8
-#      - name: Install dependencies
-#        run: |
-#          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-#      - name: Run tests
-#        run: |
-#          python manage.py test
-
   push_to_registry:
     name: Push Docker image to HerokuApp
     runs-on: ubuntu-20.04
