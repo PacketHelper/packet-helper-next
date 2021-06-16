@@ -1,0 +1,13 @@
+v0.4
+* Fix some issue with wrong showing same packets
+* Improve api -> api/hex2/{hex} showing more consistent information
+
+v0.3
+* Add information about individual packets in the Scapy'ies representation
+
+v0.2
+* Add "Clean & Decode" to remove redundant information from Scapy's hexdump
+* Add "Compare" ability to compare two packets (alpha -- lots of work needed)
+
+v0.1
+* Initial version -- simple decode packet

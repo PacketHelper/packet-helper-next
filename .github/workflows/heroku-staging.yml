@@ -1,0 +1,44 @@
+name: Build and publish image to the Heroku
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+# Disable test due to problem with environment (missing elements on GH's runners)
+#  django_tests:
+#    name: Run Django tests
+#    runs-on: ubuntu-20.04
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v2
+#      - uses: actions/setup-python@v2
+#        with:
+#          python-version: 3.8
+#      - name: Install dependencies
+#        run: |
+#          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+#      - name: Run tests
+#        run: |
+#          python manage.py test
+
+  push_to_registry:
+    name: Push Docker image to HerokuApp
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Add SHORT_SHA env property with commit short sha
+        run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+      - name: Login to Heroku Container registry
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:login
+      - name: Build and push
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:push web -a packet-helper-staging --arg PH_REV=${SHORT_SHA}
+      - name: Release
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:release web -a packet-helper-staging
