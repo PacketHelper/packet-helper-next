@@ -1,0 +1,3 @@
+[submodule "backend/packet_server/core"]
+	path = backend/packet_server/core
+	url = https://github.com/PacketHelper/packet-helper-core.git
