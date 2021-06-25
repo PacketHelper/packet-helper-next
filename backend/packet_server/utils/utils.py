@@ -20,8 +20,8 @@ def hex_str_operation(h_string, with_new_line: bool = False):
                 temp_list.append(f"{v}\n")
                 continue
             temp_list.append(f"{v} ")
-        return ''.join(temp_list)
-    return ' '.join(tmp)
+        return "".join(temp_list)
+    return " ".join(tmp)
 
 
 def decode_hex(hex_str: str, use_json=False):
@@ -37,13 +37,22 @@ def decode_hex(hex_str: str, use_json=False):
 
     # noinspection PyBroadException
     try:
-        _custom_params = ["-o", "tcp.check_checksum:TRUE",
-                          "-o", "ip.check_checksum:TRUE",
-                          "-o", "stt.check_checksum:TRUE",
-                          "-o", "udp.check_checksum:TRUE",
-                          "-o", "wlan.check_checksum:TRUE"]
+        _custom_params = [
+            "-o",
+            "tcp.check_checksum:TRUE",
+            "-o",
+            "ip.check_checksum:TRUE",
+            "-o",
+            "stt.check_checksum:TRUE",
+            "-o",
+            "udp.check_checksum:TRUE",
+            "-o",
+            "wlan.check_checksum:TRUE",
+        ]
         # only interested with the first packet
-        packet = pyshark.InMemCapture(custom_parameters=_custom_params, use_json=use_json)
+        packet = pyshark.InMemCapture(
+            custom_parameters=_custom_params, use_json=use_json
+        )
         packet = packet.parse_packet(frame_bytes)
         packet.close()
 
@@ -55,10 +64,12 @@ def decode_hex(hex_str: str, use_json=False):
 def better_scapy_summary(scapy_summary) -> list:
     list_ = []
     for frame in scapy_summary:
-        temp_frame = {"name": frame.name,
-                      "bytes": frame.raw_packet_cache,
-                      "hex": get_hex(frame.raw_packet_cache),
-                      "length": len(frame.raw_packet_cache),
-                      "repr": f"{repr(frame).split(' |')[0]}>"}
+        temp_frame = {
+            "name": frame.name,
+            "bytes": frame.raw_packet_cache,
+            "hex": get_hex(frame.raw_packet_cache),
+            "length": len(frame.raw_packet_cache),
+            "repr": f"{repr(frame).split(' |')[0]}>",
+        }
         list_.append(temp_frame)
     return list_

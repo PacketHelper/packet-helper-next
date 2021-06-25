@@ -15,8 +15,11 @@ class PacketData:
         self.body2 = self.compose_body_list()
 
     def compose_header(self):
-        return [a.replace("Layer", "").replace(":", "").replace(" ", "")
-                for a in self.array if a.startswith("Layer")]
+        return [
+            a.replace("Layer", "").replace(":", "").replace(" ", "")
+            for a in self.array
+            if a.startswith("Layer")
+        ]
 
     def compose_body(self):
         temp_body_dict = {}
