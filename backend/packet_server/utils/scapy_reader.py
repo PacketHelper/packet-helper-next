@@ -20,7 +20,7 @@ def scapy_reader(hex_str: str, packet_to_convert: List[str]) -> List[Packet]:
         "TCP": TCP,
         "UDP": UDP,
         "DNS": DNS,
-        "Raw": Raw
+        "Raw": Raw,
     }
 
     converted_packets = []
