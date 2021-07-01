@@ -5,9 +5,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from scapy_helper import hexdump
 
-from backend.packet_server.packet_data import PacketData
-from backend.packet_server.packet_data_scapy import PacketDataScapy
-from backend.packet_server.utils.utils import decode_hex
+from src.packet_data import PacketData
+from src.packet_data_server import PacketDataScapy
+from src.utils.utils import decode_hex
 
 # Serve Vue Application
 index_view = never_cache(TemplateView.as_view(template_name="index.html"))
