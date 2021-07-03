@@ -30,7 +30,7 @@ class Hex2ViewSet(APIView):
         h = " ".join(
             [
                 "".join([hex_string[e - 1], hex_string[e]])
-                for e in range(len(hex_string))
+                for e, x in enumerate(hex_string)
                 if e % 2
             ]
         )
@@ -49,7 +49,6 @@ class Hex2ViewSet(APIView):
     @staticmethod
     def prepare_api_response(hex_string, request=None):
         packet = decode_hex(hex_string)
-        print(type(packet))
         packet_data = PacketData(raw=str(packet))
 
         scapy_data = PacketDataScapy(hex_string, packet_data)
