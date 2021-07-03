@@ -34,3 +34,5 @@ yarn-error.log*
 
 *.pyc
 **/*/*.pyc
+
+packege-lock.json
