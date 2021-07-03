@@ -5,9 +5,15 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from scapy_helper import hexdump
 
-from src.packet_data import PacketData
-from src.packet_data_server import PacketDataScapy
-from src.utils.utils import decode_hex
+from backend.submodules.packet_helper_core.packet_helper_core.packet_data import (
+    PacketData,
+)
+from backend.submodules.packet_helper_core.packet_helper_core.packet_data_server import (
+    PacketDataScapy,
+)
+from backend.submodules.packet_helper_core.packet_helper_core.utils.utils import (
+    decode_hex,
+)
 
 # Serve Vue Application
 index_view = never_cache(TemplateView.as_view(template_name="index.html"))
@@ -24,7 +30,7 @@ class Hex2ViewSet(APIView):
         h = " ".join(
             [
                 "".join([hex_string[e - 1], hex_string[e]])
-                for e, x in enumerate(hex_string)
+                for e in range(len(hex_string))
                 if e % 2
             ]
         )
@@ -43,6 +49,7 @@ class Hex2ViewSet(APIView):
     @staticmethod
     def prepare_api_response(hex_string, request=None):
         packet = decode_hex(hex_string)
+        print(type(packet))
         packet_data = PacketData(raw=str(packet))
 
         scapy_data = PacketDataScapy(hex_string, packet_data)

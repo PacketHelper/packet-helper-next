@@ -13,8 +13,7 @@
     "DJANGO_SETTINGS_MODULE": {
       "description": "Set Django Settings to Production",
       "value": "backend.settings.prod"
-    },
-    "PYTHONPATH": "./backend:./src:./submodules:./submodules/packet-helper-core"
+    }
   },
   "engines": {
     "yarn": "1.4.0",
