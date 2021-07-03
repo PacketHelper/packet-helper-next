@@ -8,7 +8,7 @@ from scapy_helper import hexdump
 from backend.submodules.packet_helper_core.packet_helper_core.packet_data import (
     PacketData,
 )
-from backend.submodules.packet_helper_core.packet_helper_core.packet_data_server import (
+from backend.submodules.packet_helper_core.packet_helper_core.packet_data_scapy import (
     PacketDataScapy,
 )
 from backend.submodules.packet_helper_core.packet_helper_core.utils.utils import (
