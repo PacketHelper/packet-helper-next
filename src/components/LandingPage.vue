@@ -63,7 +63,7 @@
           Error: Can not properly decode the hex.
         </v-alert>
       </v-card>
-      <v-card v-if="structure" id="space" v-for="s in structure" :key="s.id">
+      <v-card id="space" v-if="structure" v-for="s in structure" :key="s.id">
         <v-card-title>{{ s.name }}</v-card-title>
         <v-card-subtitle>{{ s.tshark_name }}</v-card-subtitle>
         <v-card-text>
