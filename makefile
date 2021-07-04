@@ -23,7 +23,7 @@ local-core: clean-local
 
 format:
 	@echo "Formatting..."
-	python -m black -t py38 packet_server/ tests/
+	python -m black -t py38 backend/ test/
 	@echo "Formatting... Done"
 
 test:
