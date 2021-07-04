@@ -25,3 +25,6 @@ format:
 	@echo "Formatting..."
 	python -m black -t py38 packet_server/ tests/
 	@echo "Formatting... Done"
+
+test:
+	python manage.py test
