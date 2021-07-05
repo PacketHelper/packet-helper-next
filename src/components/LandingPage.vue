@@ -63,47 +63,27 @@
           Error: Can not properly decode the hex.
         </v-alert>
       </v-card>
-      <v-card id="space" v-if="structure" v-for="s in structure" :key="s.id">
-        <v-card-title>{{ s.name }}</v-card-title>
-        <v-card-subtitle>{{ s.tshark_name }}</v-card-subtitle>
-        <v-card-text>
-          <v-list-item two-line>
-            <v-list-item-content>
-              <v-list-item-title>{{ s.length }}{{ s.length_unit }}</v-list-item-title>
-              <v-list-item-subtitle>Packet Length</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-
-          <v-list-item two-line>
-            <v-list-item-content>
-              <v-list-item-title>
-                <pre><code>{{ s.repr }}</code></pre>
-              </v-list-item-title>
-              <v-list-item-subtitle>Scapy code representation</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-
-          <v-textarea
-              id="hex"
-              filled
-              name="input-7-4"
-              label="tshark raw summary"
-              :value="s.tshark_raw_summary.join('\n')"
-              auto-grow
-              readonly
-          ></v-textarea>
-
-        </v-card-text>
-      </v-card>
+      <div class="wrapper" v-if="structure">
+        <DropDown v-for="(s, key) in structure" :key="key" :data="s">
+          <template v-slot:title>
+            <v-card>
+              <v-card-title>{{ s.name }}</v-card-title>
+              <v-card-subtitle>{{ s.tshark_name }}</v-card-subtitle>
+            </v-card>
+          </template>
+        </DropDown>
+      </div>
     </v-container>
   </div>
 </template>
 
 <script>
 import MessageService from "../services/messageService.js";
+import DropDown from "./DropDown.vue"
 
 export default {
   name: "LandingPage",
+  components: { DropDown },
   data() {
     return {
       hexValue: "",
