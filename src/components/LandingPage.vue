@@ -64,14 +64,7 @@
         </v-alert>
       </v-card>
       <div class="wrapper" v-if="structure">
-        <DropDown v-for="(s, key) in structure" :key="key" :data="s">
-          <template v-slot:title>
-            <v-card>
-              <v-card-title>{{ s.name }}</v-card-title>
-              <v-card-subtitle>{{ s.tshark_name }}</v-card-subtitle>
-            </v-card>
-          </template>
-        </DropDown>
+        <Display v-for="s in structure" :key="s.id" :data="s"></Display>
       </div>
     </v-container>
   </div>
@@ -79,11 +72,11 @@
 
 <script>
 import MessageService from "../services/messageService.js";
-import DropDown from "./DropDown.vue"
+import Display from "./Display.vue"
 
 export default {
   name: "LandingPage",
-  components: { DropDown },
+  components: { Display },
   data() {
     return {
       hexValue: "",
