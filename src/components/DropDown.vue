@@ -33,7 +33,7 @@ export default {
     cursor: pointer;
 }
 .dropdown-item {
-    max-height: 500px;
+    max-height: 2000px;
 }
 .drop-enter {
     opacity: 0;
@@ -50,8 +50,10 @@ export default {
     overflow: hidden;
     transition: all 0.4s ease;
 }
+/*
 @keyframes drop {
     0% { opacity: 0; max-height: 0px }
     100% { opacity: 1; max-height: 500px }
 }
+*/
 </style>

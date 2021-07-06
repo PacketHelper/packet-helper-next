@@ -33,20 +33,26 @@
           </v-card-text>
         </div>
         <div v-else-if="structure.length > 0">
-          <v-card-title>Packet summary</v-card-title>
-          <v-card-subtitle>{{ this.header.join(" / ") }}</v-card-subtitle>
-          <v-card-text>
-            Length: {{ summary["length"] }}{{ summary["length_unit"] }}
-            <v-textarea
-                id="hex"
-                filled
-                name="input-7-4"
-                label="Hexdump"
-                :value="summary['hexdump']"
-                auto-grow
-                readonly
-            ></v-textarea>
-          </v-card-text>
+          <DropDown>
+              <template v-slot:title>
+                  <v-card-title>Packet summary</v-card-title>
+                  <v-card-subtitle>{{ header.join(" / ") }}</v-card-subtitle>
+              </template>
+              <template v-slot:content>
+                <v-card-text>
+                  Length: {{ summary["length"] }}{{ summary["length_unit"] }}
+                  <v-textarea
+                      id="hex"
+                      filled
+                      name="input-7-4"
+                      label="Hexdump"
+                      :value="summary['hexdump']"
+                      auto-grow
+                      readonly
+                  ></v-textarea>
+                </v-card-text>
+              </template>
+          </DropDown>
         </div>
         <div v-else>
 
@@ -73,10 +79,11 @@
 <script>
 import MessageService from "../services/messageService.js";
 import Display from "./Display.vue"
+import DropDown from "./DropDown.vue"
 
 export default {
   name: "LandingPage",
-  components: { Display },
+  components: { Display, DropDown },
   data() {
     return {
       hexValue: "",
