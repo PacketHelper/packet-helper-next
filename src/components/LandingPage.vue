@@ -4,7 +4,7 @@
       <v-card elevation="8">
         <v-card-title>Decode Packet</v-card-title>
         <v-card-text>
-          <v-textarea id="hex" solo label="Hex" v-model="hexValue"></v-textarea>
+          <v-textarea id="hex" solo label="Hex" v-model="hexValue" transition="rotate"></v-textarea>
         </v-card-text>
         <v-card-actions>
           <v-btn
@@ -21,7 +21,14 @@
           <v-btn text @click="showExamples">Next Example</v-btn>
         </v-card-actions>
       </v-card>
-      <v-card style="margin-top: 2rem" v-if="decode">
+        <transition-group
+            appear
+            @before-enter="beforeEnter"
+            @enter="enter"
+            @leave="leave"
+            mode="out-in"
+        >
+      <v-card style="margin-top: 2rem" v-if="decode" :key="0" :data-index="0">
         <div v-if="loading">
           <v-card-title>Loading packet...</v-card-title>
           <v-card-subtitle>Loading</v-card-subtitle>
@@ -34,10 +41,10 @@
         </div>
         <div v-else-if="structure.length > 0">
           <DropDown>
-              <template v-slot:title>
+                <template v-slot:title>
                   <v-card-title>Packet summary</v-card-title>
                   <v-card-subtitle>{{ header.join(" / ") }}</v-card-subtitle>
-              </template>
+                </template>
               <template v-slot:content>
                 <v-card-text>
                   Length: {{ summary["length"] }}{{ summary["length_unit"] }}
@@ -69,8 +76,17 @@
           Error: Can not properly decode the hex.
         </v-alert>
       </v-card>
+      </transition-group>
       <div class="wrapper" v-if="structure">
-        <Display v-for="s in structure" :key="s.id" :data="s"></Display>
+        <transition-group 
+          appear
+          @before-enter="beforeEnter"
+          @enter="enter"
+          @leave="leave"
+          mode="in-out"
+        >
+          <Display v-for="(s, index) in structure" :key="index" :data="s" :data-index="index"></Display>
+        </transition-group>
       </div>
     </v-container>
   </div>
@@ -80,6 +96,7 @@
 import MessageService from "../services/messageService.js";
 import Display from "./Display.vue"
 import DropDown from "./DropDown.vue"
+import gsap from 'gsap'
 
 export default {
   name: "LandingPage",
@@ -191,6 +208,28 @@ export default {
       ];
       let r_value = Math.floor(Math.random() * example_array.length);
       this.hexValue = example_array[r_value];
+    },
+    beforeEnter(el) {
+      el.style.opacity = 0
+      el.style.transform = 'translateY(100px)'
+    },
+    enter(el, done) {
+      gsap.to(el, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        onComplete: done,
+        delay: el.dataset.index * 0.15
+      })
+    },
+    leave(el, done) {
+      gsap.to(el, {
+        opacity: 0,
+        y: 100,
+        duration: 0.8,
+        onComplete: done,
+        delay: (4 - el.dataset.index) * 0.03
+      })
     }
   },
   mounted() {
@@ -212,5 +251,23 @@ export default {
 
 #space {
   margin-top: 1rem;
+}
+.rotate-enter-from {
+  transform: translateX(100px);
+}
+.rotate-enter-to {
+  transform: translateX(0);
+}
+.rotate-enter-active {
+  transition: all 1s ease;
+}
+.rotate-leave-from {
+  transform: translateX(0);
+}
+.rotate-leave-to {
+  transform: translateX(-100px);
+}
+.rotate-leave-active {
+  transition: all 1s ease;
 }
 </style>
