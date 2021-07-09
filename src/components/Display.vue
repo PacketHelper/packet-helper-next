@@ -34,7 +34,25 @@
             </template> 
             <template v-slot:content v-if="tshark.children"> 
               <ul> 
-              <li v-for="(child, key) in tshark.children" :key="key"> <code>{{ child.name }}: {{ child.value }}</code> </li> 
+              <li v-for="(child, key) in tshark.children" :key="key"> 
+                <div v-if="child.children">
+                  <DropDown>
+                    <template v-slot:title>
+                      <code>{{ child.name }}: {{ child.value }} </code> 
+                    </template>
+                    <template v-slot:content>
+                      <ul>
+                        <li v-for="(nestedChild, key) in child.children" :key="key">
+                          <code>{{ nestedChild.name }}: {{ nestedChild.value }}</code>
+                        </li>
+                      </ul>
+                    </template>
+                  </DropDown>
+                </div>
+                <div v-else>
+                  <code>{{ child.name }}: {{ child.value }} </code> 
+                </div>
+              </li> 
               </ul> 
             </template> 
             </DropDown> 
@@ -192,7 +210,26 @@ export default {
       ]
       return ord
     },
-    DNS(bits) {
+    DNS(bits, length, names) {
+      let answers = []
+      for(let i = 0; i < names.length - 1; i++) {
+        if(i === 0) answers.push({name: names[i + 1].name, children: [
+          {name: 'Name-' + i},
+          {name: 'Type-' + i},
+          {name: 'Class-' + i},
+          {name: 'Time to live'},
+          {name: 'Data length'},
+          {name: 'Address'}
+        ]})
+        else answers.push({name: names[i + 1].name, children: [
+          {name: 'Name-' + i},
+          {name: 'Type-' + i},
+          {name: 'Class-' + i},
+          {name: 'Time to live-' + (i - 1)},
+          {name: 'Data length-' + (i - 1)},
+        ]})
+      }
+      //console.log(answers)
       let ord = [
         {name: 'Transaction ID'},
         {name: 'Flags', children: [...bits]},
@@ -200,7 +237,15 @@ export default {
         {name: 'Answer RRs'},
         {name: 'Authority RRs'},
         {name: 'Additional RRs'},
-        {name: 'Queries'}
+        {name: 'Queries', children: [{name: names[0].name, children: [
+          {name: 'Name'},
+          {name: 'Name Length'},
+          {name: 'Label Count'},
+          {name: 'Type'},
+          {name: 'Class'}
+        ]}]},
+        {name: 'Answers', children: [...answers]},
+        {name: 'Unsolicited'}
       ]
       return ord
     },
@@ -293,7 +338,8 @@ export default {
     let obj = {}
     let bits = []
     let ord = []
-    let index = 0
+    let names = []
+    //let index = 0
     let repeatingItems = 0
     let copy = this.data.tshark_raw_summary.slice()
 
@@ -301,25 +347,34 @@ export default {
     this.data.tshark_raw_summary.forEach(element => {
       let key = element.substring(0, element.indexOf(":")).trim()
       let value = element.substring(element.indexOf(":") + 1).trim()
-      // Repeating keys really?????
-      // I've spent at least 300 of my IQ on this one
-      // and it still doesn't work great
-      if(key in obj && this.data.tshark_name !== 'ETH'){
-        repeatingItems = this.data.tshark_raw_summary.filter((item) => item.match(key + ': ')).length 
-        index = repeatingItems - copy.filter((item) => item.match(key)).length
-        copy.splice(copy.indexOf(copy.filter(x => x.match(key + ':'))[0]), 1)
+      // There are cases where keys repeat and they cant
+      // be handled in the same way as in ETH
+      if(key in obj && this.data.tshark_name !== 'ETH') {
+        repeatingItems = this.data.tshark_raw_summary.filter(item => item.match('^' + key + ': ')).length 
+        let index = repeatingItems - copy.filter(item => item.match('^' + key + ':')).length
+        copy.splice(copy.indexOf(copy.filter(x => x.match('^' + key + ':'))[0]), 1)
         //console.log('[DEBUG]: ' + element + ' '+ index)
         key = key + '-' + index
       }
+
+      // Looks for domain names
+      if(
+        key.split('').filter(x => x === '.').length &&
+        key.split('').filter(x => x === '.').length < 5
+      ) {
+        console.log(key)
+        names.push({name: key, value: value})
+      }
+
       // Who named keys 'correction:' and 'correction: Ns:'??!?!?!?!
-      if(element.split('').filter(x => x === ":").length === 2){
+      if(element.split('').filter(x => x === ":").length === 2) {
         key = element.substring(0, element.lastIndexOf(":")).trim()
         value = element.substring(element.lastIndexOf(":") + 1).trim()
       }
 
       // There are some annoying corner cases where
       // key is inside value. This handles them
-      if(!key){
+      else if(!key){
         key = value.trim()
         if(key.includes("(")) {
           key = key.substring(0, value.indexOf("(")).trim()
@@ -332,10 +387,7 @@ export default {
 
       // Takes care of bits and flags
       else if(key.includes(' =')) {
-        let bit = {}
-        bit.name = key
-        bit.value = value
-        bits.push(bit)
+        bits.push({name: key, value: value})
       }
       obj[key] = value
     })
@@ -343,7 +395,7 @@ export default {
     //console.log(this.data.tshark_raw_summary)
     console.log(obj)
     // Exectues function that match tshark's name
-    ord = this[this.data.tshark_name](bits, repeatingItems - 1)
+    ord = this[this.data.tshark_name](bits, repeatingItems - 1, names)
 
     for(const attr of ord){
       // Handles non-static keys
@@ -361,10 +413,14 @@ export default {
         attr.value = obj[attr.name]
         if(attr.children)
           for(const child of attr.children)
-            if(obj[child.name]) 
+            if(obj[child.name]) {
               child.value = obj[child.name]
+              if(child.children)
+                for(const nestedChild of child.children)
+                  nestedChild.value = obj[nestedChild.name]
+            }
     }
-    //console.log(obj)
+    console.log(ord)
     this.sortedData = ord
   }
 }
