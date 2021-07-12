@@ -1,76 +1,97 @@
-<template> 
-  <div class="wrapper"> 
-  <div v-if="data"> 
-    <v-card> 
-    <DropDown> 
-      <template v-slot:title> 
-      <v-card-title>
-        {{ data.name }}
-      </v-card-title> 
-      <v-card-subtitle>
-        {{ data.tshark_name }}
-      </v-card-subtitle> 
-      </template> 
-      <template v-slot:content> 
-      <code> 
-        <v-card-text> 
-        <ul> 
-          <li>Packet length: {{ data.length }}{{ data.length_unit }}</li> 
-          <DropDown> 
-          <template v-slot:title> 
-            <li>Scapy code representation:</li> 
-          </template> 
-          <template v-slot:content> 
-            <ul> 
-            <li> <code>{{ data.repr }}</code></li> 
-            </ul> 
-          </template> 
-          </DropDown> 
-          <div class="raw-data" v-for="(tshark, key) in sortedData" :key="key"> 
-          <div v-if="tshark.children"> 
-            <DropDown> 
-            <template v-slot:title> 
-              <li class="collapse">{{ tshark.name }}: {{ tshark.value }}</li> 
-            </template> 
-            <template v-slot:content v-if="tshark.children"> 
-              <ul> 
-              <li v-for="(child, key) in tshark.children" :key="key"> 
-                <div v-if="child.children">
-                  <DropDown>
-                    <template v-slot:title>
-                      <code>{{ child.name }}: {{ child.value }} </code> 
-                    </template>
-                    <template v-slot:content>
-                      <ul>
-                        <li v-for="(nestedChild, key) in child.children" :key="key">
-                          <code>{{ nestedChild.name }}: {{ nestedChild.value }}</code>
-                        </li>
-                      </ul>
-                    </template>
-                  </DropDown>
+<template>
+  <div class="wrapper">
+    <v-card>
+      <DropDown>
+        <template v-slot:title>
+          <v-card-title> {{ data.name }} </v-card-title>
+          <v-card-subtitle> {{ data.tshark_name }} </v-card-subtitle>
+        </template>
+        <template v-slot:content>
+          <code>
+            <v-card-text>
+              <ul>
+                <li>Packet length: {{ data.length }}{{ data.length_unit }}</li>
+                <DropDown>
+                  <template v-slot:title>
+                    <li>Scapy code representation:</li>
+                  </template>
+                  <template v-slot:content>
+                    <ul>
+                      <li><code>{{ data.repr }}</code></li>
+                    </ul>
+                  </template>
+                </DropDown>
+                <div v-if="sortedData">
+                  <div
+                    class="raw-data"
+                    v-for="(tshark, key) in sortedData"
+                    :key="key"
+                  >
+                    <div v-if="tshark.children">
+                      <DropDown>
+                        <template v-slot:title>
+                          <li class="collapse">
+                            {{ tshark.name }}: {{ tshark.value }}
+                          </li>
+                        </template>
+                        <template v-slot:content>
+                          <ul>
+                            <li
+                              v-for="(child, key) in tshark.children"
+                              :key="key"
+                            >
+                              <div v-if="child.children">
+                                <DropDown>
+                                  <template v-slot:title>
+                                    <code
+                                      >{{ child.name }}: {{ child.value }}
+                                    </code>
+                                  </template>
+                                  <template v-slot:content>
+                                    <ul>
+                                      <li
+                                        v-for="(nestedChild, key) in child.children"
+                                        :key="key"
+                                      >
+                                        <code
+                                          >{{ nestedChild.name }}: {{
+                                          nestedChild.value }}</code
+                                        >
+                                      </li>
+                                    </ul>
+                                  </template>
+                                </DropDown>
+                              </div>
+                              <div v-else>
+                                <code
+                                  >{{ child.name }}: {{ child.value }}
+                                </code>
+                              </div>
+                            </li>
+                          </ul>
+                        </template>
+                      </DropDown>
+                    </div>
+                    <div v-else-if="tshark.value">
+                      <li>{{ tshark.name }}: {{ tshark.value }}</li>
+                    </div>
+                  </div>
                 </div>
                 <div v-else>
-                  <code>{{ child.name }}: {{ child.value }} </code> 
+                  <li
+                    v-for="(tshark, key) in data.tshark_raw_summary"
+                    :key="key"
+                  >
+                    {{ tshark }}
+                  </li>
                 </div>
-              </li> 
-              </ul> 
-            </template> 
-            </DropDown> 
-          </div> 
-          <div v-else-if="tshark.value"> 
-            <li>{{ tshark.name }}: {{ tshark.value }}</li> 
-          </div> 
-          </div> 
-        </ul> 
-        </v-card-text> </code> 
-      </template> 
-    </DropDown> 
-    </v-card> 
-  </div> 
-  <div v-else>
-    There was an error while loading data 
-  </div> 
-  </div> 
+              </ul>
+            </v-card-text>
+          </code>
+        </template>
+      </DropDown>
+    </v-card>
+  </div>
 </template>
 
 <script>
@@ -82,14 +103,21 @@ export default {
   data() {
     return {
       items: [],
-      sortedData: null
+      sortedData: null,
+      supported: true
     }
   },
   methods: {
     ETH(bits) {
       let ord = [
-        {name: 'Destination', children: [...bits.slice(0,2)]}, 
-        {name: 'Source', children: [...bits.slice(2, 4)]}, // {name: 'Address', value: addresses[1]}
+        {name: 'Destination', children: [
+          {name: 'Address'},
+          ...bits.slice(0,2)
+        ]}, 
+        {name: 'Source', children: [
+          {name: 'Address'},
+          ...bits.slice(2, 4)
+        ]}, // {name: 'Address', value: addresses[1]}
         {name: 'Type'}, 
         {name: 'Frame check sequence'}, 
         {name: 'FCS Status'},
@@ -111,8 +139,12 @@ export default {
         {name: 'Flags', children: [...bits.slice(4)]},
         {name: 'Time to live'},
         {name: 'Protocol'},
+        {name: 'Fragment Offset'},
+        {name: 'Time to Live'},
         {name: 'Header Checksum', children: [{name: 'Calculated Checksum'}]},
-        {name: 'Header checksum status'}
+        {name: 'Header checksum status'},
+        {name: 'Source Address'},
+        {name: 'Destination Address'}
       ]
       return ord
     },
@@ -189,50 +221,83 @@ export default {
         {name: 'Acknowledgment number (raw)'},
         bits[0],
         {name: 'Flags', children: [
-          ...bits.slice(1), 
+          ...bits.slice(1, 6), 
           {name: 'TCP Flags'}
         ]},
-        {name: 'Expert Info (Chat/Sequence)'},
+        {name: 'TCP Segment Len'},
+        {name: 'Expert Info'},
         {name: 'Connection establish request (SYN)'},
         {name: 'Severity level'},
         {name: 'Group'},
-        {name: 'Window'},
+        {name: 'Window', children: [
+          {name: 'Calculated window size'},
+          {name: 'Window size scaling factor'}
+        ]},
         {name: 'Calculated window size'},
         {name: 'Checksum', children: [
             {name: 'Calculated Checksum'}
         ]},
         {name: 'Checksum Status'},
         {name: 'Urgent Pointer'},
+        {name: 'Options', children: [
+          {name: 'TCP Option - No-Operation', children: [
+            {name: 'Kind'}
+          ]},
+          {name: 'TCP Option - No-Operation', children: [
+            {name: 'Kind'}
+          ]},
+          {name: 'TCP Option - Timestamps', children: [
+            {name: 'Kind'},
+            {name: 'Length'},
+            {name: 'Timestamp value'},
+            {name: 'Timestamp echo reply'}
+          ]},
+        ]},
+        {name: 'SEQ/ACK analysis', children: [
+          {name: 'Bytes in flight'},
+          {name: 'Bytes sent since last PSH flag'}
+        ]},
         {name: 'Timestamps', children: [
           {name: 'Time since first frame in this TCP stream'},
           {name: 'Time since previous frame in this TCP stream'}
         ]},
+        {name: 'TCP payload'},
       ]
       return ord
     },
     DNS(bits, length, names) {
       let answers = []
+      let nameservers = []
       for(let i = 0; i < names.length - 1; i++) {
-        if(i === 0) answers.push({name: names[i + 1].name, children: [
-          {name: 'Name-' + i},
-          {name: 'Type-' + i},
-          {name: 'Class-' + i},
-          {name: 'Time to live'},
-          {name: 'Data length'},
-          {name: 'Address'}
-        ]})
-        else answers.push({name: names[i + 1].name, children: [
-          {name: 'Name-' + i},
-          {name: 'Type-' + i},
-          {name: 'Class-' + i},
-          {name: 'Time to live-' + (i - 1)},
-          {name: 'Data length-' + (i - 1)},
-        ]})
-      }
+        console.log(names[i + 1].value)
+        if(names[i + 1].value.includes('type NS')) {
+          nameservers.push({name: names[i + 1].name, children: [
+            {name: 'Name'},
+            {name: 'Type'},
+            {name: 'Class'},
+            {name: 'Time to live'},
+            {name: 'Data length'},
+            {name: 'Name Server'}
+          ]})
+        }
+        else {
+          answers.push({name: names[i + 1].name, children: [
+            {name: 'Name'},
+            {name: 'Type'},
+            {name: 'Class'},
+            {name: 'Time to live'},
+            {name: 'Data length'},
+          ]})
+          if(names[i + 1].value.includes('addr'))
+            answers[answers.length - 1].children.push({name: 'Address'})
+          else if(names[i + 1].value.includes('type CNAME'))
+            answers[answers.length - 1].children.push({name: 'CNAME'})
+          }
+        }
       //console.log(answers)
       let ord = [
         {name: 'Transaction ID'},
-        {name: 'Flags', children: [...bits]},
+        {name: 'Flags', children: [...bits.slice(0, 6)]},
         {name: 'Questions'},
         {name: 'Answer RRs'},
         {name: 'Authority RRs'},
@@ -245,7 +310,18 @@ export default {
           {name: 'Class'}
         ]}]},
         {name: 'Answers', children: [...answers]},
-        {name: 'Unsolicited'}
+        {name: 'Authorative nameservers', children: [...nameservers]},
+        {name: 'Unsolicited'},
+        {name: 'Additional records', children: [
+          {name: '<Root>', children: [
+            {name: 'Type'},
+            {name: 'UDP payload size'},
+            {name: 'Higher bits in extended RCODE'},
+            {name: 'EDNS0 version'},
+            {name: 'Z', children: [...bits.slice(6)]}, // Needs one more loop in html but I think I will leave it at that
+            {name: 'Data length'},
+          ]}
+        ]},
       ]
       return ord
     },
@@ -276,7 +352,7 @@ export default {
     TELNET(bits, length) {
       let dataChildren = []
       for(let i = 0; i < length; i++)
-        dataChildren.push({name: 'Data-' + i})
+        dataChildren.push({name: 'Data'})
 
       let ord = [
         {name: 'Data', children: [...dataChildren]}
@@ -285,14 +361,20 @@ export default {
     },
     ICMPV6(bits, length) {
       let ord = [
-        {name: 'Type'},
+        {name: 'Type', children: [
+          {name: 'Multicast Address'},
+          {name: 'Multicast Address Record Changed to include'},
+          {name: 'Number of Multicast Address Records'},
+          {name: 'Number of Sources'},
+          {name: 'Record Type'},
+        ]},
         {name: 'Code'},
         {name: 'Checksum'},
         {name: 'Checksum Status'},
         {name: 'Reserved'},
         {name: 'Target Address'},
-        {name: 'ICMPv6 Option*', children: [
-          {name: 'Type-0'},
+        {name: 'ICMPv6 Option', children: [
+          {name: 'Type'},
           {name: 'Length'},
           {name: 'Link-layer address'},
           {name: 'Source Link-layer address'}
@@ -332,95 +414,158 @@ export default {
         {name: 'Length'}
       ]
       return ord
+    },
+    QUIC(bits) {
+      let ord = [
+        ...bits,
+        {name: 'Destination Connection ID'},
+        {name: 'Destination Connection Length'},
+        {name: 'Expert Info*'},
+        {name: 'Group'},
+        {name: 'Group'},
+        {name: 'Length'},
+        {name: 'Remaining Payload'},
+        {name: 'Severity level'},
+        {name: 'Severity level-0'},
+        {name: 'Source Connection ID'},
+        {name: 'Source Connection ID Length'},
+        {name: 'Version'}
+      ]
+      return ord
+    },
+    TLS() {
+      let ord = [
+        {name: 'Application Data Protocol'},
+        {name: 'Content Type'},
+        {name: 'Encrypted Application Data'},
+        {name: 'Length'},
+        {name: 'TLSv1.2 Record Layer: Application Data Protocol'},
+        {name: 'Version'}
+      ]
+      return ord
+    },
+    HTTP() {
+      let ord = [
+        {name: 'Connection'},
+        {name: 'HTTP response'},
+        {name: 'HTTP/1.1', children: [
+          {name: 'Expert Info', children: [
+            {name: 'HTTP/1.1'},
+            {name: 'Severity level'},
+            {name: 'Group'}
+          ]},
+          {name: 'Response Version'},
+          {name: 'Status Code'},
+          {name: 'Status Code Description'},
+          {name: 'Response Phrase'}
+        ]},
+        {name: 'Date'},
+        {name: 'Server'},
+        {name: 'Connection'},
+        {name: 'Keep-Alive'},
+        {name: 'ETag'},
+      ]
+      return ord
+    },
+    TLS() {
+      let ord = [
+        {name: 'TLSv1.', children: [
+          {name: 'Content Type'},
+          {name: 'Version'},
+          {name: 'Length'},
+          {name: 'Encrypted Application Data'},
+          {name: 'Application Data Protocol'}
+        ]}
+      ]
+      return ord
+    },
+    SSDP() {
+      let ord = [
+        {name: 'NOTIFY * HTTP', children: [
+          {name: 'Expert Info', children: [
+            {name: 'NOTIFY * HTTP'},
+            {name: 'Severity level'},
+            {name: 'Group'}
+          ]},
+          {name: 'Request Method'},
+          {name: 'Request URI'},
+          {name: 'Request Version'}
+        ]},
+        {name: 'HOST'},
+        {name: 'CACHE-CONTROl'},
+        {name: 'LOCATION'},
+        {name: 'NT'},
+        {name: 'NTS'},
+        {name: 'SERVER'},
+        {name: 'USN'},
+        {name: 'Full request'}
+      ]
+      return ord
     }
   },
   mounted() {
-    let obj = {}
-    let bits = []
-    let ord = []
-    let names = []
-    //let index = 0
-    let repeatingItems = 0
-    let copy = this.data.tshark_raw_summary.slice()
-
-    // Converts tshark data from list to an object
-    this.data.tshark_raw_summary.forEach(element => {
-      let key = element.substring(0, element.indexOf(":")).trim()
-      let value = element.substring(element.indexOf(":") + 1).trim()
-      // There are cases where keys repeat and they cant
-      // be handled in the same way as in ETH
-      if(key in obj && this.data.tshark_name !== 'ETH') {
-        repeatingItems = this.data.tshark_raw_summary.filter(item => item.match('^' + key + ': ')).length 
-        let index = repeatingItems - copy.filter(item => item.match('^' + key + ':')).length
-        copy.splice(copy.indexOf(copy.filter(x => x.match('^' + key + ':'))[0]), 1)
-        //console.log('[DEBUG]: ' + element + ' '+ index)
-        key = key + '-' + index
-      }
-
-      // Looks for domain names
-      if(
-        key.split('').filter(x => x === '.').length &&
-        key.split('').filter(x => x === '.').length < 5
-      ) {
-        console.log(key)
-        names.push({name: key, value: value})
-      }
-
-      // Who named keys 'correction:' and 'correction: Ns:'??!?!?!?!
-      if(element.split('').filter(x => x === ":").length === 2) {
-        key = element.substring(0, element.lastIndexOf(":")).trim()
-        value = element.substring(element.lastIndexOf(":") + 1).trim()
-      }
-
-      // There are some annoying corner cases where
-      // key is inside value. This handles them
-      else if(!key){
-        key = value.trim()
-        if(key.includes("(")) {
-          key = key.substring(0, value.indexOf("(")).trim()
-          value = value.substring(value.indexOf("(") + 1, value.indexOf(")")).trim()
-        }
-        // For some reason children don't render properly
-        // when parent element has no value
-        else value = " "
-      }
-
-      // Takes care of bits and flags
-      else if(key.includes(' =')) {
-        bits.push({name: key, value: value})
-      }
-      obj[key] = value
-    })
-
+    // When protocol is not supported, don't do anything
+    if(!this[this.data.tshark_name]) return
+    let copy = this.data.tshark_raw_summary.slice() 
     //console.log(this.data.tshark_raw_summary)
-    console.log(obj)
-    // Exectues function that match tshark's name
-    ord = this[this.data.tshark_name](bits, repeatingItems - 1, names)
+    let bits = []
+    let names = []
 
-    for(const attr of ord){
-      // Handles non-static keys
-      if(attr.name.includes('*')){
-        const name = attr.name.slice(0, attr.name.indexOf('*'))
-        let index = Object.keys(obj).findIndex((el) => {
-          return el.match(name)
+    // Prepare arrays for bits and DNS nameservers
+    copy.forEach(element => {
+      if(element.includes(' =')){
+        bits.push({
+          name: element.substring(0, element.indexOf(':')),
+          value: element.substring(element.indexOf(':') + 1),
         })
-        attr.name = Object.keys(obj)[index]
-        attr.value = ord[Object.keys(obj)[index]]
+      }
+      // if key has dots and there are less than 4 of them
+      // ex.: www.youtube.com
+      else if(element.substring(0, element.indexOf(':')).split('.').length - 1 && 
+         element.substring(0, element.indexOf(':')).split('.').length - 1 < 4) {
+        names.push({
+          name: element.substring(0, element.indexOf(':')),
+          value: element.substring(element.indexOf(':') + 1),
+        })
+      }})
+
+    // Executes function that coresponds to tshark's name
+    let ord = this[this.data.tshark_name](bits, 4, names)
+
+    // Insert values into final object
+    ord.forEach(element => {
+      let re_parent = new RegExp('^' + element.name)
+      let index_parent = copy.findIndex(el => re_parent.test(el))
+      if(index_parent !== -1) {
+        element.value = copy[index_parent].substring(copy[index_parent].indexOf(':') + 1).trim()
+        // Remove processed item to avoid duplicates
+        copy.splice(index_parent, 1)
       }
 
-      // Assigns value to items and its children
-      if(obj[attr.name])
-        attr.value = obj[attr.name]
-        if(attr.children)
-          for(const child of attr.children)
-            if(obj[child.name]) {
-              child.value = obj[child.name]
-              if(child.children)
-                for(const nestedChild of child.children)
-                  nestedChild.value = obj[nestedChild.name]
-            }
-    }
+      if(element.children)
+        element.children.forEach(child => {
+          let re_child = new RegExp('^' + child.name + ':')
+          let index_child = copy.findIndex(el => re_child.test(el))
+          if(index_child !== -1) {
+            child.value = copy[index_child].substring(copy[index_child].indexOf(':') + 1).trim()
+            copy.splice(index_child, 1)
+          }
+
+          if(child.children) {
+            child.children.forEach(nested_child => {
+              let re_nested_child = new RegExp('^' + nested_child.name + ':')
+              let index_nested_child = copy.findIndex(el => 
+              re_nested_child.test(el))
+              if(index_nested_child !== -1) {
+                nested_child.value = copy[index_nested_child].substring(copy[index_nested_child].indexOf(':') + 1).trim()
+                copy.splice(index_nested_child, 1)
+              }
+            })
+          }
+        })
+    })
     console.log(ord)
+    // Finally display the data
     this.sortedData = ord
   }
 }

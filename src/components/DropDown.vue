@@ -16,8 +16,7 @@
 export default {
   data() {
     return {
-      toggle: false,
-      items: []
+      toggle: false
     }
   },
   methods: {
