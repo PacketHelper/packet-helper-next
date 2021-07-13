@@ -21,15 +21,13 @@
           <v-btn text @click="showExamples">Next Example</v-btn>
         </v-card-actions>
       </v-card>
-        <transition-group
-            appear
-            @before-enter="beforeEnter"
-            @enter="enter"
-            @leave="leave"
-            mode="out-in"
-        >
-      <v-card style="margin-top: 2rem" v-if="decode" :key="0" :data-index="0">
-        <div v-if="loading">
+      <transition-group
+          @before-enter="beforeEnterUp"
+          @enter="enterUp"
+          @leave="leaveUp"
+          mode="out-in"
+      >
+      <v-card style="margin-top: 2rem" v-if="loading" :key="6" :data-index="6">
           <v-card-title>Loading packet...</v-card-title>
           <v-card-subtitle>Loading</v-card-subtitle>
           <v-card-text class="text-center">
@@ -38,9 +36,42 @@
                 color="primary"
             ></v-progress-circular>
           </v-card-text>
-        </div>
-        <div v-else-if="structure.length > 0">
-          <DropDown>
+      </v-card>
+      <v-alert
+          v-else-if="alert"
+          v-model="alert"
+          border="left"
+          type="error"
+          close-text="Close Alert"
+          dark
+          dismissible
+          :key="7"
+      >
+        Error: Can not properly decode the hex.
+      </v-alert>
+      <v-alert
+          v-else-if="warning"
+          v-model="warning"
+          border="left"
+          type="warning"
+          close-text="Close Alert"
+          dark
+          dismissible
+          :key="8"
+      >
+        Warning: This protocol is not officially supported and some of the data may be displayed incorrectly
+      </v-alert>
+      </transition-group>
+      <div class="wrapper" v-if="structure">
+        <transition-group 
+          appear
+          @before-enter="beforeEnter"
+          @enter="enter"
+          @leave="leave"
+          mode="out-in"
+        >
+          <v-card :key="0" v-if="structure.length > 0" :data-index="0" class="data" rounded>
+            <DropDown>
                 <template v-slot:title>
                   <v-card-title>Packet summary</v-card-title>
                   <v-card-subtitle>{{ header.join(" / ") }}</v-card-subtitle>
@@ -59,33 +90,9 @@
                   ></v-textarea>
                 </v-card-text>
               </template>
-          </DropDown>
-        </div>
-        <div v-else>
-
-        </div>
-        <v-alert
-            v-if="alert"
-            v-model="alert"
-            border="left"
-            type="error"
-            close-text="Close Alert"
-            dark
-            dismissible
-        >
-          Error: Can not properly decode the hex.
-        </v-alert>
-      </v-card>
-      </transition-group>
-      <div class="wrapper" v-if="structure">
-        <transition-group 
-          appear
-          @before-enter="beforeEnter"
-          @enter="enter"
-          @leave="leave"
-          mode="in-out"
-        >
-          <Display v-for="(s, index) in structure" :key="index" :data="s" :data-index="index"></Display>
+            </DropDown>
+          </v-card>
+          <Display v-for="(s, index) in structure" :key="index+1" :data="s" :data-index="index+1" @warning="handleWarning"></Display>
         </transition-group>
       </div>
     </v-container>
@@ -109,14 +116,14 @@ export default {
       structure: [],
       summary: [],
       header: [],
-      alert: false
+      alert: false,
+      warning: false
     }
   },
   methods: {
     goToHex() {
       this.hexValue = this.hexValue.replace(/\s/g, '');
       this.$router.replace(`/hex/${this.hexValue}`);
-      this.loading = true
       this.showPacket();
       this.getPacket();
     },
@@ -129,12 +136,14 @@ export default {
       }
       this.showPacket();
     },
-    reset() {
+    async reset() {
       this.hexValue = "";
       this.decode = false;
+      this.resetData();
+      await this.delay(0.5)
       this.alert = false;
       this.loading = false;
-      this.resetData();
+      this.warning = false;
       this.$router.replace("/hex/")
     },
     resetData() {
@@ -151,9 +160,11 @@ export default {
     },
     async getPacket() {
       if (this.hexValue !== "undefined") {
+        this.resetData();
+        await this.delay(0.5)
         this.loading = true;
         this.alert = false;
-        this.resetData();
+        this.warning = false;
         try {
           const hexResponse = await MessageService.getHex(this.hexValue);
           this.structure = hexResponse["structure"];
@@ -209,6 +220,12 @@ export default {
       let r_value = Math.floor(Math.random() * example_array.length);
       this.hexValue = example_array[r_value];
     },
+    delay(seconds) {
+      return new Promise(res => setTimeout(res, seconds * 1000))
+    },
+    handleWarning() {
+      this.warning = true
+    },
     beforeEnter(el) {
       el.style.opacity = 0
       el.style.transform = 'translateY(100px)'
@@ -216,19 +233,40 @@ export default {
     enter(el, done) {
       gsap.to(el, {
         opacity: 1,
-        y: 0,
-        duration: 0.8,
+        y: 3,
+        duration: 0.6,
         onComplete: done,
-        delay: el.dataset.index * 0.15
+        delay: el.dataset.index * 0.15 + 0.5
       })
     },
     leave(el, done) {
       gsap.to(el, {
         opacity: 0,
         y: 100,
-        duration: 0.8,
+        duration: 0.3,
         onComplete: done,
-        delay: (4 - el.dataset.index) * 0.03
+        delay: (5 - el.dataset.index) * 0.06
+      })
+    },
+    beforeEnterUp(el) {
+      el.style.opacity = 0
+      el.style.transform = 'translateY(-40px)'
+    },
+    enterUp(el, done) {
+      gsap.to(el, {
+        opacity: 1,
+        y: 3,
+        duration: 0.4,
+        onComplete: done,
+        delay: 0.4
+      })
+    },
+    leaveUp(el, done) {
+      gsap.to(el, {
+        opacity: 0,
+        y: -40,
+        duration: 0.4,
+        onComplete: done
       })
     }
   },
@@ -269,5 +307,12 @@ export default {
 }
 .rotate-leave-active {
   transition: all 1s ease;
+}
+
+.wrapper {
+  position: relative;
+}
+.data { 
+  position: absolute;
 }
 </style>

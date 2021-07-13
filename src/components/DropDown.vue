@@ -4,7 +4,7 @@
       <slot name="title"></slot>
     </div>
 
-    <transition name="drop" active>
+    <transition name="drop" appear>
       <div class="dropdown-item" v-if="toggle">
         <slot name="content"></slot>
       </div>
@@ -16,15 +16,15 @@
 export default {
   data() {
     return {
-      toggle: false
-    }
+      toggle: false,
+    };
   },
   methods: {
     HandleClick() {
-      this.toggle = !this.toggle
-    }
+      this.toggle = !this.toggle;
+    },
   },
-}
+};
 </script>
 
 <style>
@@ -54,7 +54,25 @@ export default {
 }
 
 @keyframes drop-enter {
-  0% {opacity: 0; max-height: 0}
-  100% {opacity: 1}
+  0% {
+    opacity: 0;
+    max-height: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.collapse {
+  list-style-type: none;
+  margin-left: -15px;
+}
+.collapse::before {
+  content: "\27A4 ";
+}
+.dropdown-item {
+  font-family: "Gidole";
+}
+.dropdown-title {
+  cursor: pointer;
 }
 </style>

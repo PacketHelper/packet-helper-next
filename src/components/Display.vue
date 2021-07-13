@@ -1,93 +1,91 @@
 <template>
   <div class="wrapper">
-    <v-card>
+    <v-card style="margin-top: 0.15rem" elevation="8" rounded>
       <DropDown>
         <template v-slot:title>
           <v-card-title> {{ data.name }} </v-card-title>
           <v-card-subtitle> {{ data.tshark_name }} </v-card-subtitle>
         </template>
         <template v-slot:content>
-          <code>
-            <v-card-text>
-              <ul>
-                <li>Packet length: {{ data.length }}{{ data.length_unit }}</li>
-                <DropDown>
-                  <template v-slot:title>
-                    <li>Scapy code representation:</li>
-                  </template>
-                  <template v-slot:content>
-                    <ul>
-                      <li><code>{{ data.repr }}</code></li>
-                    </ul>
-                  </template>
-                </DropDown>
-                <div v-if="sortedData">
-                  <div
-                    class="raw-data"
-                    v-for="(tshark, key) in sortedData"
-                    :key="key"
-                  >
-                    <div v-if="tshark.children">
-                      <DropDown>
-                        <template v-slot:title>
-                          <li class="collapse">
-                            {{ tshark.name }}: {{ tshark.value }}
-                          </li>
-                        </template>
-                        <template v-slot:content>
-                          <ul>
-                            <li
-                              v-for="(child, key) in tshark.children"
-                              :key="key"
-                            >
-                              <div v-if="child.children">
-                                <DropDown>
-                                  <template v-slot:title>
-                                    <code
-                                      >{{ child.name }}: {{ child.value }}
-                                    </code>
-                                  </template>
-                                  <template v-slot:content>
-                                    <ul>
-                                      <li
-                                        v-for="(nestedChild, key) in child.children"
-                                        :key="key"
+          <v-card-text>
+            <ul>
+              <li>Packet length: {{ data.length }}{{ data.length_unit }}</li>
+              <DropDown>
+                <template v-slot:title>
+                  <li>Scapy code representation:</li>
+                </template>
+                <template v-slot:content>
+                  <ul>
+                    <li>{{ data.repr }}</li>
+                  </ul>
+                </template>
+              </DropDown>
+              <div v-if="sortedData">
+                <div
+                  class="raw-data"
+                  v-for="(tshark, key) in sortedData"
+                  :key="key"
+                >
+                  <div v-if="tshark.children">
+                    <DropDown>
+                      <template v-slot:title>
+                        <li class="collapse">
+                          {{ tshark.name }}: {{ tshark.value }}
+                        </li>
+                      </template>
+                      <template v-slot:content>
+                        <ul>
+                          <li
+                            v-for="(child, key) in tshark.children"
+                            :key="key"
+                          >
+                            <div v-if="child.children">
+                              <DropDown>
+                                <template v-slot:title>
+                                  <code
+                                    >{{ child.name }}: {{ child.value }}
+                                  </code>
+                                </template>
+                                <template v-slot:content>
+                                  <ul>
+                                    <li
+                                      v-for="(nestedChild, key) in child.children"
+                                      :key="key"
+                                    >
+                                      <code
+                                        >{{ nestedChild.name }}: {{
+                                        nestedChild.value }}</code
                                       >
-                                        <code
-                                          >{{ nestedChild.name }}: {{
-                                          nestedChild.value }}</code
-                                        >
-                                      </li>
-                                    </ul>
-                                  </template>
-                                </DropDown>
-                              </div>
-                              <div v-else>
-                                <code
-                                  >{{ child.name }}: {{ child.value }}
-                                </code>
-                              </div>
-                            </li>
-                          </ul>
-                        </template>
-                      </DropDown>
-                    </div>
-                    <div v-else-if="tshark.value">
-                      <li>{{ tshark.name }}: {{ tshark.value }}</li>
-                    </div>
+                                    </li>
+                                  </ul>
+                                </template>
+                              </DropDown>
+                            </div>
+                            <div v-else>
+                              <code
+                                >{{ child.name }}: {{ child.value }}
+                              </code>
+                            </div>
+                          </li>
+                        </ul>
+                      </template>
+                    </DropDown>
+                  </div>
+                  <div v-else-if="tshark.value">
+                    <li>{{ tshark.name }}: {{ tshark.value }}</li>
                   </div>
                 </div>
-                <div v-else>
-                  <li
-                    v-for="(tshark, key) in data.tshark_raw_summary"
-                    :key="key"
-                  >
-                    {{ tshark }}
-                  </li>
-                </div>
-              </ul>
-            </v-card-text>
-          </code>
+              </div>
+              <div v-else>
+                <li
+                  v-for="(tshark, key) in data.tshark_raw_summary"
+                  :key="key"
+                >
+                  <code>{{ tshark }}</code>
+                </li>
+              </div>
+            </ul>
+          </v-card-text>
         </template>
       </DropDown>
     </v-card>
@@ -111,7 +109,11 @@ export default {
   // Handle the way data is displayed
   mounted() {
     // When protocol is not supported, don't do anything
-    if(!Protocols[this.data.tshark_name]) return
+    if(!Protocols[this.data.tshark_name]) {
+      this.$emit('warning')
+      return
+    }
+
     let copy = this.data.tshark_raw_summary.slice() 
     //console.log(this.data.tshark_raw_summary)
     let bits = []
@@ -125,7 +127,7 @@ export default {
           value: element.substring(element.indexOf(':') + 1),
         })
       }
-      // if key has dots and there are less than 4 of them
+      // looks for keys that has dots and there are less than 4 of them
       // ex.: www.youtube.com
       else if(element.substring(0, element.indexOf(':')).split('.').length - 1 && 
          element.substring(0, element.indexOf(':')).split('.').length - 1 < 4) {
@@ -170,7 +172,7 @@ export default {
           }
         })
     })
-    console.log(ord)
+
     // Finally display the data
     this.sortedData = ord
   }
@@ -178,14 +180,5 @@ export default {
 </script>
 
 <style>
-.DropDown-title {
-  cursor: pointer;
-}
-.collapse {
-  list-style-type: none;
-  margin-left: -15px;
-}
-.collapse::before {
-  content: '\27A4 '
-}
+
 </style>

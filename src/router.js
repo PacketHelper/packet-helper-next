@@ -4,7 +4,6 @@ import VueRouter from 'vue-router'
 import Messages from '@/components/Messages'
 import Info from "@/components/Info";
 import LandingPage from "@/components/LandingPage";
-import Testing from "@/components/Testing.vue"
 
 Vue.use(VueRouter)
 
@@ -34,11 +33,6 @@ export default new VueRouter({
       path: "/info",
       name: "info",
       component: Info
-    },
-    {
-      path: "/testing",
-      name: "testing",
-      component: Testing
     }
   ],
   mode: "history",
