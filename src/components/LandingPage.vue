@@ -9,7 +9,6 @@
             solo
             label="Hex"
             v-model="hexValue"
-            transition="rotate"
           ></v-textarea>
         </v-card-text>
         <v-card-actions>
@@ -316,23 +315,19 @@ export default {
 #space {
   margin-top: 1rem;
 }
-.rotate-enter-from {
-  transform: translateX(100px);
+@keyframes rotate-e {
+  0% {opacity: 1; width: 0}
+  100% {opacity: 1; width: 100%}
 }
-.rotate-enter-to {
-  transform: translateX(0);
+@keyframes rotate-l {
+  0% {opacity: 1; width: 100%}
+  100% {opacity: 1; width: 0}
 }
 .rotate-enter-active {
-  transition: all 1s ease;
-}
-.rotate-leave-from {
-  transform: translateX(0);
-}
-.rotate-leave-to {
-  transform: translateX(-100px);
+  animation: rotate-e 0.6s ease;
 }
 .rotate-leave-active {
-  transition: all 1s ease;
+  animation: rotate-l 0.6s ease;
 }
 
 .wrapper {

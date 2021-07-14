@@ -4,17 +4,15 @@
       <slot name="title"></slot>
     </div>
 
-    <transition name="drop" appear>
+    <v-expand-transition appear>
       <div class="dropdown-item" v-if="toggle">
         <slot name="content"></slot>
       </div>
-    </transition>
+    </v-expand-transition>
   </div>
 </template>
 
 <script>
-import gsap from "gsap";
-
 export default {
   data() {
     return {
@@ -24,16 +22,9 @@ export default {
   methods: {
     HandleClick(el) {
       this.toggle = !this.toggle;
-      console.log(el.explicitOriginalTarget);
-      if (this.toggle) el.explicitOriginalTarget.className += " rotate";
-      else
-        el.explicitOriginalTarget.className =
-          el.explicitOriginalTarget.className
-            .substring(
-              0,
-              el.explicitOriginalTarget.className.indexOf(" rotate")
-            )
-            .trim();
+      //console.log(el.srcElement.nextElementSibling.className);
+      if (this.toggle) el.srcElement.nextElementSibling.className = "fa-li fa fa-caret-down";
+      else el.srcElement.nextElementSibling.className = "fa-li fa fa-caret-right"
     },
   },
 };
@@ -75,15 +66,21 @@ export default {
   }
 }
 .collapse {
-  list-style-type: georgian;
+  list-style-type: none;
+  /*position: relative;
+  padding-left: 20px;*/
 }
 /*
 .collapse::before {
-  content: "\2192";
-  margin-left: -15px;
+  content: "\f0da";
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  left: 0;
+  top: -5%;
 }
 */
-.dropdown-item {
+.v-expansion-panel {
   font-family: "Gidole";
 }
 .dropdown-title {
@@ -91,12 +88,20 @@ export default {
 }
 
 .rotate {
-  list-style-type: disc;
+  list-style-type: none;
+  /*position: relative;
+  padding-left: 20px;*/
 }
 /*
 .rotate::before {
-  content: "\2193";
-  margin-left: -15px;
+  content: "\f0d7";
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  left: 0;
 }
 */
+i {
+  margin-left: 6px;
+}
 </style>

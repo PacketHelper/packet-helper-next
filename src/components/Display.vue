@@ -1,96 +1,105 @@
 <template>
   <div class="wrapper">
     <v-expansion-panel style="margin-top: 0.15rem" elevation="8" rounded>
-        <v-expansion-panel-header>
-          <div>
-            <ul>
-              <li>
-                <v-card-title> {{ data.name }} </v-card-title>
-                <v-card-subtitle> {{ data.tshark_name }} </v-card-subtitle>
-              </li>
-            </ul>
-          </div>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <v-card-text>
-            <ul>
-              <li>Packet length: {{ data.length }}{{ data.length_unit }}</li>
-              <DropDown>
-                <template v-slot:title>
-                  <li class="collapse">
-                    Scapy code representation:
+      <v-expansion-panel-header>
+        <div>
+          <ul>
+            <li>
+              <v-card-title> {{ data.name }} </v-card-title>
+              <v-card-subtitle> {{ data.tshark_name }} </v-card-subtitle>
+            </li>
+          </ul>
+        </div>
+      </v-expansion-panel-header>
+      <v-expansion-panel-content>
+        <v-card-text>
+          <ul>
+            <li>Packet length: {{ data.length }}{{ data.length_unit }}</li>
+            <DropDown>
+              <template v-slot:title>
+                <b>
+                <li class="collapse">
+                  Scapy code representation:
+                </li>
+                <i class="fa-li fa fa-caret-right"></i></b>
+              </template>
+              <template v-slot:content>
+                <ul>
+                  <li>
+                    <code>{{ data.repr }}</code>
                   </li>
-                </template>
-                <template v-slot:content>
-                  <ul>
-                    <li><code>{{ data.repr }}</code></li>
-                  </ul>
-                </template>
-              </DropDown>
-              <div v-if="sortedData">
-                <div
-                  class="raw-data"
-                  v-for="(tshark, key) in sortedData"
-                  :key="key"
-                >
-                  <div v-if="tshark.children">
-                    <DropDown>
-                      <template v-slot:title>
-                        <li class="collapse">
-                          {{ tshark.name }}: {{ tshark.value }}
-                        </li>
-                      </template>
-                      <template v-slot:content>
-                        <ul>
-                          <div
-                            v-for="(child, key) in tshark.children"
-                            :key="key"
-                          >
-                            <div v-if="child.children">
-                              <DropDown>
-                                <template v-slot:title>
-                                  <li class="collapse"> 
-                                    {{ child.name }}: {{ child.value }}
-                                  </li>
-                                </template>
-                                <template v-slot:content>
-                                  <ul>
-                                    <li
-                                      v-for="(
-                                        nestedChild, key
-                                      ) in child.children"
-                                      :key="key"
+                </ul>
+              </template>
+            </DropDown>
+            <div v-if="sortedData">
+              <div
+                class="raw-data"
+                v-for="(tshark, key) in sortedData"
+                :key="key"
+              >
+                <div v-if="tshark.children">
+                  <DropDown>
+                    <template v-slot:title>
+                      <b>
+                      <li class="collapse">
+                        {{ tshark.name }}: {{ tshark.value }}
+                      </li>
+                      <i class="fa-li fa fa-caret-right"></i></b>
+                    </template>
+                    <template v-slot:content>
+                      <ul>
+                        <div v-for="(child, key) in tshark.children" :key="key">
+                          <div v-if="child.children">
+                            <DropDown>
+                              <template v-slot:title>
+                                <b>
+                                <li class="collapse">
+                                  {{ child.name }}: {{ child.value }}
+                                </li>
+                                <i class="fa-li fa fa-caret-right"></i>
+                                </b>
+                              </template>
+                              <template v-slot:content>
+                                <ul>
+                                  <li
+                                    v-for="(nestedChild, key) in child.children"
+                                    :key="key"
+                                  >
+                                    <code
+                                      >{{ nestedChild.name }}:
+                                      {{ nestedChild.value }}</code
                                     >
-                                      <code
-                                        >{{ nestedChild.name }}:
-                                        {{ nestedChild.value }}</code
-                                      >
-                                    </li>
-                                  </ul>
-                                </template>
-                              </DropDown>
-                            </div>
-                            <div v-else>
-                              <li><code>{{ child.name }}: {{ child.value }} </code></li>
-                            </div>
+                                  </li>
+                                </ul>
+                              </template>
+                            </DropDown>
                           </div>
-                        </ul>
-                      </template>
-                    </DropDown>
-                  </div>
-                  <div v-else-if="tshark.value">
-                    <li>{{ tshark.name }}: {{ tshark.value }}</li>
-                  </div>
+                          <div v-else>
+                            <li>
+                              <code>{{ child.name }}: {{ child.value }} </code>
+                            </li>
+                          </div>
+                        </div>
+                      </ul>
+                    </template>
+                  </DropDown>
+                </div>
+                <div v-else-if="tshark.value">
+                  <li><code>{{ tshark.name }}: {{ tshark.value }}</code></li>
                 </div>
               </div>
-              <div v-else>
-                <li v-for="(tshark, key) in data.tshark_raw_summary" :key="key">
-                  <code>{{ tshark }}</code>
-                </li>
-              </div>
-            </ul>
-          </v-card-text>
-        </v-expansion-panel-content>
+            </div>
+            <div v-else-if="!supported">
+              <li v-for="(tshark, key) in data.tshark_raw_summary" :key="key">
+                <code>{{ tshark }}</code>
+              </li>
+            </div>
+            <div v-else>
+              <h3>An unknown error has occured</h3>
+            </div>
+          </ul>
+        </v-card-text>
+      </v-expansion-panel-content>
     </v-expansion-panel>
   </div>
 </template>
@@ -112,7 +121,8 @@ export default {
   // Handle the way data is displayed
   mounted() {
     // When protocol is not supported, don't do anything
-    if (!Protocols[this.data.tshark_name]) {
+    if (!Protocols[this.data.tshark_name.toUpperCase()]) {
+      this.supported = false
       this.$emit("warning");
       return;
     }
@@ -144,7 +154,7 @@ export default {
     });
 
     // Executes function that coresponds to tshark's name
-    let ord = Protocols[this.data.tshark_name](bits, 4, names);
+    let ord = Protocols[this.data.tshark_name.toUpperCase()](bits, 4, names);
 
     // Insert values into final object
     ord.forEach((element) => {
