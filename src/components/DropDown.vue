@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import gsap from "gsap";
+
 export default {
   data() {
     return {
@@ -20,8 +22,18 @@ export default {
     };
   },
   methods: {
-    HandleClick() {
+    HandleClick(el) {
       this.toggle = !this.toggle;
+      console.log(el.explicitOriginalTarget);
+      if (this.toggle) el.explicitOriginalTarget.className += " rotate";
+      else
+        el.explicitOriginalTarget.className =
+          el.explicitOriginalTarget.className
+            .substring(
+              0,
+              el.explicitOriginalTarget.className.indexOf(" rotate")
+            )
+            .trim();
     },
   },
 };
@@ -63,16 +75,28 @@ export default {
   }
 }
 .collapse {
-  list-style-type: none;
+  list-style-type: georgian;
+}
+/*
+.collapse::before {
+  content: "\2192";
   margin-left: -15px;
 }
-.collapse::before {
-  content: "\27A4 ";
-}
+*/
 .dropdown-item {
   font-family: "Gidole";
 }
 .dropdown-title {
   cursor: pointer;
 }
+
+.rotate {
+  list-style-type: disc;
+}
+/*
+.rotate::before {
+  content: "\2193";
+  margin-left: -15px;
+}
+*/
 </style>
