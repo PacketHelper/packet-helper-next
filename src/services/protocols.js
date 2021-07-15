@@ -84,6 +84,7 @@ export default {
   },
   IPV6(bits) {
     let ord = [
+      { name: 'Expert Info' },
       bits[0],
       {
         name: bits[1].name, value: bits[1].value, children: [
@@ -112,7 +113,33 @@ export default {
     ]
     return ord
   },
-  TCP(bits) {
+  TCP(bits, length, names, options) {
+    let processedOptions = []
+
+    options.forEach(element => {
+      let temp = {
+        name: element, children: [
+          { name: 'Kind' }
+        ]
+      }
+      if (element.includes("Timestamps")) {
+        temp.children.push({ name: 'Length' })
+        temp.children.push({ name: 'Timestamp value' })
+        temp.children.push({ name: 'Timestamp echo reply' })
+      }
+      else if (element.includes("Maximum segment size")) {
+        temp.children.push({ name: 'Length' })
+        temp.children.push({ name: 'MSS Value' })
+      }
+      else if (element.includes("SACK permitted")) {
+        temp.children.push({ name: 'Length' })
+      }
+      processedOptions.push(temp)
+    });
+    processedOptions.sort((a, b) => {
+      return a.name > b.name
+    })
+
     let ord = [
       { name: 'Source Port' },
       { name: 'Destination Port' },
@@ -126,7 +153,7 @@ export default {
       bits[0],
       {
         name: 'Flags', children: [
-          ...bits.slice(1, 6),
+          ...bits.slice(1),
           { name: 'TCP Flags' }
         ]
       },
@@ -149,28 +176,7 @@ export default {
       },
       { name: 'Checksum Status' },
       { name: 'Urgent Pointer' },
-      {
-        name: 'Options', children: [
-          {
-            name: 'TCP Option - No-Operation', children: [
-              { name: 'Kind' }
-            ]
-          },
-          {
-            name: 'TCP Option - No-Operation', children: [
-              { name: 'Kind' }
-            ]
-          },
-          {
-            name: 'TCP Option - Timestamps', children: [
-              { name: 'Kind' },
-              { name: 'Length' },
-              { name: 'Timestamp value' },
-              { name: 'Timestamp echo reply' }
-            ]
-          },
-        ]
-      },
+      { name: 'Options', children: [...processedOptions] },
       {
         name: 'SEQ/ACK analysis', children: [
           { name: 'Bytes in flight' },
@@ -223,7 +229,7 @@ export default {
     //console.log(answers)
     let ord = [
       { name: 'Transaction ID' },
-      { name: 'Flags', children: [...bits.slice(0, 6)] },
+      { name: 'Flags', children: [...bits.slice(0, 10)] },
       { name: 'Questions' },
       { name: 'Answer RRs' },
       { name: 'Authority RRs' },
@@ -250,7 +256,8 @@ export default {
               { name: 'UDP payload size' },
               { name: 'Higher bits in extended RCODE' },
               { name: 'EDNS0 version' },
-              { name: 'Z', children: [...bits.slice(6)] }, // Needs one more loop in html but I think I will leave it at that
+              { name: 'Z' }, // Needs one more loop in html but I think I will leave it at that
+              ...bits.slice(10),
               { name: 'Data length' },
             ]
           }
@@ -289,8 +296,9 @@ export default {
   },
   TELNET(bits, length) {
     let dataChildren = []
-    for (let i = 0; i < length; i++)
+    for (let i = 0; i < length - 1; i++)
       dataChildren.push({ name: 'Data' })
+
     let ord = [
       { name: 'Data', children: [...dataChildren] }
     ]
@@ -363,13 +371,13 @@ export default {
       ...bits,
       { name: 'Destination Connection ID' },
       { name: 'Destination Connection Length' },
-      { name: 'Expert Info*' },
+      { name: 'Expert Info' },
       { name: 'Group' },
       { name: 'Group' },
       { name: 'Length' },
       { name: 'Remaining Payload' },
       { name: 'Severity level' },
-      { name: 'Severity level-0' },
+      { name: 'Severity level' },
       { name: 'Source Connection ID' },
       { name: 'Source Connection ID Length' },
       { name: 'Version' }

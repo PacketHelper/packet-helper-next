@@ -18,10 +18,9 @@
             <DropDown>
               <template v-slot:title>
                 <b>
-                <li class="collapse">
-                  Scapy code representation:
-                </li>
-                <i class="fa-li fa fa-caret-right"></i></b>
+                  <li class="collapse">Scapy code representation:</li>
+                  <i class="fa-li fa fa-caret-right"></i
+                ></b>
               </template>
               <template v-slot:content>
                 <ul>
@@ -41,10 +40,11 @@
                   <DropDown>
                     <template v-slot:title>
                       <b>
-                      <li class="collapse">
-                        {{ tshark.name }}: {{ tshark.value }}
-                      </li>
-                      <i class="fa-li fa fa-caret-right"></i></b>
+                        <li class="collapse">
+                          {{ tshark.name }}: {{ tshark.value }}
+                        </li>
+                        <i class="fa-li fa fa-caret-right"></i
+                      ></b>
                     </template>
                     <template v-slot:content>
                       <ul>
@@ -53,10 +53,10 @@
                             <DropDown>
                               <template v-slot:title>
                                 <b>
-                                <li class="collapse">
-                                  {{ child.name }}: {{ child.value }}
-                                </li>
-                                <i class="fa-li fa fa-caret-right"></i>
+                                  <li class="collapse">
+                                    {{ child.name }}: {{ child.value }}
+                                  </li>
+                                  <i class="fa-li fa fa-caret-right"></i>
                                 </b>
                               </template>
                               <template v-slot:content>
@@ -85,7 +85,9 @@
                   </DropDown>
                 </div>
                 <div v-else-if="tshark.value">
-                  <li><code>{{ tshark.name }}: {{ tshark.value }}</code></li>
+                  <li>
+                    <code>{{ tshark.name }}: {{ tshark.value }}</code>
+                  </li>
                 </div>
               </div>
             </div>
@@ -120,59 +122,95 @@ export default {
   },
   // Handle the way data is displayed
   mounted() {
-    // When protocol is not supported, don't do anything
+    // When protocol is not supported, emits a warning
+    // and returns
     if (!Protocols[this.data.tshark_name.toUpperCase()]) {
-      this.supported = false
+      this.supported = false;
       this.$emit("warning");
       return;
     }
 
     let copy = this.data.tshark_raw_summary.slice();
-    //console.log(this.data.tshark_raw_summary)
     let bits = [];
     let names = [];
+    let options = [];
+    let length = 0;
 
-    // Prepare arrays for bits and DNS nameservers
+    // Prepare arrays for bits, DNS nameservers, TCP Options
+    // and TELNET data
     copy.forEach((element) => {
+      let name = element.substring(0, element.indexOf(":"));
+      let value = element.substring(element.indexOf(":") + 1);
       if (element.includes(" =")) {
         bits.push({
-          name: element.substring(0, element.indexOf(":")),
-          value: element.substring(element.indexOf(":") + 1),
+          name: name,
+          value: value,
         });
       }
       // looks for keys that has dots and there are less than 4 of them
-      // ex.: www.youtube.com
-      else if (
-        element.substring(0, element.indexOf(":")).split(".").length - 1 &&
-        element.substring(0, element.indexOf(":")).split(".").length - 1 < 4
-      ) {
+      // ex.: www.youtube.com, github.com, www.my.example.com
+      else if (name.split(".").length - 1 && name.split(".").length - 1 < 4) {
         names.push({
-          name: element.substring(0, element.indexOf(":")),
-          value: element.substring(element.indexOf(":") + 1),
+          name: name,
+          value: value,
         });
+      } else if (element.includes("TCP Option")) {
+        if (element.includes(":")) options.push(name);
+        else options.push(element);
       }
+      // For TELNET protocol
+      else if (element.includes("Data")) length++;
     });
 
     // Executes function that coresponds to tshark's name
-    let ord = Protocols[this.data.tshark_name.toUpperCase()](bits, 4, names);
+    let ord = Protocols[this.data.tshark_name.toUpperCase()](
+      bits,
+      length,
+      names,
+      options
+    );
 
-    // Insert values into final object
+    // Insert values into ord
     ord.forEach((element) => {
       let re_parent = new RegExp("^" + element.name);
       let index_parent = copy.findIndex((el) => re_parent.test(el));
+
       if (index_parent !== -1) {
-        element.value = copy[index_parent]
-          .substring(copy[index_parent].indexOf(":") + 1)
-          .trim();
+        if (copy[index_parent].includes(":")) {
+          // Some keys are semi-static and have to be handled with regex
+          element.name = copy[index_parent]
+            .substring(0, copy[index_parent].indexOf(":"))
+            .trim();
+          element.value = copy[index_parent]
+            .substring(copy[index_parent].indexOf(":") + 1)
+            .trim();
+        } else {
+          element.value = copy[index_parent]
+            .substring(
+              copy[index_parent].indexOf("(") + 1,
+              copy[index_parent].indexOf(")")
+            )
+            .trim();
+        }
+        // Some headers have the same value as its key
+        if (element.value === element.name) element.value = "";
+
         // Remove processed item to avoid duplicates
         copy.splice(index_parent, 1);
       }
 
+      // Everything up to the end of foreach
+      // is being handled in the same way as
+      // parent element
       if (element.children)
         element.children.forEach((child) => {
           let re_child = new RegExp("^" + child.name + ":");
           let index_child = copy.findIndex((el) => re_child.test(el));
+
           if (index_child !== -1) {
+            child.name = copy[index_child]
+              .substring(0, copy[index_child].indexOf(":"))
+              .trim();
             child.value = copy[index_child]
               .substring(copy[index_child].indexOf(":") + 1)
               .trim();
@@ -185,7 +223,11 @@ export default {
               let index_nested_child = copy.findIndex((el) =>
                 re_nested_child.test(el)
               );
+
               if (index_nested_child !== -1) {
+                nested_child.name = copy[index_nested_child]
+                  .substring(0, copy[index_nested_child].indexOf(":"))
+                  .trim();
                 nested_child.value = copy[index_nested_child]
                   .substring(copy[index_nested_child].indexOf(":") + 1)
                   .trim();
@@ -196,8 +238,41 @@ export default {
         });
     });
 
+    // Removes headers with no values
+    // It was the last feature I added and didn't test it very much
+    // so if something breaks its probably because of this
+    let final = [];
+    for (let i = 0; i < ord.length; i++) {
+      let children = [];
+      let nested_children = [];
+      let temp = null;
+
+      if (ord[i].children) {
+        for (let j = 0; j < ord[i].children.length; j++) {
+          if (ord[i].children[j].children) {
+            for (let k = 0; k < ord[i].children[j].children.length; k++) {
+              if (ord[i].children[j].children[k].value) {
+                nested_children.push(ord[i].children[j].children[k]);
+              }
+            }
+          }
+          if (nested_children.length || ord[i].children[j].value) {
+            temp = ord[i].children[j];
+            temp.children =
+              nested_children.length === 0 ? null : nested_children;
+            children.push(temp);
+          }
+        }
+      }
+      if (children.length || ord[i].value) {
+        temp = ord[i];
+        temp.children = children.length === 0 ? null : children;
+        final.push(temp);
+      }
+    }
+
     // Finally display the data
-    this.sortedData = ord;
+    this.sortedData = final;
   },
 };
 </script>

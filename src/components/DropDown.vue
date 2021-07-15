@@ -22,9 +22,19 @@ export default {
   methods: {
     HandleClick(el) {
       this.toggle = !this.toggle;
-      //console.log(el.srcElement.nextElementSibling.className);
-      if (this.toggle) el.srcElement.nextElementSibling.className = "fa-li fa fa-caret-down";
-      else el.srcElement.nextElementSibling.className = "fa-li fa fa-caret-right"
+
+      // Pretty bad way to do this imo but
+      // couldn't come up with anything better
+      if (el.srcElement.className === "collapse") {
+        if (this.toggle)
+          el.srcElement.nextElementSibling.className = "fa-li fa fa-caret-down";
+        else
+          el.srcElement.nextElementSibling.className =
+            "fa-li fa fa-caret-right";
+      } else {
+        if (this.toggle) el.srcElement.className = "fa-li fa fa-caret-down";
+        else el.srcElement.className = "fa-li fa fa-caret-right";
+      }
     },
   },
 };

@@ -4,12 +4,7 @@
       <v-card elevation="8">
         <v-card-title>Decode Packet</v-card-title>
         <v-card-text>
-          <v-textarea
-            id="hex"
-            solo
-            label="Hex"
-            v-model="hexValue"
-          ></v-textarea>
+          <v-textarea id="hex" solo label="Hex" v-model="hexValue"></v-textarea>
         </v-card-text>
         <v-card-actions>
           <v-btn
@@ -316,12 +311,24 @@ export default {
   margin-top: 1rem;
 }
 @keyframes rotate-e {
-  0% {opacity: 1; width: 0}
-  100% {opacity: 1; width: 100%}
+  0% {
+    opacity: 1;
+    width: 0;
+  }
+  100% {
+    opacity: 1;
+    width: 100%;
+  }
 }
 @keyframes rotate-l {
-  0% {opacity: 1; width: 100%}
-  100% {opacity: 1; width: 0}
+  0% {
+    opacity: 1;
+    width: 100%;
+  }
+  100% {
+    opacity: 1;
+    width: 0;
+  }
 }
 .rotate-enter-active {
   animation: rotate-e 0.6s ease;
