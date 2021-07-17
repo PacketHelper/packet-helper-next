@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import MessageService from "../services/messageService.js";
+import MessageService from "../services/apiService.js";
 import Display from "./Display.vue";
 import DropDown from "./DropDown.vue";
 import gsap from "gsap";

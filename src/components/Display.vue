@@ -5,8 +5,9 @@
         <div>
           <ul>
             <li>
-              <v-card-title> {{ data.name }} <small> ({{ data.tshark_name }})</small></v-card-title>
+              <v-card-title> {{ data.name }} <small> ({{ data.tshark_name }}) </small></v-card-title>
               <v-card-subtitle>
+                <code>{{ data.repr }}</code>
                 <div v-if="data.chksum_status['status'] === true">
                   ✔️ Chksum: {{ data.chksum_status['chksum'] }}
                 </div>
