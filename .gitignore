@@ -35,7 +35,11 @@ yarn-error.log*
 *.pyc
 **/*/*.pyc
 
+<<<<<<< HEAD
 package-lock.json
+=======
+packege-lock.json
+>>>>>>> d38321c (Remove packet-json.lock & yarn.lock)
 yarn.lock
 phc
 packet_helper_core
