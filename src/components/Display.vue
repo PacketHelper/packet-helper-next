@@ -5,8 +5,15 @@
         <div>
           <ul>
             <li>
-              <v-card-title> {{ data.name }} </v-card-title>
-              <v-card-subtitle> {{ data.tshark_name }} </v-card-subtitle>
+              <v-card-title> {{ data.name }} <small> ({{ data.tshark_name }})</small></v-card-title>
+              <v-card-subtitle>
+                <div v-if="data.chksum_status['status'] === true">
+                  ✔️ Chksum: {{ data.chksum_status['chksum'] }}
+                </div>
+                <div v-else-if="data.chksum_status['status'] === false">
+                  ❌ Chksum: {{ data.chksum_status['chksum'] }}; should be {{ data.chksum_status['chksum_calculated'] }}
+                </div>
+              </v-card-subtitle>
             </li>
           </ul>
         </div>
@@ -32,9 +39,9 @@
             </DropDown>
             <div v-if="sortedData">
               <div
-                class="raw-data"
-                v-for="(tshark, key) in sortedData"
-                :key="key"
+                  class="raw-data"
+                  v-for="(tshark, key) in sortedData"
+                  :key="key"
               >
                 <div v-if="tshark.children">
                   <DropDown>
@@ -44,7 +51,7 @@
                           {{ tshark.name }}: {{ tshark.value }}
                         </li>
                         <i class="fa-li fa fa-caret-right"></i
-                      ></b>
+                        ></b>
                     </template>
                     <template v-slot:content>
                       <ul>
@@ -162,7 +169,7 @@ export default {
       else if (element.includes("Data")) length++;
     });
 
-    // Executes function that coresponds to tshark's name
+    // Executes function that corresponds to tshark's name
     let ord = Protocols[this.data.tshark_name.toUpperCase()](
         bits,
         length,
