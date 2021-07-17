@@ -36,5 +36,6 @@ yarn-error.log*
 **/*/*.pyc
 
 packege-lock.json
+yarn.lock
 phc
 packet_helper_core
