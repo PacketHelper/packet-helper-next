@@ -197,7 +197,6 @@ export default {
     let answers = []
     let nameservers = []
     for (let i = 0; i < names.length - 1; i++) {
-      console.log(names[i + 1].value)
       if (names[i + 1].value.includes('type NS')) {
         nameservers.push({
           name: names[i + 1].name, children: [
