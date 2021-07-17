@@ -4,8 +4,8 @@
 # from scapy_helper import diff as scapy_diff
 # from scapy_helper import hexdump
 #
-# from backend.packet_server.packet_data import PacketData
-# from backend.packet_server.utils.utils import decode_hex, hex_str_operation
+# from packet_helper_core.packet_data import PacketData
+# from packet_helper_core.utils.utils import decode_hex, hex_str_operation
 #
 # templates = Jinja2Templates(directory="templates")
 #
