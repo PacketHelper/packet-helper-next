@@ -19,6 +19,31 @@
           <v-btn color="primary" @click="goToHex" large>Decode</v-btn>
           <v-btn text @click="reset">Reset</v-btn>
           <v-spacer></v-spacer>
+          <div v-if="structure">
+            <transition
+            @before-enter="beforeEnterButton"
+            @enter="enterButton"
+            @leave="leaveButton"
+            mode="out-in"
+            >
+              <v-btn 
+              v-if="structure.length > 0&&!isExpanded"
+              class="white--text"
+              color="indigo"
+              @click="expand" 
+              >
+                Expand all
+              </v-btn>
+              <v-btn 
+              v-else-if="structure.length > 0"
+              class="white--text"
+              color="indigo"
+              @click="collapse" 
+              >
+                Collapse all
+              </v-btn>
+            </transition>
+          </div>
           <v-btn text @click="showExamples">Next Example</v-btn>
         </v-card-actions>
       </v-card>
@@ -70,6 +95,7 @@
         </v-alert>
       </transition-group>
       <div class="wrapper" v-if="structure">
+<<<<<<< HEAD
         <v-card
           v-if="structure.length > 0"
           style="margin-top: 1rem"
@@ -96,12 +122,47 @@
           focusable
           style="margin-top: 1rem; width: auto; display: block"
         >
+=======
+        <v-expansion-panels multiple focusable v-model="panel">
+>>>>>>> 259b4df (Add expand/collapse all button)
           <transition-group
             @before-enter="beforeEnter"
             @enter="enter"
             @leave="leave"
             mode="out-in"
           >
+<<<<<<< HEAD
+=======
+            <v-expansion-panel
+              v-if="structure.length > 0"
+              :data-index="0"
+              :key="0"
+              style="margin-top: 0.15rem; width: 60vw"
+            >
+              <v-expansion-panel-header>
+                <ul>
+                  <li>
+                    <v-card-title>Packet summary</v-card-title>
+                    <v-card-subtitle>{{ header.join(" / ") }}</v-card-subtitle>
+                  </li>
+                </ul>
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <v-card-text>
+                  Length: {{ summary["length"] }}{{ summary["length_unit"] }}
+                  <v-textarea
+                    id="hex"
+                    filled
+                    name="input-7-4"
+                    label="Hexdump"
+                    :value="summary['hexdump']"
+                    auto-grow
+                    readonly
+                  ></v-textarea>
+                </v-card-text>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+>>>>>>> 259b4df (Add expand/collapse all button)
             <Display
               v-for="(s, index) in structure"
               :key="index + 1"
@@ -109,9 +170,42 @@
               :data-index="index + 1"
               @warning="handleWarning"
             ></Display>
+            <div class="rating" v-if="structure&&0" :key="structure.length + 1" :data-index="structure.length + 1">
+              <v-alert v-if="structure.length > 0" dismissible>
+                <div v-if="!voted">
+                  <v-card-text>Was this packet decoded properly?</v-card-text>
+                  <v-btn class="vote" @click="vote(true)">
+                    <v-icon 
+                    text
+                    icon
+                    color="blue lighten-2">
+                      mdi-thumb-up
+                    </v-icon>
+                  </v-btn>
+                  <v-btn class="vote" @click="vote(false)">
+                    <v-icon
+                    text
+                    icon
+                    color="red lighten-2">
+                      mdi-thumb-down
+                    </v-icon>
+                  </v-btn>
+                </div>
+                <div v-else>
+                  <v-card-text>Thanks for feedback!</v-card-text>
+                </div>
+              </v-alert>
+            </div>
           </transition-group>
         </v-expansion-panels>
       </div>
+    </v-container>
+    <v-container>
+    <div class="feedback">
+      <v-btn elevation="6" icon large color="blue">
+        <v-icon>fa-pencil</v-icon>
+      </v-btn>
+    </div>
     </v-container>
   </div>
 </template>
@@ -135,6 +229,9 @@ export default {
       header: [],
       alert: false,
       warning: false,
+      panel: [],
+      isExpanded: false,
+      voted: false
     };
   },
   methods: {
@@ -161,6 +258,7 @@ export default {
       this.alert = false;
       this.loading = false;
       this.warning = false;
+      this.voted = false;
       this.$router.replace("/hex/");
     },
     resetData() {
@@ -181,6 +279,7 @@ export default {
         this.loading = true;
         this.alert = false;
         this.warning = false;
+        this.voted = false
         try {
           const hexResponse = await MessageService.getHex(this.hexValue);
           this.structure = hexResponse["structure"];
@@ -285,6 +384,38 @@ export default {
         onComplete: done,
       });
     },
+    beforeEnterButton(el) {
+      el.style.opacity = 0
+      el.style.transform = "translateY(10px)"
+    },
+    enterButton(el) {
+      gsap.to(el, {
+        opacity: 1,
+        y: 0,
+        duration: 0.1
+      })
+    },
+    leaveButton(el) {
+      gsap.to(el, {
+        opacity: 0,
+        y: 10,
+        duration: 0.1
+      })
+    },
+    expand() {
+      this.panel = [...Array(this.structure.length + 1).keys()]
+      this.isExpanded = true
+    },
+    collapse() {
+      this.panel = []
+      this.isExpanded = false
+    },
+    vote(result) {
+      this.voted = true
+      // Place for API call
+      // To refrence hex value use this.hexValue
+      // result argument stores a boolean value
+    }
   },
   mounted() {
     this.read();
@@ -295,6 +426,12 @@ export default {
       this.getPacket();
     }
   },
+  watch: {
+    panel: function() {
+      if (!this.panel.length) this.isExpanded = false
+      else if (this.panel.length === this.structure.length + 1) this.isExpanded = true
+    }
+  }
 };
 </script>
 
@@ -328,4 +465,23 @@ export default {
 .wrapper {
   position: relative;
 }
+<<<<<<< HEAD
 </style>
+=======
+.data {
+  position: absolute;
+}
+.rating {
+  text-align: center;
+  margin-top: 0.15rem;
+}
+.vote {
+  margin: 0 5px 10px 5px;
+}
+.feedback {
+  text-align: right;
+  position: fixed;
+  margin-left: 90rem;
+}
+</style>
+>>>>>>> 259b4df (Add expand/collapse all button)
