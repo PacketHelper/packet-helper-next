@@ -138,42 +138,10 @@
               :data-index="index + 1"
               @warning="handleWarning"
             ></Display>
-            <div class="rating" v-if="structure&&0" :key="structure.length + 1" :data-index="structure.length + 1">
-              <v-alert v-if="structure.length > 0" dismissible>
-                <div v-if="!voted">
-                  <v-card-text>Was this packet decoded properly?</v-card-text>
-                  <v-btn class="vote" @click="vote(true)">
-                    <v-icon 
-                    text
-                    icon
-                    color="blue lighten-2">
-                      mdi-thumb-up
-                    </v-icon>
-                  </v-btn>
-                  <v-btn class="vote" @click="vote(false)">
-                    <v-icon
-                    text
-                    icon
-                    color="red lighten-2">
-                      mdi-thumb-down
-                    </v-icon>
-                  </v-btn>
-                </div>
-                <div v-else>
-                  <v-card-text>Thanks for feedback!</v-card-text>
-                </div>
-              </v-alert>
-            </div>
           </transition-group>
         </v-expansion-panels>
       </div>
-    </v-container>
-    <v-container>
-    <div class="feedback">
-      <v-btn elevation="6" icon large color="blue">
-        <v-icon>fa-pencil</v-icon>
-      </v-btn>
-    </div>
+      <VotePrompt :data="hexValue" :struct="structure"></VotePrompt>
     </v-container>
   </div>
 </template>
@@ -182,11 +150,12 @@
 import MessageService from "../services/messageService.js";
 import Display from "./Display.vue";
 import DropDown from "./DropDown.vue";
+import VotePrompt from "./VotePrompt.vue"
 import gsap from "gsap";
 
 export default {
   name: "LandingPage",
-  components: { Display, DropDown },
+  components: { Display, DropDown, VotePrompt },
   data() {
     return {
       hexValue: "",
@@ -378,12 +347,6 @@ export default {
       this.panel = []
       this.isExpanded = false
     },
-    vote(result) {
-      this.voted = true
-      // Place for API call
-      // To refrence hex value use this.hexValue
-      // result argument stores a boolean value
-    }
   },
   mounted() {
     this.read();
@@ -443,17 +406,5 @@ export default {
 }
 .data {
   position: absolute;
-}
-.rating {
-  text-align: center;
-  margin-top: 0.15rem;
-}
-.vote {
-  margin: 0 5px 10px 5px;
-}
-.feedback {
-  text-align: right;
-  position: fixed;
-  margin-left: 90rem;
 }
 </style>
