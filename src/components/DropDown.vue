@@ -91,7 +91,7 @@ export default {
 }
 */
 .v-expansion-panel {
-  font-family: "Gidole";
+  font-family: monospace, monospace;
 }
 .dropdown-title {
   cursor: pointer;
