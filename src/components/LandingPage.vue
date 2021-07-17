@@ -300,10 +300,6 @@ export default {
   font-family: monospace, monospace;
 }
 
-#space {
-  margin-top: 1rem;
-}
-
 @keyframes rotate-e {
   0% {
     opacity: 1;
@@ -326,19 +322,8 @@ export default {
   }
 }
 
-.rotate-enter-active {
-  animation: rotate-e 0.6s ease;
-}
-
-.rotate-leave-active {
-  animation: rotate-l 0.6s ease;
-}
-
 .wrapper {
   position: relative;
 }
 
-.data {
-  position: absolute;
-}
 </style>
