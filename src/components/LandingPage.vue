@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-container>
-      <v-card elevation="8">
+      <v-card elevation="6">
         <v-card-title>Decode Packet</v-card-title>
         <v-card-text>
           <v-textarea id="hex" solo label="Hex" v-model="hexValue"></v-textarea>
@@ -23,10 +23,10 @@
         </v-card-actions>
       </v-card>
       <transition-group
-        @before-enter="beforeEnterUp"
-        @enter="enterUp"
-        @leave="leaveUp"
-        mode="out-in"
+          @before-enter="beforeEnterUp"
+          @enter="enterUp"
+          @leave="leaveUp"
+          mode="out-in"
       >
         <v-card
             style="margin-top: 2rem"
@@ -69,10 +69,11 @@
           data may be displayed incorrectly
         </v-alert>
       </transition-group>
-      <div class="wrapper" v-if="structure" >
+      <div class="wrapper" v-if="structure">
         <v-card
             v-if="structure.length > 0"
-            style="margin-top: 1rem">
+            style="margin-top: 1rem"
+            elevation="6">
 
           <v-card-title>Packet summary</v-card-title>
           <v-card-subtitle>{{ header.join(" / ") }}</v-card-subtitle>
