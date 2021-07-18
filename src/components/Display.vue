@@ -22,22 +22,7 @@
       <v-expansion-panel-content>
         <v-card-text>
           <ul>
-            <li>Packet length: {{ data.length }}{{ data.length_unit }}</li>
-            <DropDown>
-              <template v-slot:title>
-                <b>
-                  <li class="collapse">Scapy code representation:</li>
-                  <i class="fa-li fa fa-caret-right"></i
-                  ></b>
-              </template>
-              <template v-slot:content>
-                <ul>
-                  <li>
-                    <code>{{ data.repr }}</code>
-                  </li>
-                </ul>
-              </template>
-            </DropDown>
+            <li><code>Packet length: {{ data.length }}{{ data.length_unit }}</code></li>
             <div v-if="sortedData">
               <div
                   class="raw-data"
