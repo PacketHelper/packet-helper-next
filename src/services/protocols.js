@@ -100,7 +100,7 @@ export default {
     ]
     return ord
   },
-  BRE(bits) { // For testing purposes!!!
+  GRE(bits) {
     let ord = [
       { name: 'Flags and Version', children: [...bits] },
       { name: 'Protocol Type' },

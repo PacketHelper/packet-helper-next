@@ -141,7 +141,7 @@
           </transition-group>
         </v-expansion-panels>
       </div>
-      <VotePrompt :data="hexValue" :struct="structure"></VotePrompt>
+      <VotePrompt :data="hexValue" :struct="structure" v-if="structure.length > 0"></VotePrompt>
     </v-container>
   </div>
 </template>
@@ -373,36 +373,6 @@ export default {
 
 #space {
   margin-top: 1rem;
-}
-@keyframes rotate-e {
-  0% {
-    opacity: 1;
-    width: 0;
-  }
-  100% {
-    opacity: 1;
-    width: 100%;
-  }
-}
-@keyframes rotate-l {
-  0% {
-    opacity: 1;
-    width: 100%;
-  }
-  100% {
-    opacity: 1;
-    width: 0;
-  }
-}
-.rotate-enter-active {
-  animation: rotate-e 0.6s ease;
-}
-.rotate-leave-active {
-  animation: rotate-l 0.6s ease;
-}
-
-.wrapper {
-  position: relative;
 }
 .data {
   position: absolute;

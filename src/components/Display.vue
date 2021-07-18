@@ -278,4 +278,11 @@ export default {
 </script>
 
 <style>
+.wrapper {
+  position: relative;
+  z-index: 0;
+}
+.collapse {
+  list-style-type: none;
+}
 </style>
