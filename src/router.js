@@ -1,7 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-// import VueDemo from '@/components/VueDemo'
-import Messages from '@/components/Messages'
 import Info from "@/components/Info";
 import LandingPage from "@/components/LandingPage";
 
@@ -23,11 +21,6 @@ export default new VueRouter({
       path: '/hex/:hex_string',
       name: 'hex',
       component: LandingPage
-    },
-    {
-      path: '/messages',
-      name: 'messages',
-      component: Messages
     },
     {
       path: "/info",

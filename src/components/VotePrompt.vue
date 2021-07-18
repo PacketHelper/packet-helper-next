@@ -131,7 +131,7 @@ export default {
   transform: scale(0);
   border-radius: 8px;
   color: white;
-  font-family: "Gidole";
+  font-family: monospace, monospace;
 }
 .popup-enter-from {
   height: 0;
@@ -158,7 +158,7 @@ export default {
   padding: 37px;
 }
 .prompt-text {
-  font-size: 15px;
+  font-size: 13px;
   padding-top: 15px;
   padding-bottom: 10px;
 }

@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import MessageService from "../services/messageService";
+import MessageService from "../services/apiService";
 
 export default {
   name: "Info",
