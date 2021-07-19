@@ -21,6 +21,3 @@ jobs:
       - name: Bump version
         run: |
           npm version patch --force
-      - name: Commit changes
-        run: |
-          git push
