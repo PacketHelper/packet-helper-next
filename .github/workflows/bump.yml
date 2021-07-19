@@ -1,0 +1,28 @@
+name: Bump version
+on: [push]
+#on:
+#  push:
+#    branches:
+#      - main
+
+jobs:
+  push_to_registry:
+    name: Push Docker image to HerokuApp
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PAT }}
+      - name: Set committer info
+        run: |
+          git config --local user.email "$(git log --format='%ae' HEAD^!)"
+          git config --local user.name "$(git log --format='%an' HEAD^!)"
+      - name: Bump version
+        run: |
+          npm version patch --force
+      - name: Commit changes
+        run: |
+          git add app.json && git commit -m "Bump version"
+          git push
