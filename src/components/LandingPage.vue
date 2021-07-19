@@ -8,11 +8,11 @@
         </v-card-text>
         <v-card-actions>
           <v-btn
-              class="white--text"
-              color="warning"
-              depressed
-              large
-              @click="cleanHex"
+            class="white--text"
+            color="warning"
+            depressed
+            large
+            @click="cleanHex"
           >
             Clean hex
           </v-btn>
@@ -23,47 +23,47 @@
         </v-card-actions>
       </v-card>
       <transition-group
-          @before-enter="beforeEnterUp"
-          @enter="enterUp"
-          @leave="leaveUp"
-          mode="out-in"
+        @before-enter="beforeEnterUp"
+        @enter="enterUp"
+        @leave="leaveUp"
+        mode="out-in"
       >
         <v-card
-            style="margin-top: 2rem"
-            v-if="loading"
-            :key="6"
-            :data-index="6"
+          style="margin-top: 2rem"
+          v-if="loading"
+          :key="6"
+          :data-index="6"
         >
           <v-card-title>Loading packet...</v-card-title>
           <v-card-subtitle>Loading</v-card-subtitle>
           <v-card-text class="text-center">
             <v-progress-circular
-                indeterminate
-                color="primary"
+              indeterminate
+              color="primary"
             ></v-progress-circular>
           </v-card-text>
         </v-card>
         <v-alert
-            v-else-if="alert"
-            v-model="alert"
-            border="left"
-            type="error"
-            close-text="Close Alert"
-            dark
-            dismissible
-            :key="7"
+          v-else-if="alert"
+          v-model="alert"
+          border="left"
+          type="error"
+          close-text="Close Alert"
+          dark
+          dismissible
+          :key="7"
         >
           Error: Can not properly decode the hex.
         </v-alert>
         <v-alert
-            v-else-if="warning"
-            v-model="warning"
-            border="left"
-            type="warning"
-            close-text="Close Alert"
-            dark
-            dismissible
-            :key="8"
+          v-else-if="warning"
+          v-model="warning"
+          border="left"
+          type="warning"
+          close-text="Close Alert"
+          dark
+          dismissible
+          :key="8"
         >
           Warning: This protocol is not officially supported and some of the
           data may be displayed incorrectly
@@ -71,39 +71,43 @@
       </transition-group>
       <div class="wrapper" v-if="structure">
         <v-card
-            v-if="structure.length > 0"
-            style="margin-top: 1rem"
-            elevation="6">
-
+          v-if="structure.length > 0"
+          style="margin-top: 1rem"
+          elevation="6"
+        >
           <v-card-title>Packet summary</v-card-title>
           <v-card-subtitle>{{ header.join(" / ") }}</v-card-subtitle>
           <v-card-text>
             Length: {{ summary["length"] }}{{ summary["length_unit"] }}
             <v-textarea
-                id="hex"
-                filled
-                name="input-7-4"
-                label="Hexdump"
-                :value="summary['hexdump']"
-                auto-grow
-                readonly
+              id="hex"
+              filled
+              name="input-7-4"
+              label="Hexdump"
+              :value="summary['hexdump']"
+              auto-grow
+              readonly
             ></v-textarea>
           </v-card-text>
         </v-card>
 
-        <v-expansion-panels multiple focusable style="margin-top: 1rem; width: auto; display: block">
+        <v-expansion-panels
+          multiple
+          focusable
+          style="margin-top: 1rem; width: auto; display: block"
+        >
           <transition-group
-              @before-enter="beforeEnter"
-              @enter="enter"
-              @leave="leave"
-              mode="out-in"
+            @before-enter="beforeEnter"
+            @enter="enter"
+            @leave="leave"
+            mode="out-in"
           >
             <Display
-                v-for="(s, index) in structure"
-                :key="index + 1"
-                :data="s"
-                :data-index="index + 1"
-                @warning="handleWarning"
+              v-for="(s, index) in structure"
+              :key="index + 1"
+              :data="s"
+              :data-index="index + 1"
+              @warning="handleWarning"
             ></Display>
           </transition-group>
         </v-expansion-panels>
@@ -120,7 +124,7 @@ import gsap from "gsap";
 
 export default {
   name: "LandingPage",
-  components: {Display, DropDown},
+  components: { Display, DropDown },
   data() {
     return {
       hexValue: "",
@@ -168,8 +172,7 @@ export default {
       try {
         this.decode = this.hexValue.length > 0;
         // eslint-disable-next-line no-empty
-      } catch (error) {
-      }
+      } catch (error) {}
     },
     async getPacket() {
       if (this.hexValue !== "undefined") {
@@ -325,5 +328,4 @@ export default {
 .wrapper {
   position: relative;
 }
-
 </style>
