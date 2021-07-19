@@ -25,16 +25,8 @@ export default {
 
       // Pretty bad way to do this imo but
       // couldn't come up with anything better
-      if (el.srcElement.className === "collapse") {
-        if (this.toggle)
-          el.srcElement.nextElementSibling.className = "fa-li fa fa-caret-down";
-        else
-          el.srcElement.nextElementSibling.className =
-            "fa-li fa fa-caret-right";
-      } else {
-        if (this.toggle) el.srcElement.className = "fa-li fa fa-caret-down";
-        else el.srcElement.className = "fa-li fa fa-caret-right";
-      }
+      if (this.toggle) el.explicitOriginalTarget.className = "expand";
+      else el.explicitOriginalTarget.className = "collapse";
     },
   },
 };
@@ -77,8 +69,21 @@ export default {
 }
 .collapse {
   list-style-type: none;
-  /*position: relative;
-  padding-left: 20px;*/
+  position: relative;
+  left: -0.7rem;
+}
+.collapse::before {
+  font-family: "Font Awesome 5 Free";
+  content: "\f0da";
+}
+.expand {
+  list-style-type: none;
+  position: relative;
+  left: -0.91rem;
+}
+.expand::before {
+  font-family: "Font Awesome 5 Free";
+  content: "\f0dd";
 }
 /*
 .collapse::before {

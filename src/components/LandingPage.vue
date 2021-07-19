@@ -352,7 +352,7 @@ export default {
   watch: {
     panel: function() {
       if (!this.panel.length) this.isExpanded = false
-      else if (this.panel.length === this.structure.length + 1) this.isExpanded = true
+      else if (this.panel.length === this.structure.length) this.isExpanded = true
     }
   }
 };

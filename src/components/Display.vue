@@ -36,8 +36,7 @@
                         <li class="collapse">
                           {{ tshark.name }}: {{ tshark.value }}
                         </li>
-                        <i class="fa-li fa fa-caret-right"></i
-                        ></b>
+                        </b>
                     </template>
                     <template v-slot:content>
                       <ul>
@@ -49,7 +48,6 @@
                                   <li class="collapse">
                                     {{ child.name }}: {{ child.value }}
                                   </li>
-                                  <i class="fa-li fa fa-caret-right"></i>
                                 </b>
                               </template>
                               <template v-slot:content>
@@ -274,8 +272,5 @@ export default {
 .wrapper {
   position: relative;
   z-index: 0;
-}
-.collapse {
-  list-style-type: none;
 }
 </style>
