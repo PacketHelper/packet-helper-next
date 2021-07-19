@@ -139,9 +139,7 @@
           </transition-group>
         </v-expansion-panels>
       </div>
-      <transition-group name="slideLeave">
-        <VotePrompt :data="hexValue" :struct="structure" :key="0"></VotePrompt>
-      </transition-group>
+    <VotePrompt :data="hexValue" :struct="structure" :key="0"></VotePrompt>
     </v-container>
   </div>
 </template>
