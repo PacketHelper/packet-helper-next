@@ -8,11 +8,11 @@
         </v-card-text>
         <v-card-actions>
           <v-btn
-              class="white--text"
-              color="warning"
-              depressed
-              large
-              @click="cleanHex"
+            class="white--text"
+            color="warning"
+            depressed
+            large
+            @click="cleanHex"
           >
             Clean hex
           </v-btn>
@@ -21,24 +21,24 @@
           <v-spacer></v-spacer>
           <div v-if="structure">
             <transition
-            @before-enter="beforeEnterButton"
-            @enter="enterButton"
-            @leave="leaveButton"
-            mode="out-in"
+              @before-enter="beforeEnterButton"
+              @enter="enterButton"
+              @leave="leaveButton"
+              mode="out-in"
             >
-              <v-btn 
-              v-if="structure.length > 0&&!isExpanded"
-              class="white--text"
-              color="indigo"
-              @click="expand" 
+              <v-btn
+                v-if="structure.length > 0 && !isExpanded"
+                class="white--text"
+                color="indigo"
+                @click="expand"
               >
                 Expand all
               </v-btn>
-              <v-btn 
-              v-else-if="structure.length > 0"
-              class="white--text"
-              color="indigo"
-              @click="collapse" 
+              <v-btn
+                v-else-if="structure.length > 0"
+                class="white--text"
+                color="indigo"
+                @click="collapse"
               >
                 Collapse all
               </v-btn>
@@ -48,16 +48,16 @@
         </v-card-actions>
       </v-card>
       <transition-group
-          @before-enter="beforeEnterUp"
-          @enter="enterUp"
-          @leave="leaveUp"
-          mode="out-in"
+        @before-enter="beforeEnterUp"
+        @enter="enterUp"
+        @leave="leaveUp"
+        mode="out-in"
       >
         <v-card
-            style="margin-top: 2rem"
-            v-if="loading"
-            :key="6"
-            :data-index="6"
+          style="margin-top: 2rem"
+          v-if="loading"
+          :key="6"
+          :data-index="6"
         >
           <v-card-title>Loading packet...</v-card-title>
           <v-card-subtitle>Loading</v-card-subtitle>
@@ -69,66 +69,72 @@
           </v-card-text>
         </v-card>
         <v-alert
-            v-else-if="alert"
-            v-model="alert"
-            border="left"
-            type="error"
-            close-text="Close Alert"
-            dark
-            dismissible
-            :key="7"
+          v-else-if="alert"
+          v-model="alert"
+          border="left"
+          type="error"
+          close-text="Close Alert"
+          dark
+          dismissible
+          :key="7"
         >
           Error: Can not properly decode the hex.
         </v-alert>
         <v-alert
-            v-else-if="warning"
-            v-model="warning"
-            border="left"
-            type="warning"
-            close-text="Close Alert"
-            dark
-            dismissible
-            :key="8"
+          v-else-if="warning"
+          v-model="warning"
+          border="left"
+          type="warning"
+          close-text="Close Alert"
+          dark
+          dismissible
+          :key="8"
         >
           Warning: This protocol is not officially supported and some of the
           data may be displayed incorrectly
         </v-alert>
       </transition-group>
       <div class="wrapper" v-if="structure">
-
-        <v-expansion-panels multiple focusable style="margin-top: 1rem; width: auto; display: block" v-model="panel">
+        <v-expansion-panels
+          multiple
+          focusable
+          style="margin-top: 1rem; width: auto; display: block"
+          v-model="panel"
+        >
           <transition-group
-              @before-enter="beforeEnter"
-              @enter="enter"
-              @leave="leave"
-              mode="out-in"
+            @before-enter="beforeEnter"
+            @enter="enter"
+            @leave="leave"
+            mode="out-in"
           >
             <v-card
-                v-if="structure.length > 0"
-                style="margin-top: 1rem"
-                elevation="6" :key="0" :data-index="0">
-
+              v-if="structure.length > 0"
+              style="margin-top: 1rem"
+              elevation="6"
+              :key="0"
+              :data-index="0"
+            >
               <v-card-title>Packet summary</v-card-title>
               <v-card-subtitle>{{ header.join(" / ") }}</v-card-subtitle>
               <v-card-text>
                 Length: {{ summary["length"] }}{{ summary["length_unit"] }}
                 <v-textarea
-                    id="hex"
-                    filled
-                    name="input-7-4"
-                    label="Hexdump"
-                    :value="summary['hexdump']"
-                    auto-grow
-                    readonly
+                  id="hex"
+                  filled
+                  name="input-7-4"
+                  label="Hexdump"
+                  :value="summary['hexdump']"
+                  auto-grow
+                  readonly
                 ></v-textarea>
               </v-card-text>
             </v-card>
             <Display
-                v-for="(s, index) in structure"
-                :key="index + 1"
-                :data="s"
-                :data-index="index + 1"
-                @warning="handleWarning"
+              v-for="(s, index) in structure"
+              :key="index + 1"
+              :data="s"
+              :data-index="index + 1"
+              @warning="handleWarning"
             ></Display>
           </transition-group>
         </v-expansion-panels>
@@ -144,7 +150,7 @@
 import apiService from "../services/apiService.js";
 import Display from "./Display.vue";
 import DropDown from "./DropDown.vue";
-import VotePrompt from "./VotePrompt.vue"
+import VotePrompt from "./VotePrompt.vue";
 import gsap from "gsap";
 
 export default {
@@ -162,7 +168,7 @@ export default {
       warning: false,
       panel: [],
       isExpanded: false,
-      voted: false
+      voted: false,
     };
   },
   methods: {
@@ -185,7 +191,7 @@ export default {
       this.hexValue = "";
       this.decode = false;
       this.resetData();
-      this.$store.commit('reset')
+      this.$store.commit("reset");
       await this.delay(0.6);
       this.alert = false;
       this.loading = false;
@@ -207,7 +213,7 @@ export default {
     async getPacket() {
       if (this.hexValue !== "undefined") {
         this.resetData();
-        this.$store.commit('reset')
+        this.$store.commit("reset");
         await this.delay(0.6);
         this.loading = true;
         this.alert = false;
@@ -317,22 +323,22 @@ export default {
       });
     },
     beforeEnterButton(el) {
-      el.style.opacity = 0
-      el.style.transform = "translateY(10px)"
+      el.style.opacity = 0;
+      el.style.transform = "translateY(10px)";
     },
     enterButton(el) {
       gsap.to(el, {
         opacity: 1,
         y: 0,
-        duration: 0.1
-      })
+        duration: 0.1,
+      });
     },
     leaveButton(el) {
       gsap.to(el, {
         opacity: 0,
         y: 10,
-        duration: 0.1
-      })
+        duration: 0.1,
+      });
     },
     slideBefore(el) {
       el.style.transform = "translateX(100px)";
@@ -353,12 +359,12 @@ export default {
       });
     },
     expand() {
-      this.panel = [...Array(this.structure.length).keys()]
-      this.isExpanded = true
+      this.panel = [...Array(this.structure.length).keys()];
+      this.isExpanded = true;
     },
     collapse() {
-      this.panel = []
-      this.isExpanded = false
+      this.panel = [];
+      this.isExpanded = false;
     },
   },
   mounted() {
@@ -371,11 +377,12 @@ export default {
     }
   },
   watch: {
-    panel: function() {
-      if (!this.panel.length) this.isExpanded = false
-      else if (this.panel.length === this.structure.length) this.isExpanded = true
-    }
-  }
+    panel: function () {
+      if (!this.panel.length) this.isExpanded = false;
+      else if (this.panel.length === this.structure.length)
+        this.isExpanded = true;
+    },
+  },
 };
 </script>
 
@@ -384,42 +391,7 @@ export default {
   font-family: monospace, monospace;
 }
 
-@keyframes rotate-e {
-  0% {
-    opacity: 1;
-    width: 0;
-  }
-  100% {
-    opacity: 1;
-    width: 100%;
-  }
-}
-
-@keyframes rotate-l {
-  0% {
-    opacity: 1;
-    width: 100%;
-  }
-  100% {
-    opacity: 1;
-    width: 0;
-  }
-}
 .data {
   position: absolute;
-}
-.test {
-  position: fixed;
-}
-@keyframes slide-l {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(100px);
-  }
-}
-.slideLeave-leave-active {
-  animation: slide-l 0.5 ease;
 }
 </style>

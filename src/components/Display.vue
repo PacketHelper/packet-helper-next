@@ -5,14 +5,18 @@
         <div>
           <ul>
             <li>
-              <v-card-title> {{ data.name }} <small> ({{ data.tshark_name }}) </small></v-card-title>
+              <v-card-title>
+                {{ data.name }}
+                <small> ({{ data.tshark_name }}) </small></v-card-title
+              >
               <v-card-subtitle>
                 <code>{{ data.repr }}</code>
                 <div v-if="data.chksum_status['status'] === true">
-                  ✔️ Chksum: {{ data.chksum_status['chksum'] }}
+                  ✔️ Chksum: {{ data.chksum_status["chksum"] }}
                 </div>
                 <div v-else-if="data.chksum_status['status'] === false">
-                  ❌ Chksum: {{ data.chksum_status['chksum'] }}; should be {{ data.chksum_status['chksum_calculated'] }}
+                  ❌ Chksum: {{ data.chksum_status["chksum"] }}; should be
+                  {{ data.chksum_status["chksum_calculated"] }}
                 </div>
               </v-card-subtitle>
             </li>
@@ -22,12 +26,16 @@
       <v-expansion-panel-content>
         <v-card-text>
           <ul>
-            <li><code>Packet length: {{ data.length }}{{ data.length_unit }}</code></li>
+            <li>
+              <code
+                >Packet length: {{ data.length }}{{ data.length_unit }}</code
+              >
+            </li>
             <div v-if="sortedData">
               <div
-                  class="raw-data"
-                  v-for="(tshark, key) in sortedData"
-                  :key="key"
+                class="raw-data"
+                v-for="(tshark, key) in sortedData"
+                :key="key"
               >
                 <div v-if="tshark.children">
                   <DropDown>
@@ -36,7 +44,7 @@
                         <li class="collapse">
                           {{ tshark.name }}: {{ tshark.value }}
                         </li>
-                        </b>
+                      </b>
                     </template>
                     <template v-slot:content>
                       <ul>
@@ -53,11 +61,11 @@
                               <template v-slot:content>
                                 <ul>
                                   <li
-                                      v-for="(nestedChild, key) in child.children"
-                                      :key="key"
+                                    v-for="(nestedChild, key) in child.children"
+                                    :key="key"
                                   >
                                     <code
-                                    >{{ nestedChild.name }}:
+                                      >{{ nestedChild.name }}:
                                       {{ nestedChild.value }}</code
                                     >
                                   </li>
@@ -103,7 +111,7 @@ import Protocols from "../services/protocols.js";
 
 export default {
   props: ["data"],
-  components: {DropDown},
+  components: { DropDown },
   data() {
     return {
       items: [],
@@ -138,7 +146,7 @@ export default {
           value: value,
         });
       }
-          // looks for keys that has dots and there are less than 4 of them
+      // looks for keys that has dots and there are less than 4 of them
       // ex.: www.youtube.com, github.com, www.my.example.com
       else if (name.split(".").length - 1 && name.split(".").length - 1 < 4) {
         names.push({
@@ -155,10 +163,10 @@ export default {
 
     // Executes function that corresponds to tshark's name
     let ord = Protocols[this.data.tshark_name.toUpperCase()](
-        bits,
-        length,
-        names,
-        options
+      bits,
+      length,
+      names,
+      options
     );
 
     // Insert values into ord
@@ -170,18 +178,18 @@ export default {
         if (copy[index_parent].includes(":")) {
           // Some keys are semi-static and have to be handled with regex
           element.name = copy[index_parent]
-              .substring(0, copy[index_parent].indexOf(":"))
-              .trim();
+            .substring(0, copy[index_parent].indexOf(":"))
+            .trim();
           element.value = copy[index_parent]
-              .substring(copy[index_parent].indexOf(":") + 1)
-              .trim();
+            .substring(copy[index_parent].indexOf(":") + 1)
+            .trim();
         } else {
           element.value = copy[index_parent]
-              .substring(
-                  copy[index_parent].indexOf("(") + 1,
-                  copy[index_parent].indexOf(")")
-              )
-              .trim();
+            .substring(
+              copy[index_parent].indexOf("(") + 1,
+              copy[index_parent].indexOf(")")
+            )
+            .trim();
         }
         // Some headers have the same value as its key
         if (element.value === element.name) element.value = "";
@@ -200,11 +208,11 @@ export default {
 
           if (index_child !== -1) {
             child.name = copy[index_child]
-                .substring(0, copy[index_child].indexOf(":"))
-                .trim();
+              .substring(0, copy[index_child].indexOf(":"))
+              .trim();
             child.value = copy[index_child]
-                .substring(copy[index_child].indexOf(":") + 1)
-                .trim();
+              .substring(copy[index_child].indexOf(":") + 1)
+              .trim();
             copy.splice(index_child, 1);
           }
 
@@ -212,16 +220,16 @@ export default {
             child.children.forEach((nested_child) => {
               let re_nested_child = new RegExp("^" + nested_child.name + ":");
               let index_nested_child = copy.findIndex((el) =>
-                  re_nested_child.test(el)
+                re_nested_child.test(el)
               );
 
               if (index_nested_child !== -1) {
                 nested_child.name = copy[index_nested_child]
-                    .substring(0, copy[index_nested_child].indexOf(":"))
-                    .trim();
+                  .substring(0, copy[index_nested_child].indexOf(":"))
+                  .trim();
                 nested_child.value = copy[index_nested_child]
-                    .substring(copy[index_nested_child].indexOf(":") + 1)
-                    .trim();
+                  .substring(copy[index_nested_child].indexOf(":") + 1)
+                  .trim();
                 copy.splice(index_nested_child, 1);
               }
             });
@@ -250,7 +258,7 @@ export default {
           if (nested_children.length || ord[i].children[j].value) {
             temp = ord[i].children[j];
             temp.children =
-                nested_children.length === 0 ? null : nested_children;
+              nested_children.length === 0 ? null : nested_children;
             children.push(temp);
           }
         }

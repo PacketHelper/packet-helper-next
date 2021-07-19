@@ -38,34 +38,6 @@ export default {
 .dropdown-item {
   max-height: 2000px;
 }
-/*
-.drop-enter {
-  opacity: 0;
-  max-height: 0;
-}
-*/
-.drop-enter-active {
-  overflow: hidden;
-  animation: drop-enter 0.8s ease;
-}
-.drop-leave-to {
-  opacity: 0;
-  max-height: 0;
-}
-.drop-leave-active {
-  overflow: hidden;
-  transition: all 0.3s ease;
-}
-
-@keyframes drop-enter {
-  0% {
-    opacity: 0;
-    max-height: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
 .collapse {
   list-style-type: none;
   position: relative;

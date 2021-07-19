@@ -8,7 +8,11 @@
       appear
       tag="div"
     >
-      <div class="feedback" :key="0" v-if="(!hasVoted || prompt) && struct.length > 0">
+      <div
+        class="feedback"
+        :key="0"
+        v-if="(!hasVoted || prompt) && struct.length > 0"
+      >
         <v-btn
           elevation="6"
           dark
@@ -22,10 +26,7 @@
         </v-btn>
       </div>
     </transition-group>
-    <transition-group
-      @enter="popupEnter"
-      @leave="popupLeave"
-    >
+    <transition-group @enter="popupEnter" @leave="popupLeave">
       <div class="prompt" v-if="prompt && struct.length > 0" :key="0">
         <div v-if="!hasVoted">
           <div class="prompt-text">Was this packet decoded properly?</div>
@@ -51,17 +52,17 @@ export default {
   props: ["data", "struct"],
   methods: {
     vote(result) {
-      this.$store.commit('vote')
-      let hexPacket = this.data
+      this.$store.commit("vote");
+      let hexPacket = this.data;
       // Place for API call
       // To refrence hex value use hexPacket
       // Result argument stores a boolean value
-      console.log(hexPacket)
-      console.log(result)
+      console.log(hexPacket);
+      console.log(result);
     },
     showPrompt() {
-      console.log(this.$store.getters.getPrompt)
-      this.$store.commit('togglePrompt')
+      console.log(this.$store.getters.getPrompt);
+      this.$store.commit("togglePrompt");
     },
     slideBefore(el) {
       el.style.transform = "translateX(100px)";
@@ -104,12 +105,12 @@ export default {
   },
   computed: {
     hasVoted() {
-      return this.$store.getters.getVote
+      return this.$store.getters.getVote;
     },
     prompt() {
-      return this.$store.getters.getPrompt
-    }
-  }
+      return this.$store.getters.getPrompt;
+    },
+  },
 };
 </script>
 
@@ -143,27 +144,7 @@ export default {
   color: white;
   font-family: monospace, monospace;
 }
-.popup-enter-from {
-  height: 0;
-  width: 0;
-}
-.popup-enter-to {
-  height: 100px;
-  width: 100px;
-}
-.popup-enter-active {
-  transition: all 1s ease;
-}
 
-.feedbackSlide-enter-from {
-  transform: translateX(-30px);
-}
-.feedbackSlide-enter-to {
-  transform: translateX(0);
-}
-.feedbackSlide-active {
-  transition: all 1s ease;
-}
 .voted {
   padding: 37px;
 }
