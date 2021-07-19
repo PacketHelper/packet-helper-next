@@ -7,7 +7,7 @@ on: [push]
 
 jobs:
   push_to_registry:
-    name: Push Docker image to HerokuApp
+    name: Bump version of the code
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout repository
@@ -24,5 +24,4 @@ jobs:
           npm version patch --force
       - name: Commit changes
         run: |
-          git add app.json && git commit -m "Bump version"
           git push
