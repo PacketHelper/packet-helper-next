@@ -1,13 +1,14 @@
 {
-  "name": "Django VueJs Template",
+  "name": "Packet Helper Server (Next)",
   "description": "",
-  "repository": "https://github.com/gtalarico/django-vue-template",
+  "repository": "https://github.com/PacketHelper/packet-helper-next",
   "keywords": [
     "django",
     "vue",
     "vuejs",
     "template",
-    "django rest framework"
+    "packet helper",
+    "scapy"
   ],
   "env": {
     "DJANGO_SETTINGS_MODULE": {
