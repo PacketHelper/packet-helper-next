@@ -133,7 +133,9 @@
           </transition-group>
         </v-expansion-panels>
       </div>
-      <VotePrompt :data="hexValue" :struct="structure" v-if="structure.length > 0"></VotePrompt>
+      <transition-group name="slideLeave">
+        <VotePrompt :data="hexValue" :struct="structure" :key="0"></VotePrompt>
+      </transition-group>
     </v-container>
   </div>
 </template>
@@ -183,6 +185,7 @@ export default {
       this.hexValue = "";
       this.decode = false;
       this.resetData();
+      this.$store.commit('reset')
       await this.delay(0.6);
       this.alert = false;
       this.loading = false;
@@ -204,11 +207,11 @@ export default {
     async getPacket() {
       if (this.hexValue !== "undefined") {
         this.resetData();
+        this.$store.commit('reset')
         await this.delay(0.6);
         this.loading = true;
         this.alert = false;
         this.warning = false;
-        this.voted = false
         try {
           const hexResponse = await apiService.getHex(this.hexValue);
           this.structure = hexResponse["structure"];
@@ -331,6 +334,24 @@ export default {
         duration: 0.1
       })
     },
+    slideBefore(el) {
+      el.style.transform = "translateX(100px)";
+    },
+    slideEnter(el, done) {
+      gsap.to(el, {
+        x: 0,
+        duration: 0.5,
+        onComplete: done,
+      });
+    },
+    slideLeave(el, done) {
+      gsap.to(el, {
+        x: 100,
+        duration: 0.5,
+        delay: 0.5,
+        onComplete: done,
+      });
+    },
     expand() {
       this.panel = [...Array(this.structure.length).keys()]
       this.isExpanded = true
@@ -386,5 +407,19 @@ export default {
 }
 .data {
   position: absolute;
+}
+.test {
+  position: fixed;
+}
+@keyframes slide-l {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100px);
+  }
+}
+.slideLeave-leave-active {
+  animation: slide-l 0.5 ease;
 }
 </style>

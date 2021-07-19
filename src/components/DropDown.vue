@@ -23,8 +23,7 @@ export default {
     HandleClick(el) {
       this.toggle = !this.toggle;
 
-      // Pretty bad way to do this imo but
-      // couldn't come up with anything better
+      // Switches list styles
       if (this.toggle) el.explicitOriginalTarget.className = "expand";
       else el.explicitOriginalTarget.className = "collapse";
     },
@@ -85,16 +84,6 @@ export default {
   font-family: "Font Awesome 5 Free";
   content: "\f0dd";
 }
-/*
-.collapse::before {
-  content: "\f0da";
-  width: 10px;
-  height: 10px;
-  position: absolute;
-  left: 0;
-  top: -5%;
-}
-*/
 .v-expansion-panel {
   font-family: monospace, monospace;
 }

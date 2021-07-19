@@ -6,15 +6,16 @@
       @leave="slideLeave"
       mode="out-in"
       appear
+      tag="div"
     >
-      <div class="feedback" :key="0" v-if="!voted || showPrompt">
+      <div class="feedback" :key="0" v-if="(!hasVoted || prompt) && struct.length > 0">
         <v-btn
           elevation="6"
           dark
           fab
           large
           color="blue"
-          @click="showPrompt = !showPrompt"
+          @click="showPrompt"
           class="feedbackBtn"
         >
           <v-icon>mdi-thumb-up</v-icon>
@@ -25,8 +26,8 @@
       @enter="popupEnter"
       @leave="popupLeave"
     >
-      <div class="prompt" v-if="showPrompt" :key="0">
-        <div v-if="!voted">
+      <div class="prompt" v-if="prompt && struct.length > 0" :key="0">
+        <div v-if="!hasVoted">
           <div class="prompt-text">Was this packet decoded properly?</div>
           <v-btn class="vote" @click="vote(true)">
             <v-icon text icon color="green lighten-1"> mdi-thumb-up </v-icon>
@@ -48,21 +49,19 @@ import gsap from "gsap";
 
 export default {
   props: ["data", "struct"],
-  data() {
-    return {
-      voted: false,
-      showPrompt: false,
-    };
-  },
   methods: {
     vote(result) {
-      this.voted = true;
+      this.$store.commit('vote')
       let hexPacket = this.data
       // Place for API call
       // To refrence hex value use hexPacket
       // Result argument stores a boolean value
       console.log(hexPacket)
       console.log(result)
+    },
+    showPrompt() {
+      console.log(this.$store.getters.getPrompt)
+      this.$store.commit('togglePrompt')
     },
     slideBefore(el) {
       el.style.transform = "translateX(100px)";
@@ -99,7 +98,18 @@ export default {
         onComplete: done,
       });
     },
+    delay(seconds) {
+      return new Promise((res) => setTimeout(res, seconds * 1000));
+    },
   },
+  computed: {
+    hasVoted() {
+      return this.$store.getters.getVote
+    },
+    prompt() {
+      return this.$store.getters.getPrompt
+    }
+  }
 };
 </script>
 
