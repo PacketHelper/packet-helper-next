@@ -8,7 +8,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install dependencies
         run: |
-          npm install -g prettier
+          yarn add --dev --exact prettier
       - name: Verify code (js w/prettier)
         run: |
           prettier --check src/
