@@ -1,4 +1,4 @@
-name: Verify code
+name: Verify code (js)
 on: [push]
 
 jobs:
@@ -8,7 +8,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install dependencies
         run: |
-          pip install black
-      - name: Verify code
+          sudo npm install -g prettier
+      - name: Verify code (js w/prettier)
         run: |
-          black --check -t py38 backend/ test/
+          prettier --check src/

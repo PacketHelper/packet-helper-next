@@ -24,6 +24,7 @@ local-core: clean-local
 format:
 	@echo "Formatting..."
 	python -m black -t py38 backend/ test/
+	prettier --write src/
 	@echo "Formatting... Done"
 
 test:
