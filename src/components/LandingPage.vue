@@ -211,6 +211,7 @@ export default {
       this.hexValue = "";
       this.decode = false;
       this.resetData();
+      this.panel = [];
       await this.delay(0.6);
       this.alert = false;
       this.loading = false;
@@ -232,6 +233,7 @@ export default {
     async getPacket() {
       if (this.hexValue !== "undefined") {
         this.resetData();
+        this.panel = [];
         await this.delay(0.6);
         this.loading = true;
         this.alert = false;
