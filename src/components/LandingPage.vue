@@ -20,12 +20,7 @@
           <v-btn text @click="reset">Reset</v-btn>
           <v-spacer></v-spacer>
           <div v-if="structure">
-            <transition
-              @before-enter="beforeEnterButton"
-              @enter="enterButton"
-              @leave="leaveButton"
-              mode="out-in"
-            >
+            <v-slide-x-reverse-transition>
               <v-btn
                 v-if="structure.length > 0 && !isExpanded"
                 class="white--text"
@@ -42,7 +37,7 @@
               >
                 Collapse all
               </v-btn>
-            </transition>
+            </v-slide-x-reverse-transition>
           </div>
           <v-btn text @click="showExamples">Next Example</v-btn>
         </v-card-actions>
@@ -96,6 +91,7 @@
       </transition-group>
       <div class="wrapper" v-if="structure">
         <v-card
+          v-show="structure.length > 0"
           v-if="structure.length > 0"
           style="margin-top: 1rem"
           elevation="6"
