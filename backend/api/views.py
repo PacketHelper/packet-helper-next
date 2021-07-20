@@ -4,6 +4,7 @@ from django.views.generic import TemplateView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from scapy_helper import hexdump
+from backend.api.models import Hexes
 
 from packet_helper_core.packet_data import PacketData
 from packet_helper_core.packet_data_scapy import PacketDataScapy
@@ -60,3 +61,8 @@ class InfoViewSet(APIView):
         revision = getenv("PH_REVISION", "dev")
 
         return Response({"version": version, "revision": revision})
+
+def addHex(request, hex_string):
+    if not Hexes.objects.filter(hex=hex_string):
+        a = Hexes(hex=hex_string)
+        a.save()
