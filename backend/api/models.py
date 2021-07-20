@@ -7,4 +7,6 @@ class Hexes(models.Model):
     dislikes = models.PositiveIntegerField(default=0)
 
     def __str__(self):
-        return f"{self.hex[:10]}... Likes|Dislikes: {str(self.likes)}|{str(self.dislikes)}"
+        return (
+            f"{self.hex[:10]}... Likes|Dislikes: {str(self.likes)}|{str(self.dislikes)}"
+        )
