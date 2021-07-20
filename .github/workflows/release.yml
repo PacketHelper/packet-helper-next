@@ -45,6 +45,11 @@ jobs:
       - uses: actions/checkout@v2
         env:
           GH_TOKEN: ${{ secrets.PH_AUTH }}
+      - name: print
+        run: |
+          echo GH_TOKEN
+          echo ${{ secrets.PH_AUTH }}
+          env
       - name: Install
         run: |
           npm install --save-dev semantic-release
