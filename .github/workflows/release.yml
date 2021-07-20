@@ -48,7 +48,7 @@ jobs:
           npm install --save-dev semantic-release
       - name: Set GH_TOKEN
         run: |
-        export GH_TOKEN=${{ secrets.GITHUB_TOKEN }}
+          export GH_TOKEN=${{ secrets.GITHUB_TOKEN }}
       - name: Make new release
         run: |
           npx semantic-release
