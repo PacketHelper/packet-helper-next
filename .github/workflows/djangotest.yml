@@ -41,10 +41,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'versioning' }}
-    needs: |
-      verify-django
-      verify-js
-      verify-python
+    needs: [verify-django, verify-js, verify-python]
     steps:
       - uses: actions/checkout@v2
       - name: Install
