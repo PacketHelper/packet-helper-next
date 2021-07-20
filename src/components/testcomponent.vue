@@ -4,6 +4,7 @@
     <h2>test2</h2>
     <h2>test2</h2>
     <h2>test2</h2>
+    <h2>test2</h2>
   </div>
 </template>
 
