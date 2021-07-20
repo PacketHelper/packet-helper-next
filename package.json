@@ -28,6 +28,7 @@
     "eslint-plugin-prettier": "^3.4.0",
     "sass": "^1.32.12",
     "sass-loader": "^11.0.1",
+    "semantic-release": "^17.4.4",
     "vue-cli-plugin-vuetify": "~2.4.0",
     "vue-template-compiler": "^2.6.12"
   },
@@ -55,6 +56,9 @@
     "plugins": {
       "autoprefixer": {}
     }
+  },
+  "release": {
+    "branches": ["versioning"]
   },
   "browserslist": [
     "> 1%",
