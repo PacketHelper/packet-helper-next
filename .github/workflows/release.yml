@@ -43,12 +43,12 @@ jobs:
     needs: [verify-django, verify-js, verify-python]
     steps:
       - uses: actions/checkout@v2
-        env:
+        with:
           GH_TOKEN: ${{ secrets.PH_AUTH }}
       - name: print
         run: |
-          echo GH_TOKEN
-          echo ${{ secrets.PH_AUTH }}
+          echo "$GH_TOKEN"
+          echo ${{ secrets }}
           env
       - name: Install
         run: |
