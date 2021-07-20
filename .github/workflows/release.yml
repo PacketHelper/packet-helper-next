@@ -43,10 +43,11 @@ jobs:
     needs: [verify-django, verify-js, verify-python]
     steps:
       - uses: actions/checkout@v2
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Install
         run: |
           npm install --save-dev semantic-release
+      - name: Release new version
         run: |
           npx semantic-release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
