@@ -2,7 +2,7 @@ name: Run tests
 on: [push]
 
 jobs:
-  verify:
+  verify-django:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -18,3 +18,38 @@ jobs:
       - name: Run django test
         run: |
           make test
+  verify-js:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          sudo npm install -g prettier
+      - name: Verify code (js w/prettier)
+        run: |
+          prettier --check src/
+  verify-python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          pip install black
+      - name: Verify code (python w/black)
+        run: |
+          black --check -t py38 backend/ test/
+  release:
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'versioning' }}
+    needs: |
+      verify-django
+      verify-js
+      verify-python
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install
+        run: |
+          npm install --save-dev semantic-release
+      - name: Make new release
+        run: |
+          npx semantic-release
