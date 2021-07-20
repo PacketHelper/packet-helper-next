@@ -23,6 +23,7 @@
     "@vue/cli-plugin-babel": "^3.0.0-rc.12",
     "@vue/cli-plugin-eslint": "^3.0.0-rc.12",
     "@vue/cli-service": "^3.0.0-rc.12",
+    "cz-conventional-changelog": "3.3.0",
     "deepmerge": "^4.2.2",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
@@ -58,11 +59,18 @@
     }
   },
   "release": {
-    "branches": ["versioning"]
+    "branches": [
+      "versioning"
+    ]
   },
   "browserslist": [
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
 }
