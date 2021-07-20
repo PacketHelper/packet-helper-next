@@ -40,7 +40,6 @@ jobs:
           black --check -t py38 backend/ test/
   release:
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'versioning' }}
     needs: [verify-django, verify-js, verify-python]
     steps:
       - uses: actions/checkout@v2
