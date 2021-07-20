@@ -20,5 +20,5 @@ urlpatterns = [
     path("api/add", AddHexViewSet.as_view()),
     path("api/info", InfoViewSet.as_view()),
     path("api/packets", ScapyViewSet.as_view()),
-    path("api/create", CreateViewSet.as_view()),
+    path("api/create", CreateViewSet.as_view())
 ]
