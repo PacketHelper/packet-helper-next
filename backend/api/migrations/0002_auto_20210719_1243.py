@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0001_initial'),
+        ("api", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='hexes',
-            name='like',
+            model_name="hexes",
+            name="like",
             field=models.IntegerField(default=0),
         ),
         migrations.AlterField(
-            model_name='hexes',
-            name='unlike',
+            model_name="hexes",
+            name="unlike",
             field=models.IntegerField(default=0),
         ),
     ]

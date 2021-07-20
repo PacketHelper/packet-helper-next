@@ -62,6 +62,7 @@ class InfoViewSet(APIView):
 
         return Response({"version": version, "revision": revision})
 
+
 def addHex(request, hex_string):
     if not Hexes.objects.filter(hex=hex_string):
         a = Hexes(hex=hex_string)
