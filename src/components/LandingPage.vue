@@ -120,6 +120,7 @@
           multiple
           focusable
           style="margin-top: 1rem; width: auto; display: block"
+          v-model="panel"
         >
           <transition-group
             @before-enter="beforeEnter"
@@ -359,7 +360,7 @@ export default {
       });
     },
     expand() {
-      this.panel = [...Array(this.structure.length + 1).keys()];
+      this.panel = [...Array(this.structure.length).keys()];
       this.isExpanded = true;
     },
     collapse() {
@@ -385,7 +386,7 @@ export default {
   watch: {
     panel: function () {
       if (!this.panel.length) this.isExpanded = false;
-      else if (this.panel.length === this.structure.length + 1)
+      else if (this.panel.length === this.structure.length)
         this.isExpanded = true;
     },
   },
