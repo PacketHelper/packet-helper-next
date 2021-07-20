@@ -43,8 +43,6 @@ jobs:
     needs: [verify-django, verify-js, verify-python]
     steps:
       - uses: actions/checkout@v2
-        with:
-          GH_TOKEN: ${{ secrets.PH_AUTH }}
       - name: print
         run: |
           echo "$GH_TOKEN"
@@ -54,5 +52,8 @@ jobs:
         run: |
           npm install --save-dev semantic-release
       - name: Release new version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           npx semantic-release
