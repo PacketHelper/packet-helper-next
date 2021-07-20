@@ -44,7 +44,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.ph-versioning }}
       - name: Install
         run: |
           npm install --save-dev semantic-release
