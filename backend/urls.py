@@ -14,4 +14,6 @@ urlpatterns = [
     path("api/hex/<str:hex_string>", Hex2ViewSet.as_view(), addHex),
     path("api/info", InfoViewSet.as_view()),
     path("api/create", CreateViewSet.as_view()),
+    path("api/hex/<str:hex_string>/like", Hex2ViewSet.as_view(), like),
+    path("api/hex/<str:hex_string>/unlike", Hex2ViewSet.as_view(), dislike),
 ]
