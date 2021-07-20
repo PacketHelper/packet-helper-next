@@ -19,6 +19,31 @@
           <v-btn color="primary" @click="goToHex" large>Decode</v-btn>
           <v-btn text @click="reset">Reset</v-btn>
           <v-spacer></v-spacer>
+          <div v-if="structure">
+            <transition
+              @before-enter="beforeEnterButton"
+              @enter="enterButton"
+              @leave="leaveButton"
+              mode="out-in"
+            >
+              <v-btn
+                v-if="structure.length > 0 && !isExpanded"
+                class="white--text"
+                color="indigo"
+                @click="expand"
+              >
+                Expand all
+              </v-btn>
+              <v-btn
+                v-else-if="structure.length > 0"
+                class="white--text"
+                color="indigo"
+                @click="collapse"
+              >
+                Collapse all
+              </v-btn>
+            </transition>
+          </div>
           <v-btn text @click="showExamples">Next Example</v-btn>
         </v-card-actions>
       </v-card>
@@ -95,6 +120,7 @@
           multiple
           focusable
           style="margin-top: 1rem; width: auto; display: block"
+          v-model="panel"
         >
           <transition-group
             @before-enter="beforeEnter"
@@ -109,6 +135,31 @@
               :data-index="index + 1"
               @warning="handleWarning"
             ></Display>
+            <div
+              class="rating"
+              v-if="structure && 0"
+              :key="structure.length + 1"
+              :data-index="structure.length + 1"
+            >
+              <v-alert v-if="structure.length > 0" dismissible>
+                <div v-if="!voted">
+                  <v-card-text>Was this packet decoded properly?</v-card-text>
+                  <v-btn class="vote" @click="vote(true)">
+                    <v-icon text icon color="blue lighten-2">
+                      mdi-thumb-up
+                    </v-icon>
+                  </v-btn>
+                  <v-btn class="vote" @click="vote(false)">
+                    <v-icon text icon color="red lighten-2">
+                      mdi-thumb-down
+                    </v-icon>
+                  </v-btn>
+                </div>
+                <div v-else>
+                  <v-card-text>Thanks for feedback!</v-card-text>
+                </div>
+              </v-alert>
+            </div>
           </transition-group>
         </v-expansion-panels>
       </div>
@@ -135,6 +186,9 @@ export default {
       header: [],
       alert: false,
       warning: false,
+      panel: [],
+      isExpanded: false,
+      voted: false,
     };
   },
   methods: {
@@ -157,10 +211,12 @@ export default {
       this.hexValue = "";
       this.decode = false;
       this.resetData();
+      this.panel = [];
       await this.delay(0.6);
       this.alert = false;
       this.loading = false;
       this.warning = false;
+      this.voted = false;
       this.$router.replace("/hex/");
     },
     resetData() {
@@ -177,10 +233,12 @@ export default {
     async getPacket() {
       if (this.hexValue !== "undefined") {
         this.resetData();
+        this.panel = [];
         await this.delay(0.6);
         this.loading = true;
         this.alert = false;
         this.warning = false;
+        this.voted = false;
         try {
           const hexResponse = await MessageService.getHex(this.hexValue);
           this.structure = hexResponse["structure"];
@@ -285,6 +343,38 @@ export default {
         onComplete: done,
       });
     },
+    beforeEnterButton(el) {
+      el.style.opacity = 0;
+      el.style.transform = "translateY(10px)";
+    },
+    enterButton(el) {
+      gsap.to(el, {
+        opacity: 1,
+        y: 0,
+        duration: 0.1,
+      });
+    },
+    leaveButton(el) {
+      gsap.to(el, {
+        opacity: 0,
+        y: 10,
+        duration: 0.1,
+      });
+    },
+    expand() {
+      this.panel = [...Array(this.structure.length).keys()];
+      this.isExpanded = true;
+    },
+    collapse() {
+      this.panel = [];
+      this.isExpanded = false;
+    },
+    vote(result) {
+      this.voted = true;
+      // Place for API call
+      // To refrence hex value use this.hexValue
+      // result argument stores a boolean value
+    },
   },
   mounted() {
     this.read();
@@ -294,6 +384,13 @@ export default {
       this.showPacket();
       this.getPacket();
     }
+  },
+  watch: {
+    panel: function () {
+      if (!this.panel.length) this.isExpanded = false;
+      else if (this.panel.length === this.structure.length)
+        this.isExpanded = true;
+    },
   },
 };
 </script>
