@@ -65,5 +65,17 @@ class InfoViewSet(APIView):
 
 def addHex(request, hex_string):
     if not Hexes.objects.filter(hex=hex_string):
-        a = Hexes(hex=hex_string)
-        a.save()
+        newHex = Hexes(hex=hex_string)
+        newHex.save()
+
+
+def like(request, hex_string):
+    hex = Hexes.objects.get(hex=hex_string)
+    hex.likes += 1
+    hex.save()
+
+
+def dislike(request, hex_string):
+    hex = Hexes.objects.get(hex=hex_string)
+    hex.dislikes += 1
+    hex.save()
