@@ -139,7 +139,6 @@
           </transition-group>
         </v-expansion-panels>
       </div>
-    <VotePrompt :data="hexValue" :struct="structure" :key="0"></VotePrompt>
     </v-container>
   </div>
 </template>
@@ -148,12 +147,11 @@
 import apiService from "../services/apiService.js";
 import Display from "./Display.vue";
 import DropDown from "./DropDown.vue";
-import VotePrompt from "./VotePrompt.vue";
 import gsap from "gsap";
 
 export default {
   name: "LandingPage",
-  components: { Display, DropDown, VotePrompt },
+  components: { Display, DropDown },
   data() {
     return {
       hexValue: "",
@@ -189,7 +187,6 @@ export default {
       this.hexValue = "";
       this.decode = false;
       this.resetData();
-      this.$store.commit("reset");
       await this.delay(0.6);
       this.alert = false;
       this.loading = false;
@@ -211,7 +208,6 @@ export default {
     async getPacket() {
       if (this.hexValue !== "undefined") {
         this.resetData();
-        this.$store.commit("reset");
         await this.delay(0.6);
         this.loading = true;
         this.alert = false;
