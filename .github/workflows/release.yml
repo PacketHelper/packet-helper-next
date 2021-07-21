@@ -51,7 +51,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release
-      - name: [DEBUG] Get all tags
+      - name: Get all tags
         run: git tag | head
       - name: Update the version in repo
         run: git tag | awk 'END{print}' > VERSION
