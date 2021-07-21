@@ -56,14 +56,11 @@
       "autoprefixer": {}
     }
   },
-<<<<<<< HEAD
-=======
   "release": {
     "branches": [
       "main"
     ]
   },
->>>>>>> b00cbb9 (ci(github actions): add versioning)
   "browserslist": [
     "> 1%",
     "last 2 versions",
