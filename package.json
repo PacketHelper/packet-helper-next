@@ -20,14 +20,20 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
+    "@commitlint/cli": "^12.1.4",
+    "@commitlint/config-conventional": "^12.1.4",
     "@vue/cli-plugin-babel": "^3.0.0-rc.12",
     "@vue/cli-plugin-eslint": "^3.0.0-rc.12",
     "@vue/cli-service": "^3.0.0-rc.12",
+    "commitizen": "^4.2.4",
+    "cz-conventional-changelog": "3.3.0",
     "deepmerge": "^4.2.2",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
+    "husky": "^7.0.1",
     "sass": "^1.32.12",
     "sass-loader": "^11.0.1",
+    "semantic-release": "^17.4.4",
     "vue-cli-plugin-vuetify": "~2.4.0",
     "vue-template-compiler": "^2.6.12"
   },
