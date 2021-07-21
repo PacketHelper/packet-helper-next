@@ -38,23 +38,17 @@ jobs:
       - name: Verify code (python w/black)
         run: |
           black --check -t py38 backend/ test/
+          echo ${{ github.ref }}
   release:
     if: ${{ github.ref == 'versioning' }}
     runs-on: ubuntu-latest
     needs: [verify-django, verify-js, verify-python]
     steps:
       - uses: actions/checkout@v2
-      - name: print
-        run: |
-          echo "$GH_TOKEN"
-          echo ${{ secrets }}
-          env
       - name: Install
-        run: |
-          npm install --save-dev semantic-release
+        run: npm install --save-dev semantic-release
       - name: Release new version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          npx semantic-release
+        run: npx semantic-release
