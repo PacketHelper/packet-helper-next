@@ -37,7 +37,7 @@
       </v-main>
 
       <v-footer app>
-        Packet Helper v{{ this.version }}.<small> ({{ this.revision }})</small>
+        Packet Helper {{ this.version }} <small> ({{ this.revision }})</small>
       </v-footer>
     </v-app>
   </div>

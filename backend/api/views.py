@@ -52,11 +52,19 @@ class Hex2ViewSet(APIView):
 
 class InfoViewSet(APIView):
     def get(self, request, format=None):
-        with open("VERSION") as version_file:
-            version = version_file.read()
-
         from os import getenv
+        import requests
 
+        # Personal Access Token is needed
+        # as long as repo is private
+        token = getenv("PAT_TOKEN")
+        version = "Couldn't fetch version data"
+        res = requests.get(
+            "https://api.github.com/repos/PacketHelper/packet-helper-next/releases/latest",
+            headers={"Authorization": f"token {token}"},
+        )
+        if res.ok:
+            version = res.json()["name"]
         revision = getenv("PH_REVISION", "dev")
 
         return Response({"version": version, "revision": revision})

@@ -1,0 +1,53 @@
+name: Run tests
+on: [push]
+
+jobs:
+  verify-django:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Python dependencies (pip)
+        run: |
+          pip install -r requirements.txt
+      - name: Install Wireshark & tshark  (apt)
+        run: |
+          export DEBIAN_FRONTEND=noninteractive
+          sudo apt-get update
+          sudo apt-get -y install wireshark
+          sudo apt-get install -y --allow-change-held-packages --force-yes tshark
+      - name: Run django test
+        run: |
+          make test
+  verify-js:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          sudo npm install -g prettier
+      - name: Verify code (js w/prettier)
+        run: |
+          prettier --check src/
+  verify-python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          pip install black
+      - name: Verify code (python w/black)
+        run: |
+          black --check -t py38 backend/ test/
+  release:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    needs: [verify-django, verify-js, verify-python]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install
+        run: npm install --save-dev semantic-release
+      - name: Release new version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx semantic-release
