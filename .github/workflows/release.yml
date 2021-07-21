@@ -38,7 +38,6 @@ jobs:
       - name: Verify code (python w/black)
         run: |
           black --check -t py38 backend/ test/
-          echo ${{ github.ref }}
   release:
     if: ${{ github.ref == 'refs/heads/versioning' }}
     runs-on: ubuntu-latest
@@ -52,3 +51,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release
+      - name: [DEBUG] Get all tags
+          run: git tag
+      - name: Update the version in repo
+          run: git tag | awk 'END{print}' > VERSION
