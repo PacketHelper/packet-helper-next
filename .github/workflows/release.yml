@@ -52,6 +52,6 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release
       - name: [DEBUG] Get all tags
-          run: git tag
+        run: git tag | head
       - name: Update the version in repo
-          run: git tag | awk 'END{print}' > VERSION
+        run: git tag | awk 'END{print}' > VERSION
