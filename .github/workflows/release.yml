@@ -39,6 +39,7 @@ jobs:
         run: |
           black --check -t py38 backend/ test/
   release:
+    if: { { github.ref == 'versioning' } }
     runs-on: ubuntu-latest
     needs: [verify-django, verify-js, verify-python]
     steps:
