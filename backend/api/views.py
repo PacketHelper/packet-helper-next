@@ -57,14 +57,16 @@ class InfoViewSet(APIView):
 
         # Personal Access Token is needed
         # as long as repo is private
-        token = getenv("PAT_TOKEN")
-        version = "Couldn't fetch version data"
+        token = getenv("PAT_TOKEN", False)
+        revision = getenv("PH_REVISION", "dev")
+        if not token:
+            return Response({"version": "unknown", "revision": revision})
+        version = "unknown"
         res = requests.get(
             "https://api.github.com/repos/PacketHelper/packet-helper-next/releases/latest",
             headers={"Authorization": f"token {token}"},
         )
         if res.ok:
             version = res.json()["name"]
-        revision = getenv("PH_REVISION", "dev")
 
         return Response({"version": version, "revision": revision})
