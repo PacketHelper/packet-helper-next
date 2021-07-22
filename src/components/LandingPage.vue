@@ -18,6 +18,11 @@
           </v-btn>
           <v-btn color="primary" @click="goToHex" large>Decode</v-btn>
           <v-btn text @click="reset">Reset</v-btn>
+          <v-checkbox
+            v-model="expandOnLoad"
+            :value="expandOnLoad"
+            :label="`Expand on load?`"
+          ></v-checkbox>
           <v-spacer></v-spacer>
           <div v-if="structure">
             <v-slide-x-reverse-transition>
@@ -185,6 +190,7 @@ export default {
       panel: [],
       isExpanded: false,
       voted: false,
+      expandOnLoad: true,
     };
   },
   methods: {
@@ -250,6 +256,10 @@ export default {
         this.loading = false;
         this.alert = false;
         this.packData();
+        if (this.expandOnLoad) {
+          this.panel = [...Array(this.structure.length).keys()];
+          this.$router.push({ query: { expand: "true" } });
+        } else this.$router.push({ query: { expand: "false" } });
       }
     },
     packData() {
@@ -380,12 +390,17 @@ export default {
       this.showPacket();
       this.getPacket();
     }
+    if (this.$route.query.expand == "true") this.expandOnLoad = true;
+    else this.expandOnLoad = false;
   },
   watch: {
     panel: function () {
       if (!this.panel.length) this.isExpanded = false;
       else if (this.panel.length === this.structure.length)
         this.isExpanded = true;
+    },
+    route: function () {
+      console.log(this.$route);
     },
   },
 };
