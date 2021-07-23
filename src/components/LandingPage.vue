@@ -162,6 +162,7 @@
               </v-alert>
             </div>
           </transition-group>
+          <ShareButton :struct="structure"></ShareButton>
         </v-expansion-panels>
       </div>
     </v-container>
@@ -172,11 +173,12 @@
 import MessageService from "../services/apiService.js";
 import Display from "./Display.vue";
 import DropDown from "./DropDown.vue";
+import ShareButton from "./ShareButton.vue";
 import gsap from "gsap";
 
 export default {
   name: "LandingPage",
-  components: { Display, DropDown },
+  components: { Display, DropDown, ShareButton },
   data() {
     return {
       hexValue: "",
@@ -236,6 +238,7 @@ export default {
       if (this.hexValue !== "undefined") {
         this.resetData();
         this.panel = [];
+        this.$store.commit("reset");
         await this.delay(0.6);
         this.loading = true;
         this.alert = false;
