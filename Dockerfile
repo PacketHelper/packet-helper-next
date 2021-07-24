@@ -34,6 +34,10 @@ COPY --from=build-stage /app/dist dist
 # Set ENV's
 ARG PH_REV
 ENV PH_REVISION=${PH_REV}
+
+ARG PH_VER
+ENV PH_VERSION=${PH_VER}
+
 ENV DJANGO_SETTINGS_MODULE="backend.settings.prod"
 # Run the app.  CMD is required to run on Heroku
 # $PORT is set by Heroku
