@@ -47,7 +47,7 @@ export default {
   props: ["data", "struct"],
   data() {
     return {
-      link: "next.packet-helper.com" + this.$route.fullPath,
+      link: "next.packethelper.com" + this.$route.fullPath,
       time: 0,
       inter: null,
     };
@@ -112,7 +112,7 @@ export default {
   },
   watch: {
     "$route.fullPath": function () {
-      this.link = "next.packet-helper.com" + this.$route.fullPath;
+      this.link = "next.packethelper.com" + this.$route.fullPath;
     },
   },
 };
