@@ -238,7 +238,7 @@ export default {
       if (this.hexValue !== "undefined") {
         this.resetData();
         this.panel = [];
-        this.$store.commit("reset");
+        this.$store.commit("hideAlert");
         await this.delay(0.6);
         this.loading = true;
         this.alert = false;

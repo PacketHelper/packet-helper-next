@@ -8,41 +8,34 @@
       appear
       tag="div"
     >
-      <div class="feedback" :key="0" v-if="struct.length > 0">
+      <div class="share" :key="0" v-if="struct.length > 0">
         <v-btn
           elevation="6"
           dark
-          fab
           large
           color="blue"
-          @click="showPrompt"
-          class="feedbackBtn"
+          @click="handleCopy"
+          class="shareBtn"
         >
-          <v-icon>fa-share</v-icon>
+          <v-icon>mdi-content-copy</v-icon> Copy link
         </v-btn>
       </div>
     </transition-group>
-    <transition-group @enter="popupEnter" @leave="popupLeave">
-      <div class="prompt" v-if="prompt" :key="1">
-        <div class="shareTitle">Share this packet</div>
-        <div class="shareLabel">Share link</div>
-        <div class="shareprompt">
-          <v-text-field
-            solo
-            dense
-            outlined
-            readonly
-            background-color="#ddd"
-            label="Link to share"
-            :value="link"
-          ></v-text-field>
-        </div>
-        <div class="copyBtn">
-          <v-btn outlined height="30px" @click="copy" width="130px"
-            ><div v-if="!copied">Copy link</div>
-            <v-icon v-else color="green">mdi-check</v-icon></v-btn
-          >
-        </div>
+    <transition-group @enter="slide2Enter" @leave="slide2Leave">
+      <div class="alert" v-if="alert" :key="1">
+        <v-alert border="left" type="success" width="300px"
+          ><div class="closeWindow" @click="handleClose">
+            <v-icon>mdi-close</v-icon>
+          </div>
+          Link has been copied
+          <div class="progress">
+            <v-progress-linear
+              class="progress"
+              :value="time"
+              color="error"
+            ></v-progress-linear>
+          </div>
+        </v-alert>
       </div>
     </transition-group>
   </div>
@@ -55,21 +48,32 @@ export default {
   data() {
     return {
       link: "next.packet-helper.com" + this.$route.fullPath,
-      copied: false,
+      time: 0,
+      inter: null,
     };
   },
   methods: {
-    showPrompt() {
-      console.log(this.link);
-      this.$store.commit("togglePrompt");
-      this.copied = false;
-    },
-    async copy(el) {
+    async handleCopy() {
       await navigator.clipboard.writeText(this.link);
-      this.copied = true;
+      this.time = 110;
+      if (!this.$store.getters.getAlert) {
+        this.inter = setInterval(() => {
+          this.time -= 5;
+          if (this.time < -20) {
+            console.log("end time");
+            clearInterval(this.inter);
+            this.$store.commit("hideAlert");
+          }
+        }, 100);
+      }
+      this.$store.commit("showAlert");
+    },
+    handleClose() {
+      this.$store.commit("hideAlert");
+      clearInterval(this.inter);
     },
     slideBefore(el) {
-      el.style.transform = "translateX(100px)";
+      el.style.transform = "translateX(200px)";
     },
     slideEnter(el, done) {
       gsap.to(el, {
@@ -80,99 +84,67 @@ export default {
     },
     slideLeave(el, done) {
       gsap.to(el, {
-        x: 100,
+        x: 200,
         duration: 0.5,
         delay: 0.5,
         onComplete: done,
       });
     },
-    popupBefore(el) {
-      el.style.transform = "scale(0)";
-    },
-    popupEnter(el, done) {
+    slide2Enter(el, done) {
       gsap.to(el, {
-        scale: 1,
+        y: 0,
         duration: 0.4,
         onComplete: done,
       });
     },
-    popupLeave(el, done) {
+    slide2Leave(el, done) {
       gsap.to(el, {
-        scale: 0,
+        y: 200,
         duration: 0.4,
         onComplete: done,
       });
-    },
-    delay(seconds) {
-      return new Promise((res) => setTimeout(res, seconds * 1000));
     },
   },
   computed: {
-    hasVoted() {
-      return this.$store.getters.getVote;
+    alert() {
+      return this.$store.getters.getAlert;
     },
-    prompt() {
-      return this.$store.getters.getPrompt;
+  },
+  watch: {
+    "$route.fullPath": function () {
+      this.link = "next.packet-helper.com" + this.$route.fullPath;
     },
   },
 };
 </script>
 
 <style>
-.rating {
-  text-align: center;
-  margin-top: 0.15rem;
-}
-.vote {
-  margin: 0 5px 10px 5px;
-}
-.feedback {
+.share {
   position: fixed;
-  top: 88vh;
+  top: 90vh;
   right: 1rem;
   z-index: 1;
 }
-.prompt {
+.alert {
   z-index: 0;
-  text-align: center;
-  overflow: hidden;
-  height: 150px;
-  width: 400px;
   position: fixed;
-  top: 78vh;
-  right: 1.9rem;
-  transform-origin: bottom right;
-  transform: scale(0);
-  border-radius: 8px;
-  font-family: monospace, monospace;
-  border: 1px solid;
-  background: white;
+  transform: translateY(200px);
+  top: 87vh;
+  right: 50rem;
 }
-.voted {
-  padding: 37px;
-}
-.prompt-text {
+.alert-text {
   font-size: 13px;
   padding-top: 15px;
   padding-bottom: 10px;
 }
-.shareprompt {
-  display: flex;
-  padding: 5px 5px 0 5px;
+.progress {
+  margin: 0px -42px 0px -27px;
+  padding: 0px;
+  top: 16px;
 }
-.copyBtn {
-  text-align: left;
-  margin-top: -20px;
-  padding-left: 5px;
-  padding-top: 5px;
-}
-.shareLabel {
-  text-align: right;
-  padding-right: 10px;
-  margin-bottom: -8px;
-  font-size: 14px;
-}
-.shareTitle {
-  padding-top: 6px;
+.closeWindow {
+  position: fixed;
+  right: 0.2rem;
+  cursor: pointer;
 }
 </style>

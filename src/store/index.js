@@ -5,27 +5,22 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    voted: false,
-    showPrompt: false,
+    showAlert: false,
   },
   mutations: {
-    togglePrompt(state) {
-      state.showPrompt = !state.showPrompt;
+    showAlert(state) {
+      state.showAlert = true;
     },
-    reset(state) {
-      state.showPrompt = false;
-      state.voted = false;
-    },
-    vote(state) {
-      state.voted = true;
+    hideAlert(state) {
+      state.showAlert = false;
     },
   },
   getters: {
     getVote(state) {
       return state.voted;
     },
-    getPrompt(state) {
-      return state.showPrompt;
+    getAlert(state) {
+      return state.showAlert;
     },
   },
 });
