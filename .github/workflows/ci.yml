@@ -1,8 +1,9 @@
-name: Run tests
+name: CI
 on: [push]
 
 jobs:
   verify-django:
+    name: Django tests (backend)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -19,6 +20,7 @@ jobs:
         run: |
           make test
   verify-js:
+    name: JS code verification (frontend)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -29,6 +31,7 @@ jobs:
         run: |
           prettier --check src/
   verify-python:
+    name: Python code verification (backend)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -39,6 +42,7 @@ jobs:
         run: |
           black --check -t py38 backend/ test/
   release:
+    name: Prepare release
     if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     needs: [verify-django, verify-js, verify-python]
@@ -50,3 +54,25 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release
+  push_to_registry:
+    name: Push Docker image to HerokuApp
+    if: ${{ github.ref == 'refs/heads/main' }}
+    needs: [verify-django, verify-js, verify-python, release]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Add SHORT_SHA env property with commit short sha
+        run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+      - name: Login to Heroku Container registry
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:login
+      - name: Build and push
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:push web -a packet-helper-staging --arg PH_REV=${SHORT_SHA}
+      - name: Release
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:release web -a packet-helper-staging
