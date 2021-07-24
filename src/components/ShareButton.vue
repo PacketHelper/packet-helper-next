@@ -56,11 +56,11 @@ export default {
     async handleCopy() {
       await navigator.clipboard.writeText(this.link);
       this.time = 110;
+      // Starts timer when alert is hidden
       if (!this.$store.getters.getAlert) {
         this.inter = setInterval(() => {
           this.time -= 5;
           if (this.time < -20) {
-            console.log("end time");
             clearInterval(this.inter);
             this.$store.commit("hideAlert");
           }

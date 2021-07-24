@@ -136,31 +136,6 @@
               :data-index="index + 1"
               @warning="handleWarning"
             ></Display>
-            <div
-              class="rating"
-              v-if="structure && 0"
-              :key="structure.length + 1"
-              :data-index="structure.length + 1"
-            >
-              <v-alert v-if="structure.length > 0" dismissible>
-                <div v-if="!voted">
-                  <v-card-text>Was this packet decoded properly?</v-card-text>
-                  <v-btn class="vote" @click="vote(true)">
-                    <v-icon text icon color="blue lighten-2">
-                      mdi-thumb-up
-                    </v-icon>
-                  </v-btn>
-                  <v-btn class="vote" @click="vote(false)">
-                    <v-icon text icon color="red lighten-2">
-                      mdi-thumb-down
-                    </v-icon>
-                  </v-btn>
-                </div>
-                <div v-else>
-                  <v-card-text>Thanks for feedback!</v-card-text>
-                </div>
-              </v-alert>
-            </div>
           </transition-group>
           <ShareButton :struct="structure"></ShareButton>
         </v-expansion-panels>
@@ -401,9 +376,6 @@ export default {
       if (!this.panel.length) this.isExpanded = false;
       else if (this.panel.length === this.structure.length)
         this.isExpanded = true;
-    },
-    route: function () {
-      console.log(this.$route);
     },
   },
 };
