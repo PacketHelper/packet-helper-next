@@ -18,6 +18,7 @@
             >
           </v-toolbar>
         </v-container>
+        <small id="version">{{ this.version }}.{{ this.revision }}</small>
       </v-app-bar>
 
       <v-main>
@@ -35,10 +36,6 @@
           </v-container>
         </v-container>
       </v-main>
-
-      <v-footer app>
-        Packet Helper {{ this.version }} <small> ({{ this.revision }})</small>
-      </v-footer>
     </v-app>
   </div>
 </template>
@@ -67,4 +64,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+#version {
+  color: grey;
+}
+</style>

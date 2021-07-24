@@ -1,3 +1,5 @@
+from os import getenv
+
 from django.shortcuts import redirect
 from django.views.decorators.cache import never_cache
 from django.views.generic import TemplateView
@@ -52,21 +54,20 @@ class Hex2ViewSet(APIView):
 
 class InfoViewSet(APIView):
     def get(self, request, format=None):
-        from os import getenv
-        import requests
+        # import requests
 
         # Personal Access Token is needed
         # as long as repo is private
-        token = getenv("PAT_TOKEN", False)
+        # token = getenv("PAT_TOKEN", False)
         revision = getenv("PH_REVISION", "dev")
-        if not token:
-            return Response({"version": "unknown", "revision": revision})
-        version = "unknown"
-        res = requests.get(
-            "https://api.github.com/repos/PacketHelper/packet-helper-next/releases/latest",
-            headers={"Authorization": f"token {token}"},
-        )
-        if res.ok:
-            version = res.json()["name"]
+        # if not token:
+        #     return Response({"version": "unknown", "revision": revision})
+        # version = "unknown"
+        # res = requests.get(
+        #     "https://api.github.com/repos/PacketHelper/packet-helper-next/releases/latest",
+        #     headers={"Authorization": f"token {token}"},
+        # )
+        # if res.ok:
+        #     version = res.json()["name"]
 
-        return Response({"version": version, "revision": revision})
+        return Response({"version": "1.0", "revision": revision})
