@@ -26,22 +26,22 @@
       <v-expansion-panel-content>
         <v-card-text>
           <ul>
-            <li>Packet length: {{ data.length }}{{ data.length_unit }}</li>
-            <DropDown>
-              <template v-slot:title>
-                <b>
-                  <li class="collapse">Scapy code representation:</li>
-                  <i class="fa-li fa fa-caret-right"></i
-                ></b>
-              </template>
-              <template v-slot:content>
-                <ul>
-                  <li>
-                    <code>{{ data.repr }}</code>
-                  </li>
-                </ul>
-              </template>
-            </DropDown>
+            <!-- LAYER SUMMARY -->
+            <h4>Layer summary</h4>
+            <v-divider></v-divider>
+            Packet length:
+            {{
+              data.length
+            }}{{
+              data.length_unit
+            }}
+            <br />
+
+            <!-- TSHARK INFORMATION -->
+            <br />
+            <h4>Layer info <small>tshark</small></h4>
+            <v-divider></v-divider>
+
             <div v-if="sortedData">
               <div
                 class="raw-data"
@@ -111,6 +111,17 @@
             <div v-else>
               <h3>An unknown error has occured</h3>
             </div>
+
+            <!-- SCAPY INFORMATION -->
+            <br />
+            <h4>Layer info <small>scapy</small></h4>
+            <v-divider></v-divider>
+            Scapy code representation:
+            <ul>
+              <li>
+                <code>{{ data.repr }}</code>
+              </li>
+            </ul>
           </ul>
         </v-card-text>
       </v-expansion-panel-content>
