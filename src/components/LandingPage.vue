@@ -18,6 +18,11 @@
           </v-btn>
           <v-btn color="primary" @click="goToHex" large>Decode</v-btn>
           <v-btn text @click="reset">Reset</v-btn>
+          <v-checkbox
+            v-model="expandOnLoad"
+            :value="expandOnLoad"
+            :label="`Expand on load?`"
+          ></v-checkbox>
           <v-spacer></v-spacer>
           <div v-if="structure">
             <v-slide-x-reverse-transition>
@@ -131,32 +136,8 @@
               :data-index="index + 1"
               @warning="handleWarning"
             ></Display>
-            <div
-              class="rating"
-              v-if="structure && 0"
-              :key="structure.length + 1"
-              :data-index="structure.length + 1"
-            >
-              <v-alert v-if="structure.length > 0" dismissible>
-                <div v-if="!voted">
-                  <v-card-text>Was this packet decoded properly?</v-card-text>
-                  <v-btn class="vote" @click="vote(true)">
-                    <v-icon text icon color="blue lighten-2">
-                      mdi-thumb-up
-                    </v-icon>
-                  </v-btn>
-                  <v-btn class="vote" @click="vote(false)">
-                    <v-icon text icon color="red lighten-2">
-                      mdi-thumb-down
-                    </v-icon>
-                  </v-btn>
-                </div>
-                <div v-else>
-                  <v-card-text>Thanks for feedback!</v-card-text>
-                </div>
-              </v-alert>
-            </div>
           </transition-group>
+          <ShareButton :struct="structure"></ShareButton>
         </v-expansion-panels>
       </div>
     </v-container>
@@ -167,11 +148,12 @@
 import MessageService from "../services/apiService.js";
 import Display from "./Display.vue";
 import DropDown from "./DropDown.vue";
+import ShareButton from "./ShareButton.vue";
 import gsap from "gsap";
 
 export default {
   name: "LandingPage",
-  components: { Display, DropDown },
+  components: { Display, DropDown, ShareButton },
   data() {
     return {
       hexValue: "",
@@ -185,6 +167,7 @@ export default {
       panel: [],
       isExpanded: false,
       voted: false,
+      expandOnLoad: true,
     };
   },
   methods: {
@@ -230,6 +213,7 @@ export default {
       if (this.hexValue !== "undefined") {
         this.resetData();
         this.panel = [];
+        this.$store.commit("hideAlert");
         await this.delay(0.6);
         this.loading = true;
         this.alert = false;
@@ -250,6 +234,10 @@ export default {
         this.loading = false;
         this.alert = false;
         this.packData();
+        if (this.expandOnLoad) {
+          this.panel = [...Array(this.structure.length).keys()];
+          this.$router.push({ query: { expand: "true" } });
+        } else this.$router.push({ query: { expand: "false" } });
       }
     },
     packData() {
@@ -380,6 +368,8 @@ export default {
       this.showPacket();
       this.getPacket();
     }
+    if (this.$route.query.expand == "true") this.expandOnLoad = true;
+    else this.expandOnLoad = false;
   },
   watch: {
     panel: function () {
