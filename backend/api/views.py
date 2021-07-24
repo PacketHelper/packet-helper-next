@@ -54,20 +54,8 @@ class Hex2ViewSet(APIView):
 
 class InfoViewSet(APIView):
     def get(self, request, format=None):
-        # import requests
+        git_tag = getenv("PH_VERSION", "v1.0.0")
+        # by the default we transfer here a 8 char's
+        git_sha = getenv("PH_REVISION", "dev00000")
 
-        # Personal Access Token is needed
-        # as long as repo is private
-        # token = getenv("PAT_TOKEN", False)
-        revision = getenv("PH_REVISION", "dev")
-        # if not token:
-        #     return Response({"version": "unknown", "revision": revision})
-        # version = "unknown"
-        # res = requests.get(
-        #     "https://api.github.com/repos/PacketHelper/packet-helper-next/releases/latest",
-        #     headers={"Authorization": f"token {token}"},
-        # )
-        # if res.ok:
-        #     version = res.json()["name"]
-
-        return Response({"version": "1.0", "revision": revision})
+        return Response({"version": git_tag, "revision": git_sha})

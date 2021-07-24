@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(SETTINGS_DIR)
 SECRET_KEY = "verybadsecret!!!"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
 
