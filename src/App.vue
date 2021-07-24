@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import MessageService from "@/services/apiService";
+import ApiService from "@/services/apiService";
 
 export default {
   name: "Info",
@@ -56,7 +56,7 @@ export default {
   },
   methods: {
     async getInfo() {
-      const info = await MessageService.getInfo();
+      const info = await ApiService.getInfo();
       this.version = info["version"];
       this.revision = info["revision"];
     },
