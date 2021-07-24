@@ -368,8 +368,7 @@ export default {
       this.showPacket();
       this.getPacket();
     }
-    if (this.$route.query.expand == "true") this.expandOnLoad = true;
-    else this.expandOnLoad = false;
+    this.expandOnLoad = this.$route.query.expand === "true";
   },
   watch: {
     panel: function () {
