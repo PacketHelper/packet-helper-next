@@ -3,6 +3,7 @@ on: [push]
 
 jobs:
   verify-django:
+    name: Django tests (backend)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -19,6 +20,7 @@ jobs:
         run: |
           make test
   verify-js:
+    name: JS code verification (frontend)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -29,6 +31,7 @@ jobs:
         run: |
           prettier --check src/
   verify-python:
+    name: Python code verification (backend)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -39,6 +42,7 @@ jobs:
         run: |
           black --check -t py38 backend/ test/
   release:
+    name: Prepare release
     if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     needs: [verify-django, verify-js, verify-python]
