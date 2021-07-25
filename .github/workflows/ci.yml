@@ -64,7 +64,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Add SHORT_SHA env property with commit short sha
         run: |
-          echo "GIT_VERSION_TAG=`git describe --tags --abbrev=0`" > $GITHUB_ENV
+          echo "GIT_VERSION_TAG=`git describe --tags --abbrev=0`" >> $GITHUB_ENV
           echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
       - name: Login to Heroku Container registry
         env:
