@@ -71,7 +71,8 @@ jobs:
       - name: Test
         run: |
           echo ${GIT_VERSION_TAG}
-          echo #{SHORT_SHA} 
+          echo ${SHORT_SHA} 
+          echo $GITHUB_ENV
 #       - name: Login to Heroku Container registry
 #         env:
 #           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
