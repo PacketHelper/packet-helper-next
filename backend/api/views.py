@@ -54,8 +54,5 @@ class Hex2ViewSet(APIView):
 
 class InfoViewSet(APIView):
     def get(self, request, format=None):
-        git_tag = getenv("PH_VERSION", "v1.0.0")
-        # by the default we transfer here a 8 char's
-        git_sha = getenv("PH_REVISION", "dev00000")
-
-        return Response({"version": git_tag, "revision": git_sha})
+        ph_version = getenv("PH_VERSION", "v1.0.0:00000000").split(":")
+        return Response({"version": ph_version[0], "revision": ph_version[1]})
