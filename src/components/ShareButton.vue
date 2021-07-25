@@ -121,7 +121,7 @@ export default {
 <style>
 .share {
   position: fixed;
-  top: 90vh;
+  top: 94vh;
   right: 1rem;
   z-index: 1;
 }
@@ -131,11 +131,6 @@ export default {
   transform: translateY(200px);
   top: 87vh;
   right: 50rem;
-}
-.alert-text {
-  font-size: 13px;
-  padding-top: 15px;
-  padding-bottom: 10px;
 }
 .progress {
   margin: 0px -42px 0px -27px;
