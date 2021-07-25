@@ -68,6 +68,9 @@ jobs:
         run: |
           echo "GIT_VERSION_TAG=`git describe --tags --abbrev=0`" >> $GITHUB_ENV
           echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+      - name: Test
+        run: |
+          echo ${GIT_VERSION_TAG}
 #       - name: Login to Heroku Container registry
 #         env:
 #           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
