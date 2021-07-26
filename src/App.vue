@@ -12,6 +12,7 @@
               <!--            <v-badge content="alpha"></v-badge>-->
             </v-btn>
             <v-btn text disabled>Visual</v-btn>
+            <router-link to="/creator"><v-btn text>Creator</v-btn></router-link>
             <v-spacer></v-spacer>
             <v-btn text disabled
               >"Craft packets before, packets craft you" 🐱‍👤</v-btn

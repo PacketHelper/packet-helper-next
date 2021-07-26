@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .api.views import index_view, Hex2ViewSet, InfoViewSet
+from .api.views import index_view, Hex2ViewSet, InfoViewSet, ScapyViewSet
 
 handler404 = "backend.api.views.handler404_redirect"
 
@@ -10,4 +10,5 @@ urlpatterns = [
     # API's
     path("api/hex/<str:hex_string>", Hex2ViewSet.as_view()),
     path("api/info", InfoViewSet.as_view()),
+    path("api/packets/<str:protocol>", ScapyViewSet.as_view())
 ]

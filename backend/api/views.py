@@ -4,6 +4,8 @@ from django.views.generic import TemplateView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from scapy_helper import hexdump
+from scapy_helper import to_dict
+from scapy.all import *
 
 from packet_helper_core.packet_data import PacketData
 from packet_helper_core.packet_data_scapy import PacketDataScapy
@@ -70,3 +72,9 @@ class InfoViewSet(APIView):
             version = res.json()["name"]
 
         return Response({"version": version, "revision": revision})
+
+
+class ScapyViewSet(APIView):
+    def get(self, request, format=None, protocol: str = None):
+        attr = to_dict(globals()[protocol]())
+        return Response(attr)
