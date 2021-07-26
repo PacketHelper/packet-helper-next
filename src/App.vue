@@ -4,19 +4,30 @@
       <v-app-bar dark app>
         <v-container>
           <v-toolbar>
-            <v-toolbar-title>Packet helper </v-toolbar-title>
+            <v-toolbar-title
+              >Packet helper
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <span v-bind="attrs" v-on="on">
+                    <small id="version"
+                      ><small>{{ version }}</small></small
+                    ></span
+                  >
+                </template>
+                <span
+                  ><small>{{ revision }}</small></span
+                >
+              </v-tooltip>
+            </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn text>Decode</v-btn>
-            <v-btn text disabled
-              >Diff
-              <!--            <v-badge content="alpha"></v-badge>-->
-            </v-btn>
+            <v-btn text disabled>Diff</v-btn>
             <v-btn text disabled>Visual</v-btn>
             <router-link to="/creator"><v-btn text>Creator</v-btn></router-link>
             <v-spacer></v-spacer>
             <v-btn text disabled
-              >"Craft packets before, packets craft you" 🐱‍👤</v-btn
-            >
+              >"Craft packets before, packets craft you" 🐱‍👤
+            </v-btn>
           </v-toolbar>
         </v-container>
       </v-app-bar>
@@ -36,10 +47,6 @@
           </v-container>
         </v-container>
       </v-main>
-
-      <v-footer app>
-        Packet Helper {{ this.version }} <small> ({{ this.revision }})</small>
-      </v-footer>
     </v-app>
   </div>
 </template>
@@ -68,4 +75,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+#version {
+  color: grey;
+}
+</style>

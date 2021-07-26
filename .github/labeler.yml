@@ -1,0 +1,13 @@
+backend:
+  - backend/**/*
+
+frontend:
+  - public/**/*
+  - src/**/*
+
+pipeline:
+  - .github/**/*
+  - Dockerfile
+
+test:
+  - test/**/*

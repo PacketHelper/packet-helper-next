@@ -1,14 +1,22 @@
+from http.client import CREATED
+from os import getenv
+
 from django.shortcuts import redirect
 from django.views.decorators.cache import never_cache
 from django.views.generic import TemplateView
 from rest_framework.response import Response
 from rest_framework.views import APIView
+<<<<<<< HEAD
 from scapy_helper import hexdump
 from scapy_helper import to_dict
 from scapy.all import *
+=======
+from scapy_helper import hexdump, get_hex
+>>>>>>> origin/main
 
 from packet_helper_core.packet_data import PacketData
 from packet_helper_core.packet_data_scapy import PacketDataScapy
+from packet_helper_core.utils.conversion import from_sh_list
 from packet_helper_core.utils.utils import decode_hex
 
 # Serve Vue Application
@@ -54,22 +62,9 @@ class Hex2ViewSet(APIView):
 
 class InfoViewSet(APIView):
     def get(self, request, format=None):
-        from os import getenv
-        import requests
+        ph_version = getenv("PH_VERSION", "v1.0.0:00000000").split(":")
+        return Response({"version": ph_version[0], "revision": ph_version[1]})
 
-        # Personal Access Token is needed
-        # as long as repo is private
-        token = getenv("PAT_TOKEN", False)
-        revision = getenv("PH_REVISION", "dev")
-        if not token:
-            return Response({"version": "unknown", "revision": revision})
-        version = "unknown"
-        res = requests.get(
-            "https://api.github.com/repos/PacketHelper/packet-helper-next/releases/latest",
-            headers={"Authorization": f"token {token}"},
-        )
-        if res.ok:
-            version = res.json()["name"]
 
         return Response({"version": version, "revision": revision})
 
@@ -78,3 +73,10 @@ class ScapyViewSet(APIView):
     def get(self, request, format=None, protocol: str = None):
         attr = to_dict(globals()[protocol]())
         return Response(attr)
+
+
+class CreateViewSet(APIView):
+    def post(self, request, format=None):
+        return Response(
+            {"hex": get_hex(from_sh_list(request.data["json"]))}, status=CREATED
+        )

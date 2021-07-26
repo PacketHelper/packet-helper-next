@@ -24,26 +24,6 @@
             :label="`Expand on load?`"
           ></v-checkbox>
           <v-spacer></v-spacer>
-          <div v-if="structure">
-            <v-slide-x-reverse-transition>
-              <v-btn
-                v-if="structure.length > 0 && !isExpanded"
-                class="white--text"
-                color="indigo"
-                @click="expand"
-              >
-                Expand all
-              </v-btn>
-              <v-btn
-                v-else-if="structure.length > 0"
-                class="white--text"
-                color="indigo"
-                @click="collapse"
-              >
-                Collapse all
-              </v-btn>
-            </v-slide-x-reverse-transition>
-          </div>
           <v-btn text @click="showExamples">Next Example</v-btn>
         </v-card-actions>
       </v-card>
@@ -137,7 +117,29 @@
               @warning="handleWarning"
             ></Display>
           </transition-group>
-          <ShareButton :struct="structure"></ShareButton>
+          <div v-if="structure" class="fab">
+            <v-slide-x-reverse-transition>
+              <v-btn
+                v-if="structure.length > 0 && !isExpanded"
+                class="white--text shareBtn"
+                color="indigo"
+                large
+                @click="expand"
+              >
+                <v-icon>mdi-arrow-down-drop-circle-outline</v-icon> Expand all
+              </v-btn>
+              <v-btn
+                v-else-if="structure.length > 0"
+                class="white--text shareBtn"
+                color="indigo"
+                large
+                @click="collapse"
+              >
+                <v-icon>mdi-arrow-down-drop-circle</v-icon> Collapse all
+              </v-btn>
+            </v-slide-x-reverse-transition>
+            <ShareButton :struct="structure"></ShareButton>
+          </div>
         </v-expansion-panels>
       </div>
     </v-container>
@@ -356,7 +358,7 @@ export default {
     vote(result) {
       this.voted = true;
       // Place for API call
-      // To refrence hex value use this.hexValue
+      // To reference hex value use this.hexValue
       // result argument stores a boolean value
     },
   },
@@ -409,5 +411,15 @@ export default {
 
 .wrapper {
   position: relative;
+}
+.shareBtn {
+  width: 200px;
+  height: 200px;
+}
+.fab {
+  position: fixed;
+  top: 90vh;
+  right: 1rem;
+  z-index: 1;
 }
 </style>

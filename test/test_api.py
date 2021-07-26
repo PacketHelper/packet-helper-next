@@ -1,4 +1,9 @@
+import json
+
 from rest_framework.test import APITestCase
+from scapy.layers.inet import IP, TCP
+from scapy.layers.l2 import Ether
+from scapy_helper import to_list, get_hex
 
 
 class TestApi(APITestCase):
@@ -15,3 +20,16 @@ class TestApi(APITestCase):
             len(url.data["structure"]) == 4
         ), "Structure should contain 4 elements (Ether, IP, IP, GRE)"
         assert url.status_code == 200
+
+    def test_create(self):
+        packet = Ether() / IP() / TCP()
+        url = self.client.post(
+            "/api/create",
+            data=json.dumps({"json": to_list(packet)}),
+            content_type="application/json",
+        )
+
+        assert url.status_code == 201, "Endpoint should return 201 Created"
+        assert url.data["hex"] == get_hex(packet), (
+            f"Endpoint should return hex: " f"{get_hex(packet)}"
+        )
