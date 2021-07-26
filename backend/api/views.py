@@ -1,3 +1,4 @@
+from http.client import CREATED
 from os import getenv
 
 from django.shortcuts import redirect
@@ -5,10 +6,11 @@ from django.views.decorators.cache import never_cache
 from django.views.generic import TemplateView
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from scapy_helper import hexdump
+from scapy_helper import hexdump, get_hex
 
 from packet_helper_core.packet_data import PacketData
 from packet_helper_core.packet_data_scapy import PacketDataScapy
+from packet_helper_core.utils.conversion import from_sh_list
 from packet_helper_core.utils.utils import decode_hex
 
 # Serve Vue Application
@@ -56,3 +58,10 @@ class InfoViewSet(APIView):
     def get(self, request, format=None):
         ph_version = getenv("PH_VERSION", "v1.0.0:00000000").split(":")
         return Response({"version": ph_version[0], "revision": ph_version[1]})
+
+
+class CreateViewSet(APIView):
+    def post(self, request, format=None):
+        return Response(
+            {"hex": get_hex(from_sh_list(request.data["json"]))}, status=CREATED
+        )
