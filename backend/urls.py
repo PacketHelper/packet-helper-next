@@ -11,6 +11,6 @@ urlpatterns = [
     # API's
     path("api/hex/<str:hex_string>", Hex2ViewSet.as_view()),
     path("api/info", InfoViewSet.as_view()),
-    path("api/packets/<str:protocol>", ScapyViewSet.as_view()),
+    path("api/packets", ScapyViewSet.as_view()),
     path("api/create", CreateViewSet.as_view()),
 ]

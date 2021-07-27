@@ -20,7 +20,7 @@
               </v-tooltip>
             </v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn text>Decode</v-btn>
+            <router-link to="/"><v-btn text>Decode</v-btn></router-link>
             <v-btn text disabled>Diff</v-btn>
             <v-btn text disabled>Visual</v-btn>
             <router-link to="/creator"><v-btn text>Creator</v-btn></router-link>

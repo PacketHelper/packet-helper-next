@@ -6,13 +6,10 @@ from django.views.decorators.cache import never_cache
 from django.views.generic import TemplateView
 from rest_framework.response import Response
 from rest_framework.views import APIView
-<<<<<<< HEAD
 from scapy_helper import hexdump
-from scapy_helper import to_dict
+from scapy_helper import to_list
 from scapy.all import *
-=======
 from scapy_helper import hexdump, get_hex
->>>>>>> origin/main
 
 from packet_helper_core.packet_data import PacketData
 from packet_helper_core.packet_data_scapy import PacketDataScapy
@@ -66,17 +63,20 @@ class InfoViewSet(APIView):
         return Response({"version": ph_version[0], "revision": ph_version[1]})
 
 
-        return Response({"version": version, "revision": revision})
-
-
 class ScapyViewSet(APIView):
-    def get(self, request, format=None, protocol: str = None):
-        attr = to_dict(globals()[protocol]())
-        return Response(attr)
+    def post(self, request, format=None):
+        packet = None
+        print(request.data)
+        print(globals()[request.data[0]]())
+        for protocol in request.data:
+            if packet == None:
+                packet = globals()[protocol]()
+            else:
+                packet /= globals()[protocol]()
+        return Response(to_list(packet))
 
 
 class CreateViewSet(APIView):
     def post(self, request, format=None):
-        return Response(
-            {"hex": get_hex(from_sh_list(request.data["json"]))}, status=CREATED
-        )
+        print(request.data)
+        return Response({"hex": get_hex(from_sh_list(request.data))}, status=CREATED)
