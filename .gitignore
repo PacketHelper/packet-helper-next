@@ -39,3 +39,4 @@ package-lock.json
 yarn.lock
 phc
 packet_helper_core
+backend/api/migrations/

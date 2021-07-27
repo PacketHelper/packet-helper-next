@@ -11,9 +11,9 @@ urlpatterns = [
     # landing page
     path("", index_view, name="index"),
     # API's
-    path("api/hex/<str:hex_string>", Hex2ViewSet.as_view(), add_hex),
+    path("api/hex/<str:hex_string>", Hex2ViewSet.as_view()),
+    path("api/hex/<str:hex_string>/like", LikeViewSet.as_view(), name="like"),
+    path("api/hex/<str:hex_string>/dislike", DislikeViewSet.as_view(), name="dislike"),
     path("api/info", InfoViewSet.as_view()),
-    path("api/create", CreateViewSet.as_view()),
-    path("api/hex/<str:hex_string>/like", Hex2ViewSet.as_view(), like),
-    path("api/hex/<str:hex_string>/dislike", Hex2ViewSet.as_view(), dislike),
+    path("api/create", CreateViewSet.as_view())
 ]

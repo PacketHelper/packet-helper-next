@@ -18,9 +18,19 @@ export default new VueRouter({
       component: LandingPage,
     },
     {
-      path: "/hex/:hex_string",
-      name: "hex",
-      component: LandingPage,
+      path: '/hex/:hex_string/like',
+      name: 'hex_like',
+      component: LandingPage
+    },
+    {
+      path: '/hex/:hex_string/dislike',
+      name: 'hex_dislike',
+      component: LandingPage
+    },
+    {
+      path: '/hex/:hex_string',
+      name: 'hex',
+      component: LandingPage
     },
     {
       path: "/info",
