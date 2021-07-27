@@ -22,6 +22,9 @@ def handler404_redirect(request, exception, template_name="404.html"):
 
 class Hex2ViewSet(APIView):
     def get(self, request, format=None, hex_string: str = None):
+        if not Hexes.objects.filter(Hex=hex_string) and len(hex_string) > 1:
+            newHex = Hexes(Hex=hex_string)
+            newHex.save()
         h = " ".join(
             [
                 "".join([hex_string[e - 1], hex_string[e]])
@@ -63,19 +66,22 @@ class InfoViewSet(APIView):
         return Response({"version": version, "revision": revision})
 
 
-def add_hex(request, hex_string):
-    if not Hexes.objects.filter(hex=hex_string):
-        newHex = Hexes(hex=hex_string)
-        newHex.save()
+class LikeViewSet(APIView):
+    def get(self, request, hex_string, format=None):
+        print("test")
+        if not Hexes.objects.filter(Hex=hex_string) and len(hex_string) > 1:
+            newHex = Hexes(Hex=hex_string)
+            newHex.save()
+        hex = Hexes.objects.get(Hex=hex_string)
+        hex.Likes += 1
+        hex.save()
 
 
-def like(request, hex_string):
-    hex = Hexes.objects.get(hex=hex_string)
-    hex.likes += 1
-    hex.save()
-
-
-def dislike(request, hex_string):
-    hex = Hexes.objects.get(hex=hex_string)
-    hex.dislikes += 1
-    hex.save()
+class DislikeViewSet(APIView):
+    def get(self, request, hex_string, format=None):
+        if not Hexes.objects.filter(Hex=hex_string) and len(hex_string) > 1:
+            newHex = Hexes(Hex=hex_string)
+            newHex.save()
+        hex = Hexes.objects.get(Hex=hex_string)
+        hex.Dislikes += 1
+        hex.save()
