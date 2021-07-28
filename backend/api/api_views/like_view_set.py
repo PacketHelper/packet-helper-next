@@ -13,3 +13,4 @@ class LikeViewSet(APIView):
         hex = Hexes.objects.get(Hex=hex_str)
         hex.Likes += 1
         hex.save()
+        return Response(status=200)
