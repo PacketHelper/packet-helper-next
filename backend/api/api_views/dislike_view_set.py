@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from backend.api.models import Hexes
 
+
 class DislikeViewSet(APIView):
     def get(self, request, hex_string, format=None):
         url = self.client.get(f"/api/hex/{hex_string}")
