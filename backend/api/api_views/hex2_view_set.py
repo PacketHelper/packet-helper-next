@@ -8,6 +8,11 @@ from packet_helper_core.utils.utils import decode_hex
 
 class Hex2ViewSet(APIView):
     def get(self, request, format=None, hex_string: str = None):
+        url = self.client.get(f"/api/hex/{hex_string}")
+        hex_str = hex_string.lower()
+        if not Hexes.objects.filter(Hex=hex_str) and not url.data["warning"]:
+            newHex = Hexes(Hex=hex_str)
+            newHex.save()
         h = " ".join(
             [
                 "".join([hex_string[e - 1], hex_string[e]])
