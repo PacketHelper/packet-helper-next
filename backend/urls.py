@@ -17,5 +17,5 @@ urlpatterns = [
     path("api/hex/<str:hex_string>/like", LikeViewSet.as_view(), name="like"),
     path("api/hex/<str:hex_string>/dislike", DislikeViewSet.as_view(), name="dislike"),
     path("api/info", InfoViewSet.as_view()),
-    path("api/create", CreateViewSet.as_view())
+    path("api/create", CreateViewSet.as_view()),
 ]
