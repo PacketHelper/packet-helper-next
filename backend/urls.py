@@ -1,15 +1,11 @@
 from django.urls import path
 
-<<<<<<< HEAD
 from .api.views import index_view
 from .api.api_views.create_view_set import CreateViewSet
 from .api.api_views.info_view_set import InfoViewSet
 from .api.api_views.hex2_view_set import Hex2ViewSet
 from .api.api_views.dislike_view_set import DislikeViewSet
 from .api.api_views.Like_view_set import LikeViewSet
-=======
-from .api.views import index_view, Hex2ViewSet, InfoViewSet, LikeViewSet, DislikeViewSet
->>>>>>> aa42ec13cf4d36b2668ba32ac556c025af05fc85
 
 handler404 = "backend.api.views.handler404_redirect"
 
