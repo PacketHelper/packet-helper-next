@@ -7,4 +7,10 @@ export default {
   getInfo() {
     return api.get(`info`).then((response) => response.data);
   },
+  getScapy(protocols) {
+    return api.post(`packets`, protocols).then((response) => response.data);
+  },
+  createPacket(packetInfo) {
+    return api.post(`create`, packetInfo).then((response) => response.data);
+  },
 };
