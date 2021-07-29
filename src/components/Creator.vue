@@ -367,6 +367,7 @@ export default {
           this.createdHex =
             this.createdHex.slice(0, i) + " " + this.createdHex.slice(i);
         }
+        this.createdHex = this.createdHex.trim();
         this.spacing = true;
       }
     },
