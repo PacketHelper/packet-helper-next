@@ -1,16 +1,17 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from scapy.all import *
 from scapy_helper import to_list
+import importlib
 
 
 class ScapyViewSet(APIView):
     def post(self, request, format=None):
+        imported_all = importlib.import_module("scapy.all")
         packet = None
-        print(request.data)
         for protocol in request.data:
-            if packet == None:
-                packet = globals()[protocol]()
-            else:
-                packet /= globals()[protocol]()
+            new_layer = imported_all.__getattribute__(protocol)
+            if packet is None:
+                packet = new_layer()
+                continue
+            packet /= new_layer()
         return Response(to_list(packet))
