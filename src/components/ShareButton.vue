@@ -46,18 +46,21 @@ export default {
       this.sw = !this.sw;
     },
     slideBefore(el) {
-      el.style.transform = "translateX(200px)";
+      el.style.transform = "translateX(250px)";
+      el.style.opacity = "0";
     },
     slideEnter(el, done) {
       gsap.to(el, {
         x: 0,
+        opacity: 1,
         duration: 0.5,
         onComplete: done,
       });
     },
     slideLeave(el, done) {
       gsap.to(el, {
-        x: 200,
+        x: 250,
+        opacity: 0,
         duration: 0.5,
         delay: 0.5,
         onComplete: done,

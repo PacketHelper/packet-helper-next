@@ -329,24 +329,6 @@ export default {
         onComplete: done,
       });
     },
-    beforeEnterButton(el) {
-      el.style.opacity = 0;
-      el.style.transform = "translateY(10px)";
-    },
-    enterButton(el) {
-      gsap.to(el, {
-        opacity: 1,
-        y: 0,
-        duration: 0.1,
-      });
-    },
-    leaveButton(el) {
-      gsap.to(el, {
-        opacity: 0,
-        y: 10,
-        duration: 0.1,
-      });
-    },
     expand() {
       this.panel = [...Array(this.structure.length).keys()];
       this.isExpanded = true;
@@ -386,29 +368,6 @@ export default {
 #hex {
   font-family: monospace, monospace;
 }
-
-@keyframes rotate-e {
-  0% {
-    opacity: 1;
-    width: 0;
-  }
-  100% {
-    opacity: 1;
-    width: 100%;
-  }
-}
-
-@keyframes rotate-l {
-  0% {
-    opacity: 1;
-    width: 100%;
-  }
-  100% {
-    opacity: 1;
-    width: 0;
-  }
-}
-
 .wrapper {
   position: relative;
 }
