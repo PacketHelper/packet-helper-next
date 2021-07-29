@@ -75,28 +75,6 @@
         </v-alert>
       </transition-group>
       <div class="wrapper" v-if="structure">
-        <v-card
-          v-show="structure.length > 0"
-          v-if="structure.length > 0"
-          style="margin-top: 1rem"
-          elevation="6"
-        >
-          <v-card-title>Packet summary</v-card-title>
-          <v-card-subtitle>{{ header.join(" / ") }}</v-card-subtitle>
-          <v-card-text>
-            Length: {{ summary["length"] }}{{ summary["length_unit"] }}
-            <v-textarea
-              id="hex"
-              filled
-              name="input-7-4"
-              label="Hexdump"
-              :value="summary['hexdump']"
-              auto-grow
-              readonly
-            ></v-textarea>
-          </v-card-text>
-        </v-card>
-
         <v-expansion-panels
           multiple
           focusable
@@ -109,6 +87,28 @@
             @leave="leave"
             mode="out-in"
           >
+            <v-card
+              v-if="structure.length > 0"
+              style="margin-top: 1rem"
+              elevation="6"
+              :key="0"
+              :data-index="0"
+            >
+              <v-card-title>Packet summary</v-card-title>
+              <v-card-subtitle>{{ header.join(" / ") }}</v-card-subtitle>
+              <v-card-text>
+                Length: {{ summary["length"] }}{{ summary["length_unit"] }}
+                <v-textarea
+                  id="hex"
+                  filled
+                  name="input-7-4"
+                  label="Hexdump"
+                  :value="summary['hexdump']"
+                  auto-grow
+                  readonly
+                ></v-textarea>
+              </v-card-text>
+            </v-card>
             <Display
               v-for="(s, index) in structure"
               :key="index + 1"

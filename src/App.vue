@@ -43,7 +43,9 @@
               new lines will be ignored.
             </v-alert>
             <!-- If using vue-router -->
-            <router-view></router-view>
+            <transition name="route" mode="out-in">
+              <router-view> </router-view>
+            </transition>
           </v-container>
         </v-container>
       </v-main>
@@ -78,5 +80,19 @@ export default {
 <style>
 #version {
   color: grey;
+}
+.route-enter {
+  opacity: 0;
+  transform: translateX(-200px);
+}
+.route-enter-active {
+  transition: all 0.3s ease-out;
+}
+.route-leave-to {
+  opacity: 0;
+  transform: translateX(200px);
+}
+.route-leave-active {
+  transition: all 0.3s ease-in;
 }
 </style>

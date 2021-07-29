@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card style="padding: 10px; margin-top: 1rem" elevation="6">
-      <v-card-title>Your packet</v-card-title>
+      <v-card-title>Your Packet</v-card-title>
       <v-textarea
         name="input-7-4"
         solo
@@ -49,7 +49,7 @@
       </div>
     </v-card>
 
-    <v-card>
+    <v-card style="margin-top: 10px">
       <v-stepper v-model="stepper" height="">
         <v-stepper-header>
           <v-stepper-step step="0" @click="stepper = 0" style="cursor: pointer">
@@ -74,11 +74,15 @@
                   v-for="(pickedPacket, index) in pickedPackets"
                   :key="index"
                   style="display: flex"
-                  @click="handleAdd"
                 >
-                  {{ pickedPacket }}
+                  <b style="cursor: pointer">
+                    <v-icon x-small>mdi-window-close</v-icon>
+                    <span @click="handleAdd" style="margin-left: 3px">{{
+                      pickedPacket
+                    }}</span>
+                  </b>
                   <div
-                    v-if="index != pickedPackets.length"
+                    v-if="index != pickedPackets.length - 1"
                     style="margin: 0 5px 0 5px"
                   >
                     /
@@ -188,16 +192,44 @@
             </v-form>
           </v-stepper-content>
         </v-stepper-items>
+        <v-tooltip right>
+          <template v-slot:activator="{ on, attrs }">
+            <v-icon v-bind="attrs" v-on="on"> mdi-information </v-icon>
+          </template>
+          <span>
+            <ul>
+              <li>You can select up to 4 protocols</li>
+              <li>Headers with default value can't be empty</li>
+              <li>Options should be separated with a comma</li>
+              <li>TCP breaks when options are provided</li>
+            </ul>
+          </span>
+        </v-tooltip>
       </v-stepper>
     </v-card>
+    <Toast type="success" :trigger="successSw" :key="0"
+      ><template #info> Hex has been copied </template></Toast
+    >
+    <Toast type="warning" :trigger="alertSw" :key="1"
+      ><template #info> Hex is empty </template></Toast
+    >
+    <Toast type="error" :trigger="errorSw" :key="2"
+      ><template #info> Error </template></Toast
+    >
   </div>
 </template>
 
 <script>
 import ApiService from "../services/apiService.js";
+import Toast from "./Toast.vue";
+
 export default {
+  components: { Toast },
   data() {
     return {
+      // Some protocols have different function name
+      // and "to_list" key (ex. Ethernet) so they
+      // have to be handled in core to be able to add them here
       packets: [
         { name: "Ether", scapy_name: "Ethernet" },
         { name: "IP", scapy_name: "IP" },
@@ -237,10 +269,14 @@ export default {
       createdHex: null,
       upperCase: false,
       spacing: true,
+      successSw: 0,
+      alertSw: 0,
+      errorSw: 0,
     };
   },
   computed: {
     filtered_packets() {
+      // Returns packets that match the filter
       return [
         this.packets.filter((x) =>
           x.name.toLowerCase().includes(this.filter.toLowerCase())
@@ -253,7 +289,13 @@ export default {
       return new Promise((res) => setTimeout(res, seconds * 1000));
     },
     async get_packets() {
-      this.res = await ApiService.getScapy(this.pickedPackets);
+      try {
+        this.res = await ApiService.getScapy(this.pickedPackets);
+        if (!this.res.length) throw "Empty structure";
+      } catch (err) {
+        this.errorSw = !this.errorSw;
+        return;
+      }
       this.displayPackets = [];
       this.inputs = [];
       for (let i = 0; i < this.res.length; i++) {
@@ -276,9 +318,23 @@ export default {
           if (/^-?\d+$/.test(element[temp_packet][header])) {
             element[temp_packet][header] = Number(element[temp_packet][header]);
           }
+          if (
+            header === "options" &&
+            element[temp_packet][header].includes(",")
+          ) {
+            element[temp_packet][header] = element[temp_packet][header]
+              .trim()
+              .split(",");
+          }
         });
       });
-      const newPacket = await ApiService.createPacket(this.res);
+      let newPacket = "";
+      try {
+        newPacket = await ApiService.createPacket(this.res);
+      } catch {
+        this.errorSw = !this.errorSw;
+        return;
+      }
       this.createdHex = newPacket["hex"];
       console.log(this.createdHex);
     },
@@ -315,7 +371,10 @@ export default {
       }
     },
     async copy() {
-      await navigator.clipboard.writeText(this.createdHex);
+      if (this.createdHex) {
+        await navigator.clipboard.writeText(this.createdHex);
+        this.successSw = !this.successSw;
+      } else this.alertSw = !this.alertSw;
     },
   },
 };
