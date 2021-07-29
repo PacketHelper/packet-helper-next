@@ -1,7 +1,10 @@
 from django.urls import path
 
-from .api.views import index_view, Hex2ViewSet, InfoViewSet, ScapyViewSet
-from .api.views import index_view, Hex2ViewSet, InfoViewSet, CreateViewSet
+from .api.views import index_view
+from .api.api_views.create_view_set import CreateViewSet
+from .api.api_views.info_view_set import InfoViewSet
+from .api.api_views.hex2_view_set import Hex2ViewSet
+from .api.api_views.scapy_view_set import ScapyViewSet
 
 handler404 = "backend.api.views.handler404_redirect"
 
