@@ -75,28 +75,6 @@
         </v-alert>
       </transition-group>
       <div class="wrapper" v-if="structure">
-        <v-card
-          v-show="structure.length > 0"
-          v-if="structure.length > 0"
-          style="margin-top: 1rem"
-          elevation="6"
-        >
-          <v-card-title>Packet summary</v-card-title>
-          <v-card-subtitle>{{ header.join(" / ") }}</v-card-subtitle>
-          <v-card-text>
-            Length: {{ summary["length"] }}{{ summary["length_unit"] }}
-            <v-textarea
-              id="hex"
-              filled
-              name="input-7-4"
-              label="Hexdump"
-              :value="summary['hexdump']"
-              auto-grow
-              readonly
-            ></v-textarea>
-          </v-card-text>
-        </v-card>
-
         <v-expansion-panels
           multiple
           focusable
@@ -109,6 +87,28 @@
             @leave="leave"
             mode="out-in"
           >
+            <v-card
+              v-if="structure.length > 0"
+              style="margin-top: 1rem"
+              elevation="6"
+              :key="0"
+              :data-index="0"
+            >
+              <v-card-title>Packet summary</v-card-title>
+              <v-card-subtitle>{{ header.join(" / ") }}</v-card-subtitle>
+              <v-card-text>
+                Length: {{ summary["length"] }}{{ summary["length_unit"] }}
+                <v-textarea
+                  id="hex"
+                  filled
+                  name="input-7-4"
+                  label="Hexdump"
+                  :value="summary['hexdump']"
+                  auto-grow
+                  readonly
+                ></v-textarea>
+              </v-card-text>
+            </v-card>
             <Display
               v-for="(s, index) in structure"
               :key="index + 1"
@@ -329,24 +329,6 @@ export default {
         onComplete: done,
       });
     },
-    beforeEnterButton(el) {
-      el.style.opacity = 0;
-      el.style.transform = "translateY(10px)";
-    },
-    enterButton(el) {
-      gsap.to(el, {
-        opacity: 1,
-        y: 0,
-        duration: 0.1,
-      });
-    },
-    leaveButton(el) {
-      gsap.to(el, {
-        opacity: 0,
-        y: 10,
-        duration: 0.1,
-      });
-    },
     expand() {
       this.panel = [...Array(this.structure.length).keys()];
       this.isExpanded = true;
@@ -386,29 +368,6 @@ export default {
 #hex {
   font-family: monospace, monospace;
 }
-
-@keyframes rotate-e {
-  0% {
-    opacity: 1;
-    width: 0;
-  }
-  100% {
-    opacity: 1;
-    width: 100%;
-  }
-}
-
-@keyframes rotate-l {
-  0% {
-    opacity: 1;
-    width: 100%;
-  }
-  100% {
-    opacity: 1;
-    width: 0;
-  }
-}
-
 .wrapper {
   position: relative;
 }
