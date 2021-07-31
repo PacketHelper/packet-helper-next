@@ -9,6 +9,4 @@ from packet_helper_core.utils.conversion import from_sh_list
 
 class CreateViewSet(APIView):
     def post(self, request, format=None):
-        return Response(
-            {"hex": get_hex(from_sh_list(request.data["json"]))}, status=CREATED
-        )
+        return Response({"hex": get_hex(from_sh_list(request.data))}, status=CREATED)

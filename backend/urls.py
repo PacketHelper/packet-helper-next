@@ -7,6 +7,7 @@ from .api.api_views.hex2_view_set import Hex2ViewSet
 from .api.api_views.dislike_view_set import DislikeViewSet
 from .api.api_views.like_view_set import LikeViewSet
 from .api.api_views.add_hex_view_set import AddHexViewSet
+from .api.api_views.scapy_view_set import ScapyViewSet
 
 handler404 = "backend.api.views.handler404_redirect"
 
@@ -20,5 +21,5 @@ urlpatterns = [
     path("api/add", AddHexViewSet.as_view()),
     path("api/info", InfoViewSet.as_view()),
     path("api/packets", ScapyViewSet.as_view()),
-    path("api/create", CreateViewSet.as_view())
+    path("api/create", CreateViewSet.as_view()),
 ]
