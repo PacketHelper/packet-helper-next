@@ -37,10 +37,7 @@
         <v-container fluid>
           <v-container>
             <v-alert icon="mdi-shield-lock-outline" prominent text type="info">
-              <strong>Paste a hex & click decode!</strong> Packet Helper is an
-              online tool to analyze packet base on the hex information. Provide
-              a hexdump information into text area and click "Decode". Spaces &
-              new lines will be ignored.
+              <strong>Legacy version</strong> of the PacketHelper is available at <a href="http://legacy.packethelper.com">http://legacy.packethelper.com </a>
             </v-alert>
             <!-- If using vue-router -->
             <transition name="route" mode="out-in">
