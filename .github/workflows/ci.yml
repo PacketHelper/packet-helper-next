@@ -76,8 +76,8 @@ jobs:
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
-          heroku container:push web -a packet-helper-staging --arg PH_VER="${GIT_VERSION_TAG}:${SHORT_SHA}"
+          heroku container:push web -a packet-helper --arg PH_VER="${GIT_VERSION_TAG}:${SHORT_SHA}"
       - name: Release
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: heroku container:release web -a packet-helper-staging
+        run: heroku container:release web -a packet-helper
