@@ -9,4 +9,4 @@ All information comes from the Scapy & TShark projects.
 Live instance of the application: [packethelper.com](http://packethelper.com)
 
 
-![Packet Helper v0.1](github_docs/packethelper.png "Packet Helper v0.1")
+![Packet Helper v0.1](github_docs/packethelper.png "Packet Helper")
