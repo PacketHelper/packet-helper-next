@@ -1,7 +1,8 @@
+import importlib
+
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from scapy_helper import to_list
-import importlib
 
 
 class ScapyViewSet(APIView):
