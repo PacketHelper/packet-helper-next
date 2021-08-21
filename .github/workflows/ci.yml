@@ -37,10 +37,13 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install dependencies
         run: |
-          pip install black
+          pip install black isort 
       - name: Verify code (python w/black)
         run: |
           black --check -t py38 backend/ test/
+      - name: Verify imports (w/isort)
+        run: |
+          isort --check backend/ test/
   release:
     name: Prepare release
     if: ${{ github.ref == 'refs/heads/main' }}
