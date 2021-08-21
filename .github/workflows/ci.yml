@@ -43,7 +43,7 @@ jobs:
           black --check -t py38 backend/ test/
       - name: Verify imports (w/isort)
         run: |
-          isort --check backend/ test/
+          isort --check backend/ test/ --profile black
   release:
     name: Prepare release
     if: ${{ github.ref == 'refs/heads/main' }}
