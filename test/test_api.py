@@ -3,7 +3,7 @@ import json
 from rest_framework.test import APITestCase
 from scapy.layers.inet import IP, TCP
 from scapy.layers.l2 import Ether
-from scapy_helper import to_list, get_hex
+from scapy_helper import get_hex, to_list
 
 
 class TestApi(APITestCase):

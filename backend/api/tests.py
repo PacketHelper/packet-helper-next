@@ -1,4 +1,5 @@
 from django.test import TestCase
+
 from backend.api.api_views.hex2_view_set import Hex2ViewSet
 
 
