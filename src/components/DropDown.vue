@@ -80,19 +80,11 @@ export default {
   /*position: relative;
   padding-left: 20px;*/
 }
-/*
-.collapse::before {
-  content: "\f0da";
-  width: 10px;
-  height: 10px;
-  position: absolute;
-  left: 0;
-  top: -5%;
-}
-*/
+
 .v-expansion-panel {
   font-family: monospace, monospace;
 }
+
 .dropdown-title {
   cursor: pointer;
 }
@@ -102,15 +94,7 @@ export default {
   /*position: relative;
   padding-left: 20px;*/
 }
-/*
-.rotate::before {
-  content: "\f0d7";
-  width: 10px;
-  height: 10px;
-  position: absolute;
-  left: 0;
-}
-*/
+
 i {
   margin-left: 6px;
 }
