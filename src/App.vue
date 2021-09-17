@@ -86,11 +86,9 @@ export default {
 #version {
   color: grey;
 }
-
 a {
   text-decoration: none;
 }
-
 .route-enter {
   opacity: 0;
   transform: translateX(-200px);
