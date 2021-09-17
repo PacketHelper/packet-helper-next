@@ -23,7 +23,7 @@
             <router-link to="/"><v-btn text>Decode</v-btn></router-link>
             <v-btn text disabled>Diff</v-btn>
             <v-btn text disabled>Visual</v-btn>
-            <router-link to="/creator"><v-btn text>Creator</v-btn></router-link>
+            <router-link to="/creator"><v-btn text><v-badge content="Preview">Creator</v-badge></v-btn></router-link>
             <v-spacer></v-spacer>
             <v-btn text disabled
               >"Craft packets before, packets craft you" 🐱‍👤
