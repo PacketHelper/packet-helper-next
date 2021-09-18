@@ -75,7 +75,11 @@
       v-if="hexValueA.length !== hexValueB.length"
       style="margin-top: 1rem"
     >
-      The given frames vary in length ({{ hexValueA.replace(/\s/g, "").length / 2 }}B != {{ hexValueB.replace(/\s/g, "").length / 2 }}B). To avoid any problems, PacketHelper will show only the common part, please treat the rest as RAW data
+      The given frames vary in length ({{
+        hexValueA.replace(/\s/g, "").length / 2
+      }}B != {{ hexValueB.replace(/\s/g, "").length / 2 }}B). To avoid any
+      problems, PacketHelper will show only the common part, please treat the
+      rest as RAW data
     </v-alert>
     <v-card
       v-if="
@@ -92,7 +96,10 @@
       <v-card-text v-else>
         More information per structure:
         <ul>
-          <li v-for="(item, index) in combined.slice(0, shorter())" :key="index">
+          <li
+            v-for="(item, index) in combined.slice(0, shorter())"
+            :key="index"
+          >
             {{ item[0]["name"] }} = {{ item[1]["name"] }}
             <code-diff
               :old-string="item[0]['repr']"
@@ -171,9 +178,9 @@ export default {
     },
 
     shorter() {
-        let lenA = this.structureA.length;
-        let lenB = this.structureB.length;
-        return Math.min(lenA, lenB);
+      let lenA = this.structureA.length;
+      let lenB = this.structureB.length;
+      return Math.min(lenA, lenB);
     },
     async getPacket() {
       this.structureA = [];
@@ -214,9 +221,9 @@ export default {
         this.combined = this.structureA.map((e, i) => {
           try {
             return [e, this.structureB[i]];
-          } catch(e) {
-              console.log(e);
-              this.loading = false;  // TODO Extend this for alert message
+          } catch (e) {
+            console.log(e);
+            this.loading = false; // TODO Extend this for alert message
           }
         });
         this.loading = false;
