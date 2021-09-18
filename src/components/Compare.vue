@@ -153,7 +153,6 @@ export default {
       this.diff();
     },
     cleanHex(potentialId) {
-      console.log(potentialId);
       let value = this[potentialId].split(" ");
 
       // let slicePotentialHex = value.slice(2, 18)
@@ -208,7 +207,6 @@ export default {
           if (this.structureB.length === 0) {
             throw "Empty Structure";
           }
-          console.log(hexResponseB);
         } catch (err) {
           return;
         }
@@ -216,13 +214,11 @@ export default {
         let reprA = this.structureA.map((e, i) => {
           return e["repr"];
         });
-        console.log(reprA);
 
         this.combined = this.structureA.map((e, i) => {
           try {
             return [e, this.structureB[i]];
           } catch (e) {
-            console.log(e);
             this.loading = false; // TODO Extend this for alert message
           }
         });

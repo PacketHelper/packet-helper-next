@@ -336,7 +336,6 @@ export default {
         return;
       }
       this.createdHex = newPacket["hex"];
-      console.log(this.createdHex);
     },
     handleAdd(el) {
       const protocol = el.srcElement.innerText;
