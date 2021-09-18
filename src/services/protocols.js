@@ -219,7 +219,6 @@ export default {
           answers[answers.length - 1].children.push({ name: "CNAME" });
       }
     }
-    //console.log(answers)
     let ord = [
       { name: "Transaction ID" },
       { name: "Flags", children: [...bits.slice(0, 10)] },

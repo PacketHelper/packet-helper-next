@@ -4,9 +4,29 @@
       <v-card-title>Simple Compare</v-card-title>
       <v-card-text>
         <v-container>
+          The purpose of this view is to compare two packets to check for
+          differences between them. It can be helpful in finding the difference
+          between the outgoing packet and the packet received on the selected
+          port.
+          <v-tooltip v-model="show" top>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon v-bind="attrs" v-on="on">
+                <v-icon color="grey lighten-1"> mdi-help-circle </v-icon>
+              </v-btn>
+            </template>
+            <span>
+              Enter Hex A and Hex B to see the differences. If you copied your
+              frame along with the information in `HEXDUMP`, use" Clean "first,
+              then look for more information with" Refresh ". If both packages
+              contain add-ons from the `HEXDUMP` function, use the" Clean & Show
+              Diff "option. Otherwise, use "Quick diff". If something has
+              changed, use "Refresh".</span
+            >
+          </v-tooltip>
+          <br /><br />
+
           <v-row>
             <v-col>
-              Hex A
               <v-card-text>
                 <v-textarea
                   id="hexA"
@@ -18,7 +38,6 @@
               </v-card-text>
             </v-col>
             <v-col>
-              Hex B
               <v-card-text>
                 <v-textarea
                   id="hexB"
@@ -68,6 +87,19 @@
       </v-card-text>
     </v-card>
 
+    <v-alert
+      border="top"
+      color="red lighten-2"
+      dark
+      v-if="hexValueA.length !== hexValueB.length"
+      style="margin-top: 1rem"
+    >
+      The given frames vary in length ({{
+        hexValueA.replace(/\s/g, "").length / 2
+      }}B != {{ hexValueB.replace(/\s/g, "").length / 2 }}B). To avoid any
+      problems, PacketHelper will show only the common part, please treat the
+      rest as RAW data
+    </v-alert>
     <v-card
       v-if="
         hexValueA.toLowerCase() !== '' &&
@@ -83,7 +115,10 @@
       <v-card-text v-else>
         More information per structure:
         <ul>
-          <li v-for="(item, index) in combined">
+          <li
+            v-for="(item, index) in combined.slice(0, shorter())"
+            :key="index"
+          >
             {{ item[0]["name"] }} = {{ item[1]["name"] }}
             <code-diff
               :old-string="item[0]['repr']"
@@ -137,7 +172,6 @@ export default {
       this.diff();
     },
     cleanHex(potentialId) {
-      console.log(potentialId);
       let value = this[potentialId].split(" ");
 
       // let slicePotentialHex = value.slice(2, 18)
@@ -160,8 +194,12 @@ export default {
     diff() {
       this.getPacket();
     },
-    load() {},
-    resetData() {},
+
+    shorter() {
+      let lenA = this.structureA.length;
+      let lenB = this.structureB.length;
+      return Math.min(lenA, lenB);
+    },
     async getPacket() {
       this.structureA = [];
       this.structureB = [];
@@ -188,7 +226,6 @@ export default {
           if (this.structureB.length === 0) {
             throw "Empty Structure";
           }
-          console.log(hexResponseB);
         } catch (err) {
           return;
         }
@@ -196,10 +233,13 @@ export default {
         let reprA = this.structureA.map((e, i) => {
           return e["repr"];
         });
-        console.log(reprA);
 
         this.combined = this.structureA.map((e, i) => {
-          return [e, this.structureB[i]];
+          try {
+            return [e, this.structureB[i]];
+          } catch (e) {
+            this.loading = false; // TODO Extend this for alert message
+          }
         });
         this.loading = false;
       }
