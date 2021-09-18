@@ -37,38 +37,89 @@
           class="white--text"
           color="warning"
           depressed
+          :loading="loading"
+          :disabled="loading"
           large
           @click="cleanHexs"
         >
-          Clean hexs
+          Clean & show diff
         </v-btn>
-        <v-btn color="primary" large>Quick diff</v-btn>
-        <!-- <v-btn text @click="reset">Reset</v-btn> -->
-        <!-- <v-checkbox
-          v-model="expandOnLoad"
-          :value="expandOnLoad"
-          :label="`Expand on load?`"
-        ></v-checkbox> -->
-        <!-- <v-spacer></v-spacer>
-        <v-btn text @click="showExamples">Next Example</v-btn> -->
+        <v-btn
+          color="primary"
+          :loading="loading"
+          :disabled="loading"
+          @click="diff"
+          large
+          >Quick diff</v-btn
+        >
       </v-card-actions>
     </v-card>
-    <code-diff :old-string="hexValueA" :new-string="hexValueB" :context="10" />
+    <v-card
+      v-if="hexValueA !== '' && hexValueB !== ''"
+      style="margin-top: 1rem"
+    >
+      <v-card-title>Simple diff</v-card-title>
+      <v-card-text>
+        <code-diff
+          :old-string="hexValueA"
+          :new-string="hexValueB"
+          :context="10"
+        />
+      </v-card-text>
+    </v-card>
+
+    <v-card
+      v-if="hexValueA !== '' && hexValueB !== '' && hexValueA !== hexValueB"
+      style="margin-top: 1rem"
+    >
+      <v-card-title>More diff information</v-card-title>
+      <v-card-text v-if="loading">
+        <center>Loading...</center>
+      </v-card-text>
+      <v-card-text v-else>
+        More information per structure:
+        <ul>
+          <li v-for="(item, index) in combined">
+            {{ item[0]["name"] }} = {{ item[1]["name"] }}
+            <code-diff
+              :old-string="item[0]['repr']"
+              :new-string="item[1]['repr']"
+              :context="10"
+            />
+          </li>
+        </ul>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn
+          class="ma-2"
+          :loading="loading"
+          :disabled="loading"
+          color="secondary"
+          @click="diff"
+          large
+          >Refresh <v-icon right dark> mdi-refresh </v-icon></v-btn
+        >
+      </v-card-actions>
+    </v-card>
   </div>
 </template>
 
 <script>
 import MessageService from "../services/apiService";
-import CodeDiff from 'vue-code-diff';
+import CodeDiff from "vue-code-diff";
 
 export default {
   name: "Compare",
-  components: {CodeDiff},
+  components: { CodeDiff },
   data() {
     return {
       hexValueA: "",
       hexValueB: "",
       prettyDiff: "",
+      structureA: [],
+      structureB: [],
+      combined: [],
+      loading: false,
     };
   },
   methods: {
@@ -79,6 +130,7 @@ export default {
     },
     cleanHexs() {
       ["hexValueA", "hexValueB"].forEach(this.cleanHex);
+      this.diff();
     },
     cleanHex(potentialId) {
       console.log(potentialId);
@@ -101,15 +153,55 @@ export default {
       });
       this[potentialId] = stack.join(" ");
     },
-    // diff() {
-    //   let diff = new Diff();
-    //   let text_diff = diff.main(this.hexValueA, this.hexValueB);
-    //   this.prettyDiff = text_diff.prettyHtml(text_diff);
-    // },
+    diff() {
+      this.getPacket();
+    },
+    load() {},
+    resetData() {},
+    async getPacket() {
+      this.structureA = [];
+      this.structureB = [];
+      this.loading = true;
+
+      if (this.hexValueA !== "undefined" || this.hexValueB !== "undefined") {
+        try {
+          const hexResponse = await MessageService.getHex(
+            this.hexValueA.replace(/\s/g, "")
+          );
+          this.structureA = hexResponse["structure"];
+          if (this.structureA.length === 0) {
+            throw "Empty Structure";
+          }
+        } catch (err) {
+          return;
+        }
+
+        try {
+          const hexResponseB = await MessageService.getHex(
+            this.hexValueB.replace(/\s/g, "")
+          );
+          this.structureB = hexResponseB["structure"];
+          if (this.structureB.length === 0) {
+            throw "Empty Structure";
+          }
+          console.log(hexResponseB);
+        } catch (err) {
+          return;
+        }
+
+        let reprA = this.structureA.map((e, i) => {
+          return e["repr"];
+        });
+        console.log(reprA);
+
+        this.combined = this.structureA.map((e, i) => {
+          return [e, this.structureB[i]];
+        });
+        this.loading = false;
+      }
+    },
   },
-  mounted() {
-    this.getInfo();
-  },
+  mounted() {},
 };
 </script>
 
