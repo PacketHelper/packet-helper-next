@@ -69,7 +69,11 @@
     </v-card>
 
     <v-card
-      v-if="hexValueA.toLowerCase() !== '' && hexValueB.toLowerCase() !== '' && hexValueA.toLowerCase() !== hexValueB.toLowerCase()"
+      v-if="
+        hexValueA.toLowerCase() !== '' &&
+        hexValueB.toLowerCase() !== '' &&
+        hexValueA.toLowerCase() !== hexValueB.toLowerCase()
+      "
       style="margin-top: 1rem"
     >
       <v-card-title>More diff information</v-card-title>
