@@ -21,6 +21,9 @@ local-core: clean-local
 	rm -rf phc
 	@echo "Getting core... Done"
 
+format-ui:
+	prettier --write src/
+
 format:
 	@echo "Formatting..."
 	python -m black -t py38 backend/ test/
