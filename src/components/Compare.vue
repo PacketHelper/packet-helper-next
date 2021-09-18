@@ -4,9 +4,30 @@
       <v-card-title>Simple Compare</v-card-title>
       <v-card-text>
         <v-container>
+        The purpose of this view is to compare two packets to check for differences between them. It can be helpful in finding the difference between the outgoing packet and the packet received on the selected port.
+                <v-tooltip
+          v-model="show"
+          top
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              icon
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-icon color="grey lighten-1">
+                mdi-help-circle
+              </v-icon>
+            </v-btn>
+          </template>
+          <span>        Enter Hex A and Hex B to see the differences. If you copied your frame along with the information in `HEXDUMP`, use" Clean "first, then look for more information with" Refresh ". If both packages contain add-ons from the `HEXDUMP` function, use the" Clean & Show Diff "option. Otherwise, use "Quick diff".
+        If something has changed, use "Refresh".</span>
+        </v-tooltip>
+        <br><br>
+
+
           <v-row>
             <v-col>
-              Hex A
               <v-card-text>
                 <v-textarea
                   id="hexA"
@@ -18,7 +39,6 @@
               </v-card-text>
             </v-col>
             <v-col>
-              Hex B
               <v-card-text>
                 <v-textarea
                   id="hexB"
