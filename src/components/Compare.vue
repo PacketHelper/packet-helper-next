@@ -68,6 +68,15 @@
       </v-card-text>
     </v-card>
 
+    <v-alert
+      border="top"
+      color="red lighten-2"
+      dark
+      v-if="hexValueA.length !== hexValueB.length"
+      style="margin-top: 1rem"
+    >
+      The given frames vary in length ({{ hexValueA.replace(/\s/g, "").length / 2 }}B != {{ hexValueB.replace(/\s/g, "").length / 2 }}B). To avoid any problems, PacketHelper will show only the common part, please treat the rest as RAW data
+    </v-alert>
     <v-card
       v-if="
         hexValueA.toLowerCase() !== '' &&
@@ -83,7 +92,7 @@
       <v-card-text v-else>
         More information per structure:
         <ul>
-          <li v-for="(item, index) in combined">
+          <li v-for="(item, index) in combined.slice(0, shorter())" :key="index">
             {{ item[0]["name"] }} = {{ item[1]["name"] }}
             <code-diff
               :old-string="item[0]['repr']"
@@ -160,8 +169,12 @@ export default {
     diff() {
       this.getPacket();
     },
-    load() {},
-    resetData() {},
+
+    shorter() {
+        let lenA = this.structureA.length;
+        let lenB = this.structureB.length;
+        return Math.min(lenA, lenB);
+    },
     async getPacket() {
       this.structureA = [];
       this.structureB = [];
@@ -199,7 +212,12 @@ export default {
         console.log(reprA);
 
         this.combined = this.structureA.map((e, i) => {
-          return [e, this.structureB[i]];
+          try {
+            return [e, this.structureB[i]];
+          } catch(e) {
+              console.log(e);
+              this.loading = false;  // TODO Extend this for alert message
+          }
         });
         this.loading = false;
       }
