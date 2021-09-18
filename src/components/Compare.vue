@@ -42,7 +42,7 @@
         >
           Clean hexs
         </v-btn>
-        <v-btn color="primary" @click="goToHex" large>Quick diff</v-btn>
+        <v-btn color="primary" large>Quick diff</v-btn>
         <!-- <v-btn text @click="reset">Reset</v-btn> -->
         <!-- <v-checkbox
           v-model="expandOnLoad"
@@ -53,18 +53,22 @@
         <v-btn text @click="showExamples">Next Example</v-btn> -->
       </v-card-actions>
     </v-card>
+    <code-diff :old-string="hexValueA" :new-string="hexValueB" :context="10" />
   </div>
 </template>
 
 <script>
 import MessageService from "../services/apiService";
+import CodeDiff from 'vue-code-diff';
 
 export default {
   name: "Compare",
+  components: {CodeDiff},
   data() {
     return {
       hexValueA: "",
       hexValueB: "",
+      prettyDiff: "",
     };
   },
   methods: {
@@ -97,6 +101,11 @@ export default {
       });
       this[potentialId] = stack.join(" ");
     },
+    // diff() {
+    //   let diff = new Diff();
+    //   let text_diff = diff.main(this.hexValueA, this.hexValueB);
+    //   this.prettyDiff = text_diff.prettyHtml(text_diff);
+    // },
   },
   mounted() {
     this.getInfo();
