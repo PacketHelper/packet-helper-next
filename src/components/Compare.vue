@@ -61,15 +61,15 @@
       <v-card-title>Simple diff</v-card-title>
       <v-card-text>
         <code-diff
-          :old-string="hexValueA"
-          :new-string="hexValueB"
+          :old-string="hexValueA.toUpperCase()"
+          :new-string="hexValueB.toUpperCase()"
           :context="10"
         />
       </v-card-text>
     </v-card>
 
     <v-card
-      v-if="hexValueA !== '' && hexValueB !== '' && hexValueA !== hexValueB"
+      v-if="hexValueA.toLowerCase() !== '' && hexValueB.toLowerCase() !== '' && hexValueA.toLowerCase() !== hexValueB.toLowerCase()"
       style="margin-top: 1rem"
     >
       <v-card-title>More diff information</v-card-title>
