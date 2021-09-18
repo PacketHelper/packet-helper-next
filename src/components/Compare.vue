@@ -14,8 +14,7 @@
                   label="Hex A"
                   v-model="hexValueA"
                 ></v-textarea>
-                <v-btn
-                @click="cleanHex('hexValueA')">Clean A</v-btn>
+                <v-btn @click="cleanHex('hexValueA')">Clean A</v-btn>
               </v-card-text>
             </v-col>
             <v-col>
@@ -27,8 +26,7 @@
                   label="Hex B"
                   v-model="hexValueB"
                 ></v-textarea>
-                <v-btn
-                @click="cleanHex('hexValueB')">Clean B</v-btn>
+                <v-btn @click="cleanHex('hexValueB')">Clean B</v-btn>
               </v-card-text>
             </v-col>
           </v-row>
@@ -65,8 +63,8 @@ export default {
   name: "Compare",
   data() {
     return {
-        hexValueA: "",
-        hexValueB: "",
+      hexValueA: "",
+      hexValueB: "",
     };
   },
   methods: {
@@ -76,7 +74,7 @@ export default {
       this.revision = info["revision"];
     },
     cleanHexs() {
-        ["hexValueA", "hexValueB"].forEach(this.cleanHex);
+      ["hexValueA", "hexValueB"].forEach(this.cleanHex);
     },
     cleanHex(potentialId) {
       console.log(potentialId);
