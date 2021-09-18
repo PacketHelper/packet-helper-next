@@ -1,0 +1,208 @@
+<template>
+  <div>
+    <v-card>
+      <v-card-title>Simple Compare</v-card-title>
+      <v-card-text>
+        <v-container>
+          <v-row>
+            <v-col>
+              Hex A
+              <v-card-text>
+                <v-textarea
+                  id="hexA"
+                  solo
+                  label="Hex A"
+                  v-model="hexValueA"
+                ></v-textarea>
+                <v-btn @click="cleanHex('hexValueA')">Clean A</v-btn>
+              </v-card-text>
+            </v-col>
+            <v-col>
+              Hex B
+              <v-card-text>
+                <v-textarea
+                  id="hexB"
+                  solo
+                  label="Hex B"
+                  v-model="hexValueB"
+                ></v-textarea>
+                <v-btn @click="cleanHex('hexValueB')">Clean B</v-btn>
+              </v-card-text>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn
+          class="white--text"
+          color="warning"
+          depressed
+          :loading="loading"
+          :disabled="loading"
+          large
+          @click="cleanHexs"
+        >
+          Clean & show diff
+        </v-btn>
+        <v-btn
+          color="primary"
+          :loading="loading"
+          :disabled="loading"
+          @click="diff"
+          large
+          >Quick diff</v-btn
+        >
+      </v-card-actions>
+    </v-card>
+    <v-card
+      v-if="hexValueA !== '' && hexValueB !== ''"
+      style="margin-top: 1rem"
+    >
+      <v-card-title>Simple diff</v-card-title>
+      <v-card-text>
+        <code-diff
+          :old-string="hexValueA"
+          :new-string="hexValueB"
+          :context="10"
+        />
+      </v-card-text>
+    </v-card>
+
+    <v-card
+      v-if="hexValueA !== '' && hexValueB !== '' && hexValueA !== hexValueB"
+      style="margin-top: 1rem"
+    >
+      <v-card-title>More diff information</v-card-title>
+      <v-card-text v-if="loading">
+        <center>Loading...</center>
+      </v-card-text>
+      <v-card-text v-else>
+        More information per structure:
+        <ul>
+          <li v-for="(item, index) in combined">
+            {{ item[0]["name"] }} = {{ item[1]["name"] }}
+            <code-diff
+              :old-string="item[0]['repr']"
+              :new-string="item[1]['repr']"
+              :context="10"
+            />
+          </li>
+        </ul>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn
+          class="ma-2"
+          :loading="loading"
+          :disabled="loading"
+          color="secondary"
+          @click="diff"
+          large
+          >Refresh <v-icon right dark> mdi-refresh </v-icon></v-btn
+        >
+      </v-card-actions>
+    </v-card>
+  </div>
+</template>
+
+<script>
+import MessageService from "../services/apiService";
+import CodeDiff from "vue-code-diff";
+
+export default {
+  name: "Compare",
+  components: { CodeDiff },
+  data() {
+    return {
+      hexValueA: "",
+      hexValueB: "",
+      prettyDiff: "",
+      structureA: [],
+      structureB: [],
+      combined: [],
+      loading: false,
+    };
+  },
+  methods: {
+    async getInfo() {
+      const info = await MessageService.getInfo();
+      this.version = info["version"];
+      this.revision = info["revision"];
+    },
+    cleanHexs() {
+      ["hexValueA", "hexValueB"].forEach(this.cleanHex);
+      this.diff();
+    },
+    cleanHex(potentialId) {
+      console.log(potentialId);
+      let value = this[potentialId].split(" ");
+
+      // let slicePotentialHex = value.slice(2, 18)
+      // let notHexFlag = slicePotentialHex.some(el => {
+      //   return el.length !== 2;
+      // });
+      //
+      // if (notHexFlag) {
+      //   return false;
+      // }
+      let stack = [];
+      let regex = new RegExp("[0-9a-fA-F]{1,2}");
+      value.forEach((h) => {
+        if (h.length === 2 && regex.test(h)) {
+          stack.push(h);
+        }
+      });
+      this[potentialId] = stack.join(" ");
+    },
+    diff() {
+      this.getPacket();
+    },
+    load() {},
+    resetData() {},
+    async getPacket() {
+      this.structureA = [];
+      this.structureB = [];
+      this.loading = true;
+
+      if (this.hexValueA !== "undefined" || this.hexValueB !== "undefined") {
+        try {
+          const hexResponse = await MessageService.getHex(
+            this.hexValueA.replace(/\s/g, "")
+          );
+          this.structureA = hexResponse["structure"];
+          if (this.structureA.length === 0) {
+            throw "Empty Structure";
+          }
+        } catch (err) {
+          return;
+        }
+
+        try {
+          const hexResponseB = await MessageService.getHex(
+            this.hexValueB.replace(/\s/g, "")
+          );
+          this.structureB = hexResponseB["structure"];
+          if (this.structureB.length === 0) {
+            throw "Empty Structure";
+          }
+          console.log(hexResponseB);
+        } catch (err) {
+          return;
+        }
+
+        let reprA = this.structureA.map((e, i) => {
+          return e["repr"];
+        });
+        console.log(reprA);
+
+        this.combined = this.structureA.map((e, i) => {
+          return [e, this.structureB[i]];
+        });
+        this.loading = false;
+      }
+    },
+  },
+  mounted() {},
+};
+</script>
+
+<style></style>
