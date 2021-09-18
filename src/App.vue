@@ -21,7 +21,7 @@
             </v-toolbar-title>
             <v-spacer></v-spacer>
             <router-link to="/"><v-btn text>Decode</v-btn></router-link>
-            <router-link to="compare"
+            <router-link to="/compare"
               ><v-btn text
                 ><v-badge color="red" content="New">Simple Diff</v-badge></v-btn
               ></router-link
