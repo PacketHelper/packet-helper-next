@@ -174,8 +174,7 @@ export default {
   },
   methods: {
     goToHex() {
-      this.hexValue = this.hexValue.replace(/\s/g, "");
-      this.$router.replace(`/hex/${this.hexValue}`);
+      this.$router.replace(`/hex/${this.hexValue.replace(/\s/g, "")}`);
       this.showPacket();
       this.getPacket();
     },
@@ -222,7 +221,9 @@ export default {
         this.warning = false;
         this.voted = false;
         try {
-          const hexResponse = await MessageService.getHex(this.hexValue);
+          const hexResponse = await MessageService.getHex(
+            this.hexValue.replace(/\s/g, "")
+          );
           this.structure = hexResponse["structure"];
           this.summary = hexResponse["summary"];
           if (this.structure.length === 0) {
