@@ -222,7 +222,9 @@ export default {
         this.warning = false;
         this.voted = false;
         try {
-          const hexResponse = await MessageService.getHex(this.hexValue.replace(/\s/g, ""));
+          const hexResponse = await MessageService.getHex(
+            this.hexValue.replace(/\s/g, "")
+          );
           this.structure = hexResponse["structure"];
           this.summary = hexResponse["summary"];
           if (this.structure.length === 0) {
