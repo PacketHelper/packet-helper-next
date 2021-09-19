@@ -174,8 +174,7 @@ export default {
   },
   methods: {
     goToHex() {
-      let strHexValue = this.hexValue.replace(/\s/g, "");
-      this.$router.replace(`/hex/${strHexValue}`);
+      this.$router.replace(`/hex/${this.hexValue.replace(/\s/g, "")}`);
       this.showPacket();
       this.getPacket();
     },
