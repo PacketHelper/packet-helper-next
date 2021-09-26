@@ -37,42 +37,40 @@
               >"Craft packets before, packets craft you" 🐱‍👤
             </v-btn>
             <v-dialog v-model="dialog" width="500">
+              <template v-slot:activator="{ on, attrs }">
+                <v-icon color="grey" v-bind="attrs" v-on="on">
+                  mdi-help-circle
+                </v-icon>
+              </template>
 
-            <template v-slot:activator="{ on, attrs }">
-              <v-icon color="grey" v-bind="attrs" v-on="on"> mdi-help-circle </v-icon>
-            </template>
-
-            <v-card>
-              <v-card-title>
-                About PacketHelper.com
-              </v-card-title>
-              <v-card-subtitle>
-                "Craft packets before, packets craft you" 🐱‍👤  
-              </v-card-subtitle>
-              <v-card-text>
-                The application has been prepared to facilitate the work of all those who work with internet packages on a daily basis. If you program in P4 Lang at your work, use the PTF framework or you don't know what happened to your package during the laboratories at the university.
-                <br><br>Find us at:<br>
-                <a href="https://github.com/PacketHelper/packet-helper-next"><v-icon>mdi-github</v-icon> GitHub PacketHelper/packet-helper-next</a>
-              </v-card-text>
-              <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-card-text>{{this.revision}}</v-card-text>
-          <v-btn
-            text
-            :href="this.getLinkToLatestRelease()">
-          Latest version {{ this.version }}
-          </v-btn>
-          <v-btn
-            color="primary"
-            text
-            @click="dialog = false"
-          >
-            Close
-          </v-btn>
-        </v-card-actions>
-            </v-card>
-
-
+              <v-card>
+                <v-card-title> About PacketHelper.com </v-card-title>
+                <v-card-subtitle>
+                  "Craft packets before, packets craft you" 🐱‍👤
+                </v-card-subtitle>
+                <v-card-text>
+                  The application has been prepared to facilitate the work of
+                  all those who work with internet packages on a daily basis. If
+                  you program in P4 Lang at your work, use the PTF framework or
+                  you don't know what happened to your package during the
+                  laboratories at the university.
+                  <br /><br />Find us at:<br />
+                  <a href="https://github.com/PacketHelper/packet-helper-next"
+                    ><v-icon>mdi-github</v-icon> GitHub
+                    PacketHelper/packet-helper-next</a
+                  >
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-card-text>{{ this.revision }}</v-card-text>
+                  <v-btn text :href="this.getLinkToLatestRelease()">
+                    Latest version {{ this.version }}
+                  </v-btn>
+                  <v-btn color="primary" text @click="dialog = false">
+                    Close
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
             </v-dialog>
           </v-toolbar>
         </v-container>
@@ -120,10 +118,13 @@ export default {
     },
     getLinkToLatestRelease() {
       if (this.version === 0) {
-        return "https://github.com/PacketHelper/packet-helper-next"
+        return "https://github.com/PacketHelper/packet-helper-next";
       }
-      return "https://github.com/PacketHelper/packet-helper-next/releases/tag/" + this.version
-    }
+      return (
+        "https://github.com/PacketHelper/packet-helper-next/releases/tag/" +
+        this.version
+      );
+    },
   },
   mounted() {
     this.getInfo();
