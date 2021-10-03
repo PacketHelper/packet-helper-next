@@ -182,8 +182,8 @@ export default {
     convertToBytes() {
       this.bytes = [];
       [...this.hexValue.replace(/\s/g, "")].forEach((v, i) => {
-        if (i%2) {
-          this.bytes.push(tempValue[i-1] + tempValue[i]);
+        if (i % 2) {
+          this.bytes.push(tempValue[i - 1] + tempValue[i]);
         }
       });
     },
