@@ -29,7 +29,7 @@ name: Deploy to Amazon ECS
 on: push
 
 env:
-  AWS_REGION: us-central-1                   # set this to your preferred AWS region, e.g. us-west-1
+  AWS_REGION: ue-central-1                   # set this to your preferred AWS region, e.g. us-west-1
   ECR_REPOSITORY: ph-api           # set this to your Amazon ECR repository name
   ECS_SERVICE: ph-api-service-name                 # set this to your Amazon ECS service name
   ECS_CLUSTER: ph-api-fargate-cluster               # set this to your Amazon ECS cluster name
