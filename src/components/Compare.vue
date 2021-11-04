@@ -120,6 +120,24 @@
             :key="index"
           >
             {{ item[0]["name"] }} = {{ item[1]["name"] }}
+            <div>
+              <div v-if="item[0]['chksum_status']['status'] === true">
+                A: ✔️ Chksum: {{ item[0]["chksum_status"]["chksum"] }}
+              </div>
+              <div v-else-if="item[0]['chksum_status']['status'] === false">
+                A: ❌ Chksum: {{ item[0]["chksum_status"]["chksum"] }}; should
+                be
+                {{ item[0]["chksum_status"]["chksum_calculated"] }}
+              </div>
+              <div v-if="item[1]['chksum_status']['status'] === true">
+                B: ✔️ Chksum: {{ item[1]["chksum_status"]["chksum"] }}
+              </div>
+              <div v-else-if="item[1]['chksum_status']['status'] === false">
+                B: ❌ Chksum: {{ item[1]["chksum_status"]["chksum"] }}; should
+                be
+                {{ item[1]["chksum_status"]["chksum_calculated"] }}
+              </div>
+            </div>
             <code-diff
               :old-string="item[0]['repr']"
               :new-string="item[1]['repr']"
@@ -173,17 +191,9 @@ export default {
     },
     cleanHex(potentialId) {
       let value = this[potentialId].split(" ");
-
-      // let slicePotentialHex = value.slice(2, 18)
-      // let notHexFlag = slicePotentialHex.some(el => {
-      //   return el.length !== 2;
-      // });
-      //
-      // if (notHexFlag) {
-      //   return false;
-      // }
       let stack = [];
       let regex = new RegExp("[0-9a-fA-F]{1,2}");
+
       value.forEach((h) => {
         if (h.length === 2 && regex.test(h)) {
           stack.push(h);
