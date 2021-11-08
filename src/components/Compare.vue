@@ -204,7 +204,17 @@ export default {
     diff() {
       this.getPacket();
     },
-
+    showDiffExample() {
+      const example_array = [
+        [
+          "ff ff ff aa a9 ff 00 00 00 00 00 12 08 00 45 00 00 3c 00 01 00 00 40 04 7c bb 7f 00 00 01 7f 00 00 01 45 00 00 28 00 01 00 00 40 06 7c cd 7f 00 00 01 7f 00 00 01 00 14 00 50 00 00 00 00 00 00 00 00 50 02 20 00 91 7c 00 00",
+          "ff ff ff bb a9 ff 00 00 00 00 00 12 08 00 45 00 00 3c 00 01 00 00 40 04 7c ab 7f 00 00 01 7f 00 00 01 45 00 00 28 00 01 00 00 40 06 7c cd 7f 00 00 01 7f 00 00 01 00 14 00 50 00 00 00 00 00 00 00 00 50 02 20 00 91 7c 00 00",
+        ],
+      ];
+      let r_value = Math.floor(Math.random() * example_array.length);
+      this.hexValueA = example_array[r_value][0];
+      this.hexValueB = example_array[r_value][1];
+    },
     shorter() {
       let lenA = this.structureA.length;
       let lenB = this.structureB.length;
@@ -255,7 +265,11 @@ export default {
       }
     },
   },
-  mounted() {},
+  mounted() {
+    // show example for Simple Diff
+    this.showDiffExample();
+    this.getPacket();
+  },
 };
 </script>
 
