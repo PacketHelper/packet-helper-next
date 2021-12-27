@@ -170,6 +170,7 @@ export default {
       isExpanded: false,
       voted: false,
       expandOnLoad: true,
+      bytes: [],
     };
   },
   methods: {
@@ -177,6 +178,14 @@ export default {
       this.$router.replace(`/hex/${this.hexValue.replace(/\s/g, "")}`);
       this.showPacket();
       this.getPacket();
+    },
+    convertToBytes() {
+      this.bytes = [];
+      [...this.hexValue.replace(/\s/g, "")].forEach((v, i) => {
+        if (i % 2) {
+          this.bytes.push(tempValue[i - 1] + tempValue[i]);
+        }
+      });
     },
     read() {
       if (this.$route.query["redirect"]) {
@@ -192,6 +201,7 @@ export default {
       this.decode = false;
       this.resetData();
       this.panel = [];
+      this.bytes = [];
       await this.delay(0.6);
       this.alert = false;
       this.loading = false;
