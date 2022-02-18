@@ -375,17 +375,6 @@ export default {
     ];
     return ord;
   },
-  TLS() {
-    let ord = [
-      { name: "Application Data Protocol" },
-      { name: "Content Type" },
-      { name: "Encrypted Application Data" },
-      { name: "Length" },
-      { name: "TLSv1.2 Record Layer: Application Data Protocol" },
-      { name: "Version" },
-    ];
-    return ord;
-  },
   HTTP() {
     let ord = [
       { name: "Connection" },

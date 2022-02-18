@@ -47,12 +47,7 @@ export default {
 .dropdown-item {
   max-height: 2000px;
 }
-/*
-.drop-enter {
-  opacity: 0;
-  max-height: 0;
-}
-*/
+
 .drop-enter-active {
   overflow: hidden;
   animation: drop-enter 0.8s ease;
@@ -77,8 +72,6 @@ export default {
 }
 .collapse {
   list-style-type: none;
-  /*position: relative;
-  padding-left: 20px;*/
 }
 
 .v-expansion-panel {
@@ -91,8 +84,6 @@ export default {
 
 .rotate {
   list-style-type: none;
-  /*position: relative;
-  padding-left: 20px;*/
 }
 
 i {

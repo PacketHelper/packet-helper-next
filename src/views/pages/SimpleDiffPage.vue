@@ -52,7 +52,7 @@
         </v-container>
       </v-card-text>
       <v-card-actions>
-        <v-btn
+        <!-- <v-btn
           class="white--text"
           color="warning"
           depressed
@@ -60,9 +60,10 @@
           :disabled="loading"
           large
           @click="cleanHexs"
+          disabled
         >
           Clean & show diff
-        </v-btn>
+        </v-btn> -->
         <v-btn
           color="primary"
           :loading="loading"
@@ -161,116 +162,114 @@
   </div>
 </template>
 
-<script>
-import MessageService from "../services/apiService";
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+
+import MessageService from "@/services/apiService";
 import CodeDiff from "vue-code-diff";
 
-export default {
-  name: "Compare",
-  components: { CodeDiff },
-  data() {
-    return {
-      hexValueA: "",
-      hexValueB: "",
-      prettyDiff: "",
-      structureA: [],
-      structureB: [],
-      combined: [],
-      loading: false,
-    };
+@Component({
+  components: {
+    CodeDiff,
   },
-  methods: {
-    async getInfo() {
-      const info = await MessageService.getInfo();
-      this.version = info["version"];
-      this.revision = info["revision"];
-    },
-    cleanHexs() {
-      ["hexValueA", "hexValueB"].forEach(this.cleanHex);
-      this.diff();
-    },
-    cleanHex(potentialId) {
-      let value = this[potentialId].split(" ");
-      let stack = [];
-      let regex = new RegExp("[0-9a-fA-F]{1,2}");
+})
+export default class Compare extends Vue {
+  hexValueA = "";
+  hexValueB = "";
+  prettyDiff = "";
+  structureA = [];
+  structureB = [];
+  combined: any;
+  loading = false;
+  version = "";
+  revision = "";
 
-      value.forEach((h) => {
-        if (h.length === 2 && regex.test(h)) {
-          stack.push(h);
+  async getInfo(): Promise<void> {
+    const info = await MessageService.getInfo();
+    this.version = info["version"];
+    this.revision = info["revision"];
+  }
+  // disabled since in type script this.[object_name] does not work :(
+  // cleanHexs(): void {
+  //   ["hexValueA", "hexValueB"].forEach(this.cleanHex);
+  //   this.diff();
+  // }
+
+  // cleanHex(potentialId: object): void {
+  //   let value = this[potentialId].split(" ");
+  //   let stack: Array<string> = [];
+  //   let regex = new RegExp("[0-9a-fA-F]{1,2}");
+  //   value.forEach((h: string) => {
+  //     if (h.length === 2 && regex.test(h)) {
+  //       stack.push(h);
+  //     }
+  //   });
+  //   this[potentialId] = stack.join(" ");
+  // }
+  diff(): void {
+    this.getPacket();
+  }
+  showDiffExample(): void {
+    const example_array = [
+      [
+        "ff ff ff aa a9 ff 00 00 00 00 00 12 08 00 45 00 00 3c 00 01 00 00 40 04 7c bb 7f 00 00 01 7f 00 00 01 45 00 00 28 00 01 00 00 40 06 7c cd 7f 00 00 01 7f 00 00 01 00 14 00 50 00 00 00 00 00 00 00 00 50 02 20 00 91 7c 00 00",
+        "ff ff ff bb a9 ff 00 00 00 00 00 12 08 00 45 00 00 3c 00 01 00 00 40 04 7c ab 7f 00 00 01 7f 00 00 01 45 00 00 28 00 01 00 00 40 06 7c cd 7f 00 00 01 7f 00 00 01 00 14 00 50 00 00 00 00 00 00 00 00 50 02 20 00 91 7c 00 00",
+      ],
+    ];
+    let r_value = Math.floor(Math.random() * example_array.length);
+    this.hexValueA = example_array[r_value][0];
+    this.hexValueB = example_array[r_value][1];
+  }
+  shorter(): number {
+    let lenA = this.structureA.length;
+    let lenB = this.structureB.length;
+    return Math.min(lenA, lenB);
+  }
+  async getPacket(): Promise<void> {
+    this.structureA = [];
+    this.structureB = [];
+    this.loading = true;
+
+    if (this.hexValueA !== "undefined" || this.hexValueB !== "undefined") {
+      try {
+        const hexResponse = await MessageService.getHex(
+          this.hexValueA.replace(/\s/g, "")
+        );
+        this.structureA = hexResponse["structure"];
+        if (this.structureA.length === 0) {
+          throw "Empty Structure";
+        }
+      } catch (err) {
+        return;
+      }
+
+      try {
+        const hexResponseB = await MessageService.getHex(
+          this.hexValueB.replace(/\s/g, "")
+        );
+        this.structureB = hexResponseB["structure"];
+        if (this.structureB.length === 0) {
+          throw "Empty Structure";
+        }
+      } catch (err) {
+        return;
+      }
+
+      this.combined = this.structureA.map((e, i) => {
+        try {
+          return [e, this.structureB[i]];
+        } catch (e) {
+          this.loading = false; // TODO Extend this for alert message
         }
       });
-      this[potentialId] = stack.join(" ");
-    },
-    diff() {
-      this.getPacket();
-    },
-    showDiffExample() {
-      const example_array = [
-        [
-          "ff ff ff aa a9 ff 00 00 00 00 00 12 08 00 45 00 00 3c 00 01 00 00 40 04 7c bb 7f 00 00 01 7f 00 00 01 45 00 00 28 00 01 00 00 40 06 7c cd 7f 00 00 01 7f 00 00 01 00 14 00 50 00 00 00 00 00 00 00 00 50 02 20 00 91 7c 00 00",
-          "ff ff ff bb a9 ff 00 00 00 00 00 12 08 00 45 00 00 3c 00 01 00 00 40 04 7c ab 7f 00 00 01 7f 00 00 01 45 00 00 28 00 01 00 00 40 06 7c cd 7f 00 00 01 7f 00 00 01 00 14 00 50 00 00 00 00 00 00 00 00 50 02 20 00 91 7c 00 00",
-        ],
-      ];
-      let r_value = Math.floor(Math.random() * example_array.length);
-      this.hexValueA = example_array[r_value][0];
-      this.hexValueB = example_array[r_value][1];
-    },
-    shorter() {
-      let lenA = this.structureA.length;
-      let lenB = this.structureB.length;
-      return Math.min(lenA, lenB);
-    },
-    async getPacket() {
-      this.structureA = [];
-      this.structureB = [];
-      this.loading = true;
+      this.loading = false;
+    }
+  }
 
-      if (this.hexValueA !== "undefined" || this.hexValueB !== "undefined") {
-        try {
-          const hexResponse = await MessageService.getHex(
-            this.hexValueA.replace(/\s/g, "")
-          );
-          this.structureA = hexResponse["structure"];
-          if (this.structureA.length === 0) {
-            throw "Empty Structure";
-          }
-        } catch (err) {
-          return;
-        }
-
-        try {
-          const hexResponseB = await MessageService.getHex(
-            this.hexValueB.replace(/\s/g, "")
-          );
-          this.structureB = hexResponseB["structure"];
-          if (this.structureB.length === 0) {
-            throw "Empty Structure";
-          }
-        } catch (err) {
-          return;
-        }
-
-        let reprA = this.structureA.map((e, i) => {
-          return e["repr"];
-        });
-
-        this.combined = this.structureA.map((e, i) => {
-          try {
-            return [e, this.structureB[i]];
-          } catch (e) {
-            this.loading = false; // TODO Extend this for alert message
-          }
-        });
-        this.loading = false;
-      }
-    },
-  },
-  mounted() {
+  mounted(): void {
     // show example for Simple Diff
     this.showDiffExample();
     this.getPacket();
-  },
-};
+  }
+}
 </script>
-
-<style></style>
