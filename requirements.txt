@@ -1,15 +1,6 @@
-django~=3.1.5
-whitenoise==5.2.0
-djangorestframework~=3.12.2
-filter
-django-filter
-scapy_helper~=0.12.1
-scapy~=2.4.5
-pyshark~=0.4.3
-gunicorn
-dj_database_url==0.5.0
-psycopg2-binary==2.8.6
-pyperclip==1.8.2
-ptf~=0.9.1
+fastapi~=0.74.0
+jinja2~=3.0.3
+pydantic~=1.9.0
+uvicorn~=0.17.5
 
 git+https://github.com/PacketHelper/packet-helper-core.git

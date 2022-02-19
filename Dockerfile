@@ -41,4 +41,4 @@ ENV PH_VERSION=${PH_VER}
 ENV DJANGO_SETTINGS_MODULE="backend.settings.prod"
 # Run the app.  CMD is required to run on Heroku
 # $PORT is set by Heroku
-CMD gunicorn backend.wsgi --log-file -
+CMD uvicorn ph.main:app
