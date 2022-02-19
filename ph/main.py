@@ -4,13 +4,11 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-
 from packet_helper_core import PacketData, PacketDataScapy
 from packet_helper_core.utils.utils import decode_hex
 from scapy_helper import hexdump
 
 from ph.models.info_response import InfoResponse
-
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
