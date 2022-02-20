@@ -1,14 +1,16 @@
+import importlib
 from os import getenv
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from packet_helper_core import PacketData, PacketDataScapy
 from packet_helper_core.utils.utils import decode_hex
-from scapy_helper import hexdump
+from scapy_helper import hexdump, to_list
 
 from ph.models.info_response import InfoResponse
+from ph.models.packets import CreatorPacketsRequest, CreatorPacketsResponse
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -68,3 +70,23 @@ def get_api_hex(hex_string: str):
         },
         "structure": prepare_api_response(hex_string),
     }
+
+
+@app.post("/api/packets")
+def post_api_packets(request: CreatorPacketsRequest) -> CreatorPacketsResponse:
+    imported_all = importlib.import_module("scapy.all")
+    packet = None
+    try:
+        for protocol in request.packets:
+            new_layer = imported_all.__getattribute__(protocol)
+            if packet is None:
+                packet = new_layer()
+                continue
+            packet /= new_layer()
+    except AttributeError as error:
+        raise HTTPException(
+            status_code=500,
+            detail={"error": f"Layer is not supported {str(error).split()[-1]}"},
+        )
+
+    return CreatorPacketsResponse(packets=to_list(packet))
