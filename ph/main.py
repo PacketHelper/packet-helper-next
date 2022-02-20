@@ -1,4 +1,5 @@
 import importlib
+from http.client import CREATED
 from os import getenv
 
 from fastapi import FastAPI, HTTPException, Request
@@ -6,11 +7,18 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from packet_helper_core import PacketData, PacketDataScapy
+from packet_helper_core.utils.conversion import from_sh_list
 from packet_helper_core.utils.utils import decode_hex
 from scapy_helper import hexdump, to_list
+from scapy_helper import get_hex as scapy_helper_get_hex
 
+from ph.models.creator_packets import (
+    CreatorPacketsObjectsRequest,
+    CreatorPacketsObjectsResponse,
+    CreatorPacketsRequest,
+    CreatorPacketsResponse,
+)
 from ph.models.info_response import InfoResponse
-from ph.models.packets import CreatorPacketsRequest, CreatorPacketsResponse
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -90,3 +98,11 @@ def post_api_packets(request: CreatorPacketsRequest) -> CreatorPacketsResponse:
         )
 
     return CreatorPacketsResponse(packets=to_list(packet))
+
+
+@app.post("/api/create", status_code=CREATED)
+def post_api_create(
+    request: CreatorPacketsObjectsRequest,
+) -> CreatorPacketsObjectsResponse:
+    _hex = scapy_helper_get_hex(from_sh_list(request.packets))
+    return CreatorPacketsObjectsResponse(builtpacket={"hex": _hex})
