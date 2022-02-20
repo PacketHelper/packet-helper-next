@@ -27,9 +27,11 @@ RUN pip install --no-cache-dir -q -r /tmp/requirements.txt
 # Copy files
 ADD . /opt/packet_server/
 RUN mkdir -p /opt/packet_server/tmp
+RUN mkdir -p /opt/packet_server/static
 
 WORKDIR /opt/packet_server
-COPY --from=build-stage /app/dist dist
+COPY --from=build-stage /app/dist/static static
+COPY --from=build-stage /app/dist/index.html static
 
 # Set ENV's
 ARG PH_REV
