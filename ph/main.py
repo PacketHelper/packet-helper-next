@@ -20,6 +20,11 @@ def get_root(request: Request, response_class=HTMLResponse):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
+@app.get("/hex/{hex_string}")
+def get_hex(request: Request, response_class=HTMLResponse):
+    return templates.TemplateResponse("index.html", {"request": request})
+
+
 @app.get("/version")
 def get_version():
     return {"packethelper": "0.1", "framework": "fastapi"}
@@ -39,7 +44,7 @@ def get_info():
 
 
 @app.get("/api/hex/{hex_string}")
-def get_hex(hex_string: str):
+def get_api_hex(hex_string: str):
     def prepare_api_response(hex_string, request=None):
         packet = decode_hex(hex_string)
         packet_data = PacketData(raw=str(packet))
