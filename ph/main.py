@@ -2,8 +2,8 @@ from fastapi import FastAPI, Request, status
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from ph.models.info_response import VersionResponse
 
+from ph.models.info_response import VersionResponse
 from ph.routers.api import api
 
 app = FastAPI()

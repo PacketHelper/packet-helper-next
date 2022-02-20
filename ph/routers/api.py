@@ -1,8 +1,7 @@
-from fastapi import APIRouter, status
 import importlib
 from os import getenv
 
-from fastapi import HTTPException
+from fastapi import APIRouter, HTTPException, status
 from packet_helper_core import PacketData, PacketDataScapy
 from packet_helper_core.utils.conversion import from_sh_list
 from packet_helper_core.utils.utils import decode_hex
@@ -17,7 +16,6 @@ from ph.models.creator_packets import (
 )
 from ph.models.decoded_hex import DecodedHex
 from ph.models.info_response import InfoResponse
-
 
 api = APIRouter()
 
@@ -60,7 +58,7 @@ def get_api_hex(hex_string: str) -> DecodedHex:
             },
             structure=prepare_api_response(hex_string),
         )
-    except IndexError as ie:
+    except IndexError:
         raise HTTPException(
             status.HTTP_400_BAD_REQUEST,
             detail={
@@ -71,7 +69,7 @@ def get_api_hex(hex_string: str) -> DecodedHex:
     return response
 
 
-@api.post("/api/packets", status_code=status.HTTP_201_CREATED, tags=["api"])
+@api.post("/packets", status_code=status.HTTP_201_CREATED, tags=["api"])
 def post_api_packets(request: CreatorPacketsRequest) -> CreatorPacketsResponse:
     imported_all = importlib.import_module("scapy.all")
     packet = None
@@ -91,7 +89,7 @@ def post_api_packets(request: CreatorPacketsRequest) -> CreatorPacketsResponse:
     return CreatorPacketsResponse(packets=to_list(packet))
 
 
-@api.post("/api/create", status_code=status.HTTP_201_CREATED, tags=["api"])
+@api.post("/create", status_code=status.HTTP_201_CREATED, tags=["api"])
 def post_api_create(
     request: CreatorPacketsObjectsRequest,
 ) -> CreatorPacketsObjectsResponse:
