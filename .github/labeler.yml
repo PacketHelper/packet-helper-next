@@ -1,5 +1,5 @@
 backend:
-  - backend/**/*
+  - ph/**/*
 
 frontend:
   - public/**/*
@@ -10,4 +10,4 @@ pipeline:
   - Dockerfile
 
 test:
-  - test/**/*
+  - tests/**/*

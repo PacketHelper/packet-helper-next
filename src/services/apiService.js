@@ -8,9 +8,13 @@ export default {
     return api.get(`info`).then((response) => response.data);
   },
   getScapy(protocols) {
-    return api.post(`packets`, protocols).then((response) => response.data);
+    return api
+      .post(`packets`, { packets: protocols })
+      .then((response) => response.data["packets"]);
   },
   createPacket(packetInfo) {
-    return api.post(`create`, packetInfo).then((response) => response.data);
+    return api
+      .post(`create`, { packets: packetInfo })
+      .then((response) => response.data["builtpacket"]);
   },
 };

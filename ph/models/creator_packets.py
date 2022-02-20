@@ -9,3 +9,11 @@ class CreatorPacketsRequest(BaseModel):
 
 class CreatorPacketsResponse(BaseModel):
     packets: Optional[List[Dict[str, Any]]]
+
+
+class CreatorPacketsObjectsRequest(BaseModel):
+    packets: List[Dict[str, Any]]
+
+
+class CreatorPacketsObjectsResponse(BaseModel):
+    builtpacket: Dict[str, str]
