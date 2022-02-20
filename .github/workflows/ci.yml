@@ -3,7 +3,7 @@ on: [push]
 
 jobs:
   verify-django:
-    name: Django tests (backend)
+    name: Pytest (backend)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
