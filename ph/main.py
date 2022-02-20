@@ -9,8 +9,8 @@ from fastapi.templating import Jinja2Templates
 from packet_helper_core import PacketData, PacketDataScapy
 from packet_helper_core.utils.conversion import from_sh_list
 from packet_helper_core.utils.utils import decode_hex
-from scapy_helper import hexdump, to_list
 from scapy_helper import get_hex as scapy_helper_get_hex
+from scapy_helper import hexdump, to_list
 
 from ph.models.creator_packets import (
     CreatorPacketsObjectsRequest,
