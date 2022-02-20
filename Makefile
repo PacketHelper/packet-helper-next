@@ -32,4 +32,4 @@ format:
 	@echo "Formatting... Done"
 
 test:
-	pytest
+	PYTHONPATH=${PWD} pytest
