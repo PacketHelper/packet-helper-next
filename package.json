@@ -31,8 +31,6 @@
     "commitizen": "^4.2.4",
     "cz-conventional-changelog": "3.3.0",
     "deepmerge": "^4.2.2",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.2.2",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
     "husky": "^7.0.1",
