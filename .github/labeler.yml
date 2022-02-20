@@ -1,5 +1,5 @@
 backend:
-  - backend/**/*
+  - ph/**/*
 
 frontend:
   - public/**/*
