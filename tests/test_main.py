@@ -23,7 +23,7 @@ def test_post_api_packets__success():
         "/api/packets",
         json=CreatorPacketsRequest(packets=["Ether"]).dict(),
     )
-    assert response.status_code == OK
+    assert response.status_code == CREATED
     json_response = CreatorPacketsResponse(**response.json())
     assert len(json_response.packets) == 1
     assert json_response.packets[0]["Ethernet"]

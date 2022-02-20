@@ -80,7 +80,7 @@ def get_api_hex(hex_string: str):
     }
 
 
-@app.post("/api/packets")
+@app.post("/api/packets", status_code=CREATED)
 def post_api_packets(request: CreatorPacketsRequest) -> CreatorPacketsResponse:
     imported_all = importlib.import_module("scapy.all")
     packet = None
