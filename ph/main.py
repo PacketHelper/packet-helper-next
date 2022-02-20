@@ -6,7 +6,15 @@ from fastapi.templating import Jinja2Templates
 from ph.models.info_response import VersionResponse
 from ph.routers.api import api
 
-app = FastAPI()
+app = FastAPI(
+    title="Packet Helper Next",
+    description="Packet Helper API helps you to decode hex into packets with description 🚀",
+    version="0.1",
+    license_info={
+        "name": "GPL v2.0",
+        "url": "https://github.com/PacketHelper/packet-helper-next/blob/main/LICENSE",
+    },
+)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(api, prefix="/api", tags=["api"])
 
