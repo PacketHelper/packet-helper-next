@@ -21,3 +21,17 @@ between the outgoing packet and the packet received on the selected
 port.
 
 ![Packet Helper v1.3](github_docs/ph_compare_1_3_3.png "Compare View")
+
+## Usage
+
+Use docker to build application.
+
+```text
+docker build . -t ph2
+```
+
+To run docker image locally (port value is set be the HEROKU itself). For local usage, you need to specify it manually
+
+```text
+docker run --env PORT=8000 -p 8000:8000 -t -i ph
+```

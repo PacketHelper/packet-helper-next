@@ -41,4 +41,4 @@ ARG PH_VER
 ENV PH_VERSION=${PH_VER}
 
 # $PORT is set by Heroku
-CMD uvicorn --port $PORT ph.main:app
+CMD uvicorn --host 0.0.0.0 --port $PORT ph.main:app

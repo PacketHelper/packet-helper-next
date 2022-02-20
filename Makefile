@@ -26,9 +26,10 @@ format-ui:
 
 format:
 	@echo "Formatting..."
-	python -m black -t py38 backend/ test/
+	python3 -m black -t py38 ph/ tests/
+	python3 -m isort ph/ tests/ --profile=black
 	prettier --write src/
 	@echo "Formatting... Done"
 
 test:
-	python manage.py test
+	pytest
