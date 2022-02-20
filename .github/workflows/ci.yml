@@ -40,10 +40,10 @@ jobs:
           pip install black isort
       - name: Verify code (python w/black)
         run: |
-          black --check -t py38 backend/ test/
+          black --check -t py38 ph/ tests/
       - name: Verify imports (w/isort)
         run: |
-          isort --check backend/ test/ --profile black
+          isort --check ph/ tests/ --profile black
   verify-docker:
     name: Build docker
     runs-on: ubuntu-latest
