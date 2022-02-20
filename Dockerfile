@@ -27,9 +27,11 @@ RUN pip install --no-cache-dir -q -r /tmp/requirements.txt
 # Copy files
 ADD . /opt/packet_server/
 RUN mkdir -p /opt/packet_server/tmp
+RUN mkdir -p /opt/packet_server/static
 
 WORKDIR /opt/packet_server
-COPY --from=build-stage /app/dist dist
+COPY --from=build-stage /app/dist/static static
+COPY --from=build-stage /app/dist/index.html static
 
 # Set ENV's
 ARG PH_REV
@@ -38,7 +40,5 @@ ENV PH_REVISION=${PH_REV}
 ARG PH_VER
 ENV PH_VERSION=${PH_VER}
 
-ENV DJANGO_SETTINGS_MODULE="backend.settings.prod"
-# Run the app.  CMD is required to run on Heroku
 # $PORT is set by Heroku
-CMD gunicorn backend.wsgi --log-file -
+CMD uvicorn --host 0.0.0.0 --port $PORT ph.main:app
