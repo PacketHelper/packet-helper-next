@@ -1,5 +1,15 @@
 all: format
 
+build-local:
+	rm -rf static
+	mkdir -p static
+	yarn build
+	mv dist/static/* static/
+	mv dist/index.html static/index.html
+
+run-local:
+	uvicorn --port 8080 ph.main:app 
+
 clean:
 	rm -rf phc
 
