@@ -32,4 +32,5 @@ format:
 	@echo "Formatting... Done"
 
 test:
+	mkdir -p static && touch static/index.html
 	PYTHONPATH=${PWD} pytest
