@@ -82,7 +82,7 @@ def post_api_packets(request: CreatorPacketsRequest) -> CreatorPacketsResponse:
             packet /= new_layer()
     except AttributeError as error:
         raise HTTPException(
-            status_code=500,
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail={"error": f"Layer is not supported {str(error).split()[-1]}"},
         )
 
@@ -93,5 +93,12 @@ def post_api_packets(request: CreatorPacketsRequest) -> CreatorPacketsResponse:
 def post_api_create(
     request: CreatorPacketsObjectsRequest,
 ) -> CreatorPacketsObjectsResponse:
-    _hex = scapy_helper_get_hex(from_sh_list(request.packets))
+    _hex = None
+    try:
+        _hex = scapy_helper_get_hex(from_sh_list(request.packets))
+    except AttributeError as error:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail={"error": f"Layer is not supported {str(error).split()[-1]}"},
+        )
     return CreatorPacketsObjectsResponse(builtpacket={"hex": _hex})
