@@ -47,7 +47,6 @@ run-back:
 test:
 	mkdir -p static && touch static/index.html
 	PYTHONPATH=${PWD} pytest
-	python manage.py test
 
 .PHONY: init
 init:
