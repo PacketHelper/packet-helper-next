@@ -47,7 +47,11 @@
     "vuetify-loader": "^1.7.0",
     "node-sass": "^6.0.1",
     "sass": "~1.32.0",
-    "sass-loader": "^10.0.0"
+    "sass-loader": "^10.0.0",
+    "husky": "^7.0.1",
+    "commitizen": "^4.2.4",
+    "cz-conventional-changelog": "3.3.0",
+    "semantic-release": "^17.4.4"
   },
   "eslintConfig": {
     "root": true,
