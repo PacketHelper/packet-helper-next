@@ -207,177 +207,166 @@
         </v-tooltip>
       </v-stepper>
     </v-card>
-    <Toast type="success" :trigger="successSw" :key="0"
-      ><template #info> Hex has been copied </template></Toast
-    >
-    <Toast type="warning" :trigger="alertSw" :key="1"
-      ><template #info> Hex is empty </template></Toast
-    >
-    <Toast type="error" :trigger="errorSw" :key="2"
-      ><template #info> Error </template></Toast
-    >
+    <v-snackbar v-model="successSw" color="green dark-2" :timeout="timeout">
+      <h2>👌 Hex has been copied</h2>
+    </v-snackbar>
+
+    <v-snackbar v-model="alertSw" color="orange dark-2" :timeout="timeout">
+      <h2>Hex is empty</h2>
+    </v-snackbar>
+
+    <v-snackbar v-model="errorSw" color="red dark-2" :timeout="timeout">
+      <h2>Unknown error</h2>
+    </v-snackbar>
   </div>
 </template>
 
-<script>
-import ApiService from "../services/apiService.js";
-import Toast from "./Toast.vue";
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
 
-export default {
-  components: { Toast },
-  data() {
-    return {
-      // Some protocols have different function name
-      // and "to_list" key (ex. Ethernet) so they
-      // have to be handled in core to be able to add them here
-      packets: [
-        { name: "Ether", scapy_name: "Ethernet" },
-        { name: "IP", scapy_name: "IP" },
-        { name: "UDP", scapy_name: "UDP" },
-        { name: "TCP", scapy_name: "TCP" },
-        { name: "DNS", scapy_name: "DNS" },
-        { name: "GRE", scapy_name: "GRE" },
-        { name: "IPv6", scapy_name: "IPv6" },
-        // { name: "PPTP", scapy_name: "PPTP" },
-        // { name: "DHCP", scapy_name: "DHCP options" },
-        { name: "ICMP", scapy_name: "ICMP" },
-        { name: "Raw", scapy_name: "Raw" },
-        { name: "ARP", scapy_name: "ARP" },
-        { name: "VXLAN", scapy_name: "VXLAN" },
-        // { name: "Padding", scapy_name: "Padding" },
-        // { name: "PadN", scapy_name: "PadN" },
-        // { name: "Pad1", scapy_name: "Pad1" },
-        // { name: "MGCP", scapy_name: "MGCP" },
-        // { name: "Loopback", scapy_name: "Loopback" },
-        // { name: "LLTD", scapy_name: "LLTD" },
-        // { name: "LLC", scapy_name: "LLC" },
-        // { name: "ISAKMP", scapy_name: "ISAKMP" },
-        // { name: "HSRP", scapy_name: "HSRP" },
-        // { name: "ESP", scapy_name: "ESP" },
-        // { name: "EAP", scapy_name: "EAP" },
-        // { name: "EAPOL", scapy_name: "EAPOL" },
-        // { name: "BOOTP", scapy_name: "BOOTP" },
-        // { name: "AH", scapy_name: "AH" },
-      ],
-      packet: null,
-      pickedPackets: [],
-      displayPackets: [],
-      res: null,
-      inputs: [],
-      stepper: 0,
-      filter: "",
-      createdHex: null,
-      upperCase: false,
-      spacing: true,
-      successSw: 0,
-      alertSw: 0,
-      errorSw: 0,
-    };
-  },
-  computed: {
-    filtered_packets() {
-      // Returns packets that match the filter
-      return [
-        this.packets.filter((x) =>
-          x.name.toLowerCase().includes(this.filter.toLowerCase())
-        ),
-      ];
-    },
-  },
-  methods: {
-    delay(seconds) {
-      return new Promise((res) => setTimeout(res, seconds * 1000));
-    },
-    async get_packets() {
-      try {
-        this.res = await ApiService.getScapy(this.pickedPackets);
-        if (!this.res.length) throw "Empty structure";
-      } catch (err) {
-        this.errorSw = !this.errorSw;
-        return;
-      }
-      this.displayPackets = [];
-      this.inputs = [];
-      for (let i = 0; i < this.res.length; i++) {
-        let temp_packet = Object.keys(this.res[i]);
-        this.inputs.push(Object.keys(this.res[i][temp_packet]));
-      }
-      this.displayPackets = this.pickedPackets.slice();
-      await this.delay(0.5);
-      this.stepper++;
-      /*
-      this.steps = [...Array(this.inputs.length).keys()].filter(
-        (n) => !(n % 3)
-      );
-      */
-    },
-    async handleCreate() {
-      this.res.forEach((element) => {
-        let temp_packet = Object.keys(element);
-        Object.keys(element[temp_packet]).forEach((header) => {
-          if (/^-?\d+$/.test(element[temp_packet][header])) {
-            element[temp_packet][header] = Number(element[temp_packet][header]);
-          }
-          if (
-            header === "options" &&
-            element[temp_packet][header].includes(",")
-          ) {
-            element[temp_packet][header] = element[temp_packet][header]
-              .trim()
-              .split(",");
-          }
-        });
-      });
-      let newPacket = "";
-      try {
-        newPacket = await ApiService.createPacket(this.res);
-      } catch {
-        this.errorSw = !this.errorSw;
-        return;
-      }
-      this.createdHex = newPacket["hex"];
-    },
-    handleAdd(el) {
-      const protocol = el.srcElement.innerText;
-      if (
-        !this.pickedPackets.includes(protocol) &&
-        this.pickedPackets.length < 4
-      ) {
-        this.pickedPackets.push(protocol);
-      } else if (this.pickedPackets.includes(protocol)) {
-        this.pickedPackets.splice(this.pickedPackets.indexOf(protocol), 1);
-      }
-    },
-    changeCasing() {
-      if (this.upperCase) {
-        this.createdHex = this.createdHex.toLowerCase();
-        this.upperCase = false;
-      } else {
-        this.createdHex = this.createdHex.toUpperCase();
-        this.upperCase = true;
-      }
-    },
-    changeSpacing() {
-      this.createdHex = this.createdHex.replace(/\s+/g, "");
-      if (this.spacing) {
-        this.spacing = false;
-      } else {
-        for (let i = 0; i < this.createdHex.length; i += 3) {
-          this.createdHex =
-            this.createdHex.slice(0, i) + " " + this.createdHex.slice(i);
+import ApiService from "@/services/apiService";
+
+interface Packet {
+  name: string;
+  scapy_name: string;
+}
+
+@Component
+export default class CreatorPage extends Vue {
+  // Some protocols have different function name
+  // and "to_list" key (ex. Ethernet) so they
+  // have to be handled in core to be able to add them here
+  packets: Array<Packet> = [
+    { name: "Ether", scapy_name: "Ethernet" },
+    { name: "IP", scapy_name: "IP" },
+    { name: "UDP", scapy_name: "UDP" },
+    { name: "TCP", scapy_name: "TCP" },
+    { name: "DNS", scapy_name: "DNS" },
+    { name: "GRE", scapy_name: "GRE" },
+    { name: "IPv6", scapy_name: "IPv6" },
+    { name: "ICMP", scapy_name: "ICMP" },
+    { name: "Raw", scapy_name: "Raw" },
+    { name: "ARP", scapy_name: "ARP" },
+    { name: "VXLAN", scapy_name: "VXLAN" },
+  ];
+  packet = "";
+  pickedPackets: Array<any> = [];
+  displayPackets: Array<any> = [];
+  res: any;
+  inputs: Array<any> = [];
+  stepper = 0;
+  filter = "";
+  createdHex = "";
+  upperCase = false;
+  spacing = true;
+  successSw = false;
+  alertSw = false;
+  errorSw = false;
+  timeout = 5000;
+
+  get filtered_packets(): Array<any> {
+    // Returns packets that match the filter
+    return [
+      this.packets.filter((x) =>
+        x.name.toLowerCase().includes(this.filter.toLowerCase())
+      ),
+    ];
+  }
+
+  delay(seconds: number) {
+    return new Promise((res) => setTimeout(res, seconds * 1000));
+  }
+
+  async get_packets() {
+    try {
+      this.res = await ApiService.getScapy(this.pickedPackets);
+      if (!this.res.length) throw "Empty structure";
+    } catch (err: any) {
+      this.errorSw = !this.errorSw;
+      return;
+    }
+    this.displayPackets = [];
+    this.inputs = [];
+    for (let i = 0; i < this.res.length; i++) {
+      let temp_packet: string = Object.keys(this.res[i]).toString();
+      this.inputs.push(Object.keys(this.res[i][temp_packet]));
+    }
+    this.displayPackets = this.pickedPackets.slice();
+    await this.delay(0.5);
+    this.stepper++;
+  }
+
+  async handleCreate() {
+    this.res.forEach((element: any) => {
+      let temp_packet = Object.keys(element).toString();
+      Object.keys(element[temp_packet]).forEach((header) => {
+        if (/^-?\d+$/.test(element[temp_packet][header])) {
+          element[temp_packet][header] = Number(element[temp_packet][header]);
         }
-        this.createdHex = this.createdHex.trim();
-        this.spacing = true;
+        if (
+          header === "options" &&
+          element[temp_packet][header].includes(",")
+        ) {
+          element[temp_packet][header] = element[temp_packet][header]
+            .trim()
+            .split(",");
+        }
+      });
+    });
+    let newPacket: any;
+    try {
+      newPacket = await ApiService.createPacket(this.res);
+    } catch (error) {
+      console.log(error);
+      this.errorSw = !this.errorSw;
+      return;
+    }
+    this.createdHex = newPacket["hex"];
+  }
+
+  handleAdd(el: any) {
+    const protocol = el.srcElement.innerText;
+    if (
+      !this.pickedPackets.includes(protocol) &&
+      this.pickedPackets.length < 4
+    ) {
+      this.pickedPackets.push(protocol);
+    } else if (this.pickedPackets.includes(protocol)) {
+      this.pickedPackets.splice(this.pickedPackets.indexOf(protocol), 1);
+    }
+  }
+
+  changeCasing() {
+    if (this.upperCase) {
+      this.createdHex = this.createdHex!.toLowerCase();
+      this.upperCase = false;
+    } else {
+      this.createdHex = this.createdHex!.toUpperCase();
+      this.upperCase = true;
+    }
+  }
+
+  changeSpacing() {
+    this.createdHex = this.createdHex!.replace(/\s+/g, "");
+    if (this.spacing) {
+      this.spacing = false;
+    } else {
+      for (let i = 0; i < this.createdHex.length; i += 3) {
+        this.createdHex =
+          this.createdHex.slice(0, i) + " " + this.createdHex.slice(i);
       }
-    },
-    async copy() {
-      if (this.createdHex) {
-        await navigator.clipboard.writeText(this.createdHex);
-        this.successSw = !this.successSw;
-      } else this.alertSw = !this.alertSw;
-    },
-  },
-};
+      this.createdHex = this.createdHex.trim();
+      this.spacing = true;
+    }
+  }
+
+  async copy() {
+    if (this.createdHex) {
+      await navigator.clipboard.writeText(this.createdHex);
+      this.successSw = !this.successSw;
+    } else this.alertSw = !this.alertSw;
+  }
+}
 </script>
 
 <style>

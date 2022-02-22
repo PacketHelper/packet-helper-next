@@ -36,11 +36,19 @@ format-ui:
 
 format:
 	@echo "Formatting..."
-	python3 -m black -t py38 ph/ tests/
-	python3 -m isort ph/ tests/ --profile=black
+	python3 -m black -t py38 backend/ test/
 	prettier --write src/
 	@echo "Formatting... Done"
+
+.PHONY: run-back
+run-back:
+	python3 manage.py runserver
 
 test:
 	mkdir -p static && touch static/index.html
 	PYTHONPATH=${PWD} pytest
+
+.PHONY: init
+init:
+	rm -rf node_modules/ yarn.lock
+	yarn
