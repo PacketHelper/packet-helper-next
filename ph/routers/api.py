@@ -6,10 +6,12 @@ from fastapi import APIRouter, HTTPException, status
 from packet_helper_core import PacketData, PacketDataScapy
 from packet_helper_core.utils.conversion import from_sh_list
 from packet_helper_core.utils.utils import decode_hex
-from ph.models.creator_packets import (CreatorPacketsObjectsRequest,
-                                       CreatorPacketsObjectsResponse,
-                                       CreatorPacketsRequest,
-                                       CreatorPacketsResponse)
+from ph.models.creator_packets import (
+    CreatorPacketsObjectsRequest,
+    CreatorPacketsObjectsResponse,
+    CreatorPacketsRequest,
+    CreatorPacketsResponse,
+)
 from ph.models.decoded_hex import DecodedHex
 from ph.models.info_response import InfoResponse
 from scapy_helper import get_hex as scapy_helper_get_hex
@@ -67,9 +69,7 @@ def get_api_hex(hex_string: str) -> DecodedHex:
     except pydantic.error_wrappers.ValidationError as ve:
         raise HTTPException(
             status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail={
-                "error": f"Incorrect response from engine: <{ve}>"
-            },
+            detail={"error": f"Incorrect response from engine: <{ve}>"},
         )
     return response
 
