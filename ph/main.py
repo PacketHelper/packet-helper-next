@@ -33,7 +33,9 @@ def get_hex(request: Request, status_code=status.HTTP_200_OK) -> HTMLResponse:
     return templates.TemplateResponse("index.html", {"request": request})
 
 
-@app.get("/version", status_code=status.HTTP_200_OK, include_in_schema=False, deprecated=True)
+@app.get(
+    "/version", status_code=status.HTTP_200_OK, include_in_schema=False, deprecated=True
+)
 def get_version() -> VersionResponse:
     """Return information about version of the Packethelper"""
     return VersionResponse(packethelper="0.1", framework="fastapi")

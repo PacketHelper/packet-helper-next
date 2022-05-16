@@ -36,7 +36,7 @@ format-ui:
 
 format:
 	@echo "Formatting..."
-	python3 -m black -t py38 backend/ test/
+	python3 -m black -t py38 ph/ tests/
 	prettier --write src/
 	@echo "Formatting... Done"
 
