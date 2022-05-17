@@ -1,4 +1,4 @@
-from typing import Any, Dict, Literal
+from typing import Any, Dict, List, Literal
 
 from pydantic import BaseModel
 
@@ -12,4 +12,4 @@ class HexSummary(BaseModel):
 class DecodedHex(BaseModel):
     hex: str
     summary: HexSummary
-    structure: Dict[str, Any]
+    structure: List[Dict[str, Any]]

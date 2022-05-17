@@ -58,7 +58,7 @@ def get_api_hex(hex_string: str) -> DecodedHex:
                 "length_unit": "B",
                 "hexdump": hexdump(h, dump=True),
             },
-            structure=prepare_api_response(hex_string)[0],
+            structure=prepare_api_response(hex_string),
         )
     except IndexError:
         raise HTTPException(
