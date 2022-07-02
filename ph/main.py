@@ -30,13 +30,13 @@ templates = Jinja2Templates(directory="static")
 
 
 @app.get("/", include_in_schema=False)
-def get_root(request: Request, status_code=status.HTTP_200_OK):
+def get_root(request: Request, status_code=status.HTTP_200_OK) -> HTMLResponse:
     """Return Vue singlepage"""
     return templates.TemplateResponse("index.html", {"request": request})
 
 
 @app.get("/hex/{hex_string}", include_in_schema=False)
-def get_hex(request: Request, status_code=status.HTTP_200_OK):
+def get_hex(request: Request, status_code=status.HTTP_200_OK) -> HTMLResponse:
     """Return specific path for Vue singlepage"""
     return templates.TemplateResponse("index.html", {"request": request})
 
