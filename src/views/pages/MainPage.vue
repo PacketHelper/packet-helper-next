@@ -114,6 +114,7 @@
               :key="index + 1"
               :data="s"
               :data-index="index + 1"
+              :entireHex="hexValue"
               @warning="handleWarning"
             ></Display>
           </transition-group>
@@ -149,27 +150,30 @@
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
 
-import MessageService from "@/services/apiService";
 import Display from "@/components/Display.vue";
+import HighligtedHex from "@/components/HighligtedHex.vue";
 import ShareButton from "@/components/ShareButton.vue";
+import { Structure } from "@/interfaces/packet";
+import MessageService from "@/services/apiService";
 import gsap from "gsap";
 
 @Component({
   components: {
     Display,
     ShareButton,
+    HighligtedHex,
   },
 })
 export default class LandingPage extends Vue {
   hexValue: any;
   decode = false;
   loading = false;
-  structure: Array<any> = [];
-  summary: Array<any> = [];
-  header: Array<any> = [];
+  structure: Array<Structure> = [];
+  summary: Array<unknown> = [];
+  header: Array<unknown> = [];
   alert = false;
   warning = false;
-  panel: Array<any> = [];
+  panel: Array<unknown> = [];
   isExpanded = false;
   expandOnLoad = true;
 
@@ -244,7 +248,7 @@ export default class LandingPage extends Vue {
   }
   packData(): void {
     this.header = [];
-    this.structure.forEach((packet) => {
+    this.structure.forEach((packet: Structure) => {
       this.header.push(packet["name"]);
     });
   }

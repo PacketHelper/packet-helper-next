@@ -122,6 +122,15 @@
                 <code>{{ data.repr }}</code>
               </li>
             </ul>
+
+            <!-- Location in the hexdump -->
+            <br />
+            <h4>Position in the hexdump</h4>
+            <v-divider> </v-divider>
+            <HighligtedHex
+              :partlyHex="data.hex_one"
+              :entireHex="entireHex"
+            ></HighligtedHex>
           </ul>
         </v-card-text>
       </v-expansion-panel-content>
@@ -130,12 +139,13 @@
 </template>
 
 <script>
-import DropDown from "./DropDown.vue";
 import Protocols from "../services/protocols.js";
+import DropDown from "./DropDown.vue";
+import HighligtedHex from "./HighligtedHex.vue";
 
 export default {
-  props: ["data"],
-  components: { DropDown },
+  props: ["data", "entireHex"],
+  components: { DropDown, HighligtedHex },
   data() {
     return {
       items: [],
