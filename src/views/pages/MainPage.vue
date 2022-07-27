@@ -21,7 +21,7 @@
           <v-checkbox
             v-model="expandOnLoad"
             :value="expandOnLoad"
-            :label="`Expand on load?`"
+            label="Expand on load?"
           ></v-checkbox>
           <v-spacer></v-spacer>
           <v-btn text @click="showExamples">Next Example</v-btn>
@@ -165,7 +165,7 @@ import gsap from "gsap";
   },
 })
 export default class LandingPage extends Vue {
-  hexValue: any;
+  hexValue: any = "";
   decode = false;
   loading = false;
   structure: Array<Structure> = [];
