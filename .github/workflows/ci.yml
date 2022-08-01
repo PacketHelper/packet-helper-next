@@ -66,7 +66,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release
   push_to_registry:
-    name: Push Docker image to HerokuApp
+    name: Push Docker image to HerokuApp (as production env)
     if: ${{ github.ref == 'refs/heads/main' }}
     needs: [verify-django, verify-js, verify-python, verify-docker, release]
     runs-on: ubuntu-latest
@@ -97,7 +97,7 @@ jobs:
         run: heroku container:release web -a packet-helper
   push_to_registry_pr:
     name: Push Docker image to HerokuApp (as development env)
-    if: ${{ github.ref == 'refs/heads/main' }}
+    if: ${{ github.ref != 'refs/heads/main' }}
     needs: [verify-django, verify-js, verify-python, verify-docker]
     runs-on: ubuntu-latest
     environment:
