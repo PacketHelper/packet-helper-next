@@ -95,3 +95,33 @@ jobs:
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: heroku container:release web -a packet-helper
+  push_to_registry_pr:
+    name: Push Docker image to HerokuApp (as development env)
+    if: ${{ github.ref == 'refs/heads/main' }}
+    needs: [verify-django, verify-js, verify-python, verify-docker]
+    runs-on: ubuntu-latest
+    environment:
+      name: development
+      url: https://packet-helper-pr.herokuapp.com/
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Add SHORT_SHA env property with commit short sha
+        run: |
+          echo "GIT_VERSION_TAG=`git describe --tags --abbrev=0`" >> $GITHUB_ENV
+          echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+      - name: Login to Heroku Container registry
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:login
+      - name: Build and push
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          heroku container:push web -a packet-helper-pr --arg PH_VER="${GIT_VERSION_TAG}:${SHORT_SHA}"
+      - name: Release
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:release web -a packet-helper-pr
