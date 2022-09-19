@@ -1,8 +1,8 @@
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from starlette.templating import _TemplateResponse
 
 from ph.models.info_response import VersionResponse
 from ph.routers.api import api
@@ -29,14 +29,14 @@ app.include_router(api, prefix="/api", tags=["api"])
 templates = Jinja2Templates(directory="static")
 
 
-@app.get("/", include_in_schema=False)
-def get_root(request: Request, status_code=status.HTTP_200_OK) -> HTMLResponse:
-    """Return Vue singlepage"""
+@app.get("/", include_in_schema=False, status_code=status.HTTP_200_OK)
+def get_root(request: Request) -> _TemplateResponse:
+    """Return Vue single page"""
     return templates.TemplateResponse("index.html", {"request": request})
 
 
-@app.get("/hex/{hex_string}", include_in_schema=False)
-def get_hex(request: Request, status_code=status.HTTP_200_OK) -> HTMLResponse:
+@app.get("/hex/{hex_string}", include_in_schema=False, status_code=status.HTTP_200_OK)
+def get_hex(request: Request) -> _TemplateResponse:
     """Return specific path for Vue singlepage"""
     return templates.TemplateResponse("index.html", {"request": request})
 

@@ -1,5 +1,5 @@
 -r requirements.txt
 
-black~=22.1.0
+black~=22.8.0
 isort~=5.10.1
 pytest~=7.0.1

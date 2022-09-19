@@ -1,19 +1,19 @@
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from pydantic import BaseModel
 
 
 class CreatorPacketsRequest(BaseModel):
-    packets: List[Any]
+    packets: list[Any]
 
 
 class CreatorPacketsResponse(BaseModel):
-    packets: Optional[List[Dict[str, Any]]]
+    packets: list[dict[str, Any]] | None
 
 
 class CreatorPacketsObjectsRequest(BaseModel):
-    packets: List[Dict[str, Any]]
+    packets: list[dict[str, Any]]
 
 
 class CreatorPacketsObjectsResponse(BaseModel):
-    builtpacket: Dict[str, str]
+    builtpacket: dict[str, str]  # FIXME rename => built_packet
