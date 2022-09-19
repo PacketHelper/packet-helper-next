@@ -44,7 +44,7 @@ jobs:
           pip install black isort
       - name: Verify code (python w/black)
         run: |
-          black --check -t py10 ph/ tests/
+          black --check -t py310 ph/ tests/
       - name: Verify imports (w/isort)
         run: |
           isort --check ph/ tests/ --profile black
