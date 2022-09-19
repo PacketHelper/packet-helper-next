@@ -7,5 +7,5 @@ class InfoResponse(BaseModel):
 
 
 class VersionResponse(BaseModel):
-    packethelper: str
+    packethelper: str  # FIXME rename => packet_helper
     framework: str
