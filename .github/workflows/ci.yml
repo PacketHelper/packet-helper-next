@@ -7,6 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'pip'
       - name: Install Python dependencies (pip)
         run: |
           pip install -r requirements-dev.txt
@@ -40,7 +44,7 @@ jobs:
           pip install black isort
       - name: Verify code (python w/black)
         run: |
-          black --check -t py38 ph/ tests/
+          black --check -t py10 ph/ tests/
       - name: Verify imports (w/isort)
         run: |
           isort --check ph/ tests/ --profile black
