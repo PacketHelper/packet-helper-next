@@ -37,7 +37,7 @@ format-ui:
 format:
 	@echo "Formatting..."
 	python3 -m isort ph/ tests/ --profile black 
-	python3 -m black -t py38 ph/ tests/
+	python3 -m black -t py310 ph/ tests/
 	prettier --write src/
 	@echo "Formatting... Done"
 
