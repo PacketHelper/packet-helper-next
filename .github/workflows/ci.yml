@@ -120,7 +120,7 @@ jobs:
   check_pr_staus:
     name: Check status of env (as development env)
     if: ${{ github.ref != 'refs/heads/main' }}
-    needs: [ push_to_registry_pr ]
+#    needs: [ push_to_registry_pr ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
