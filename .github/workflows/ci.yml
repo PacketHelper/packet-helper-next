@@ -117,7 +117,7 @@ jobs:
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: heroku container:release web -a packet-helper-pr
-  check_pr_staus:
+  post_deploy_check_pr:
     name: Check status of env (as development env)
     if: ${{ github.ref != 'refs/heads/main' }}
     needs: [ push_to_registry_pr ]
@@ -133,3 +133,19 @@ jobs:
           export GIT_VERSION_TAG=`git describe --tags --abbrev=0`
           export SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`
           python check_deployment.py https://packet-helper-pr.herokuapp.com $GIT_VERSION_TAG $SHORT_SHA
+  post_deploy_check_prod:
+    name: Check status of env (as production env)
+    if: ${{ github.ref != 'refs/heads/main' }}
+    needs: [ push_to_registry ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Verify /api/info
+        run: |
+          pip install requests pydantic
+          export GIT_VERSION_TAG=`git describe --tags --abbrev=0`
+          export SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`
+          python check_deployment.py https://www.packethelper.com $GIT_VERSION_TAG $SHORT_SHA
