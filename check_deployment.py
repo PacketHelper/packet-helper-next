@@ -20,5 +20,5 @@ if __name__ == "__main__":
 
     version_response = make_call(input_data.url)
 
-    assert input_data.version != version_response.version
-    assert input_data.revision != version_response.revision
+    assert input_data.version == version_response.version
+    assert input_data.revision == version_response.revision
