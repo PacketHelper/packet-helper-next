@@ -15,7 +15,7 @@ from ph.models.creator_packets import (
     CreatorPacketsRequest,
     CreatorPacketsResponse,
 )
-from ph.models.decoded_hex import DecodedHex
+from ph.models.decoded_hex import DecodedHex, HexStructure
 from ph.models.info_response import InfoResponse
 
 api = APIRouter()
@@ -34,7 +34,7 @@ def get_info() -> InfoResponse:
 
 @api.get("/hex/{hex_string}", status_code=status.HTTP_200_OK, tags=["api"])
 def get_api_hex(hex_string: str) -> DecodedHex:
-    def prepare_api_response(hex_string):
+    def prepare_api_response(hex_string: str) -> list[HexStructure]:
         packet = decode_hex(hex_string)
         packet_data = PacketData(raw=str(packet))
         scapy_data = PacketDataScapy(hex_string, packet_data)
@@ -48,9 +48,8 @@ def get_api_hex(hex_string: str) -> DecodedHex:
             if e % 2
         ]
     )
-    response = None
+
     try:
-        print(prepare_api_response(hex_string))
         response = DecodedHex(
             hex=hex_string,
             summary={

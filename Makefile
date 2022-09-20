@@ -43,7 +43,7 @@ format:
 
 .PHONY: run-back
 run-back:
-	python3 manage.py runserver
+	uvicorn --port 8080 ph.main:app 
 
 test:
 	mkdir -p static && touch static/index.html

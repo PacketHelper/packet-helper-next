@@ -32,4 +32,4 @@ class HexStructure(BaseModel):
 class DecodedHex(BaseModel):
     hex: str
     summary: HexSummary
-    structure: HexStructure
+    structure: list[HexStructure]
