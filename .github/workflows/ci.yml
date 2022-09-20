@@ -129,7 +129,7 @@ jobs:
           fetch-depth: 0
       - name: Verify /api/info
         run: |
-          pip install -r requests pydantic
+          pip install requests pydantic
           export GIT_VERSION_TAG=`git describe --tags --abbrev=0`
           export SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`
           python check_deployment.py https://packet-helper-pr.herokuapp.com $GIT_VERSION_TAG $SHORT_SHA
