@@ -8,7 +8,7 @@ from ph.models.creator_packets import (
     CreatorPacketsRequest,
     CreatorPacketsResponse,
 )
-from ph.models.decoded_hex import DecodedHex
+from ph.models.decoded_hex import DecodedHexResponse
 
 client = TestClient(app)
 
@@ -44,9 +44,9 @@ class TestAPIPackets:
             "api/hex/ffffffaaa9ff00000000001208004500003c0001000040047cbb7f0000017f000001450000280001000040067ccd7f0000017f00000100140050000000000000000050022000917c0000"
         )
         assert response.status_code == status.HTTP_200_OK
-        assert DecodedHex.parse_obj(
+        assert DecodedHexResponse.parse_obj(
             response.json()
-        ), "Response should be parsed to the 'DecodedHex' without problems"
+        ), "Response should be parsed to the 'DecodedHexResponse' without problems"
 
 
 class TestAPICreate:

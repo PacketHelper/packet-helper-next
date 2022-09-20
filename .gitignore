@@ -40,3 +40,5 @@ yarn-error.log*
 package-lock.json
 phc
 packet_helper_core
+**/.mypy_cache/
+**/.pytest_cache/

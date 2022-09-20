@@ -29,7 +29,7 @@ class HexStructure(BaseModel):
     chksum_status: HexDecodedHexChksumStatus
 
 
-class DecodedHex(BaseModel):
+class DecodedHexResponse(BaseModel):
     hex: str
     summary: HexSummary
     structure: list[HexStructure]
