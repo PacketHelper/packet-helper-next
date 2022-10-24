@@ -37,13 +37,13 @@ format-ui:
 format:
 	@echo "Formatting..."
 	python3 -m isort ph/ tests/ --profile black 
-	python3 -m black -t py38 ph/ tests/
+	python3 -m black -t py310 ph/ tests/
 	prettier --write src/
 	@echo "Formatting... Done"
 
 .PHONY: run-back
 run-back:
-	python3 manage.py runserver
+	uvicorn --port 8080 ph.main:app 
 
 test:
 	mkdir -p static && touch static/index.html

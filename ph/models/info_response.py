@@ -1,13 +1,11 @@
-from typing import Optional
-
 from pydantic import BaseModel
 
 
 class InfoResponse(BaseModel):
     version: str
-    revision: Optional[str]
+    revision: str | None
 
 
 class VersionResponse(BaseModel):
-    packethelper: str
+    packethelper: str  # FIXME rename => packet_helper
     framework: str
