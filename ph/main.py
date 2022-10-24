@@ -28,6 +28,7 @@ app.add_middleware(
 )
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+# rest api
 router_api_config = {"prefix": "/api", "tags": ["api"]}
 for api_router in (api_create, api_hex, api_info, api_packets):
     app.include_router(api_router, **router_api_config)
@@ -43,7 +44,7 @@ def get_root(request: Request) -> _TemplateResponse:
 
 @app.get("/hex/{hex_string}", include_in_schema=False, status_code=status.HTTP_200_OK)
 def get_hex(request: Request) -> _TemplateResponse:
-    """Return specific path for Vue singlepage"""
+    """Return specific path for Vue single-page"""
     return templates.TemplateResponse("index.html", {"request": request})
 
 
@@ -51,5 +52,5 @@ def get_hex(request: Request) -> _TemplateResponse:
     "/version", status_code=status.HTTP_200_OK, include_in_schema=False, deprecated=True
 )
 def get_version() -> VersionResponse:
-    """Return information about version of the Packethelper"""
+    """Return information about version of the Packet Helper"""
     return VersionResponse(packethelper="0.1", framework="fastapi")
