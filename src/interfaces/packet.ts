@@ -18,6 +18,6 @@ export interface Structure {
   repr: string;
   repr_full: string;
   tshark_name: string;
-  tshart_raw_summary: string[];
+  tshark_raw_summary: string[];
   chksum_status: StructureChksumStatus;
 }
