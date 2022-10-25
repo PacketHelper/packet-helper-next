@@ -8,7 +8,7 @@ COPY . .
 RUN yarn build
 
 # build stage (backend & package)
-FROM python:3.11-rc-buster
+FROM python:3.11-buster
 
 # Install tshark/wireshark dependecies
 RUN echo "wireshark-common wireshark-common/install-setuid boolean true" | debconf-set-selections
