@@ -140,7 +140,7 @@ jobs:
   post_deploy_check_prod:
     name: Check status of env (as production env)
 #    if: ${{ github.ref != 'refs/heads/main' }}
-    needs: [ push_to_registry ]
+#    needs: [ push_to_registry ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
