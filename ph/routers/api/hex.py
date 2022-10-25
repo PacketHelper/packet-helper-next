@@ -1,3 +1,5 @@
+import functools
+
 import pydantic
 from fastapi import APIRouter, HTTPException, status
 from packet_helper_core import PacketData, PacketDataScapy
@@ -11,10 +13,11 @@ api = APIRouter()
 
 @api.get("/hex/{hex_string}", status_code=status.HTTP_200_OK, tags=["api"])
 def get_api_hex(hex_string: str) -> DecodedHexResponse:
-    def prepare_api_response(hex_string: str) -> list[HexStructure]:
-        packet = decode_hex(hex_string)
+    @functools.cache
+    def prepare_api_response(hex_to_decode: str) -> list[HexStructure]:
+        packet = decode_hex(hex_to_decode)
         packet_data = PacketData(raw=str(packet))
-        scapy_data = PacketDataScapy(hex_string, packet_data)
+        scapy_data = PacketDataScapy(hex_to_decode, packet_data)
 
         return scapy_data.structure
 
