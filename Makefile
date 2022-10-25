@@ -37,7 +37,7 @@ format-ui:
 format:
 	@echo "Formatting..."
 	python3 -m isort ph/ tests/ --profile black 
-	python3 -m black -t py310 ph/ tests/
+	python3 -m black -t py311 ph/ tests/
 	prettier --write src/
 	@echo "Formatting... Done"
 
@@ -45,9 +45,14 @@ format:
 run-back:
 	uvicorn --port 8080 ph.main:app 
 
+.PHONY: test
 test:
 	mkdir -p static && touch static/index.html
-	PYTHONPATH=${PWD} pytest
+	PYTHONPATH=${PWD} pytest tests/integration
+
+.PHONY: test-smoke
+test-smoke:
+	PYTHONPATH=${PWD} pytest tests/smoke
 
 .PHONY: init
 init:
