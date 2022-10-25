@@ -155,4 +155,5 @@ jobs:
 #          python check_deployment.py https://www.packethelper.com $GIT_VERSION_TAG $SHORT_SHA
       - name: Run Smoke tests
         run: |
+          pip install -r requests pytest
           make test-smoke
