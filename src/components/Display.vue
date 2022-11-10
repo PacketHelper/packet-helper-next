@@ -10,7 +10,7 @@
                 <small> ({{ data.tshark_name }}) </small></v-card-title
               >
               <v-card-subtitle>
-                <code>{{ data.repr }}</code>
+                <code>{{ data.representation }}</code>
                 <div v-if="data.chksum_status['status'] === true">
                   ✔️ Chksum: {{ data.chksum_status["chksum"] }}
                 </div>
@@ -119,7 +119,7 @@
             Scapy code representation:
             <ul>
               <li>
-                <code>{{ data.repr }}</code>
+                <code>{{ data.representation }}</code>
               </li>
             </ul>
 
@@ -128,7 +128,7 @@
             <h4>Position in the hexdump</h4>
             <v-divider> </v-divider>
             <HighligtedHex
-              :partlyHex="data.hex_one"
+              :partlyHex="data.hex_record_full"
               :entireHex="entireHex"
             ></HighligtedHex>
           </ul>
