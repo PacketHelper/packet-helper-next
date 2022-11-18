@@ -3,4 +3,4 @@ jinja2~=3.0.3
 pydantic~=1.10.1
 uvicorn~=0.17.5
 
-git+https://github.com/PacketHelper/packet-helper-core.git
+git+https://github.com/PacketHelper/packet-helper-core.git@7cad24c1a430ca9c9cd06a56a93c90efe883283c
