@@ -49,7 +49,7 @@ jobs:
         run: |
           isort --check ph/ tests/ --profile black
   verify-docker:
-    name: Build a docker iamge
+    name: Build a docker image
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

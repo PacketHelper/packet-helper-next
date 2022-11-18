@@ -1,14 +1,14 @@
 # build stage (frontend)
-FROM node:lts-alpine@sha256:308e8c2ceed9182ac9f937ad166978eaab7d30ea2fe9202b24bf1fdaea34d431 as build-stage
+FROM node:lts-alpine@sha256:2175727cef5cad4020cb77c8c101d56ed41d44fbe9b1157c54f820e3d345eab1 as build-stage
 WORKDIR /app
-COPY package*.json ./
+COPY package.json yarn.lock ./
 
 RUN yarn -g install
 COPY . .
 RUN yarn build
 
 # build stage (backend & package)
-FROM python:3.11-buster
+FROM python:3.11-buster@sha256:43db725cf6c954611ffe4938e330e8d18b48627ad19e4f1ed62196baf5a3ca58
 
 # Install tshark/wireshark dependecies
 RUN echo "wireshark-common wireshark-common/install-setuid boolean true" | debconf-set-selections
