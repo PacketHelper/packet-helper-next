@@ -140,8 +140,8 @@
               </div>
             </div>
             <code-diff
-              :old-string="item[0]['repr']"
-              :new-string="item[1]['repr']"
+              :old-string="item[0]['representation']"
+              :new-string="item[1]['representation']"
               :context="10"
             />
           </li>

@@ -11,12 +11,13 @@ export interface StructureChksumStatus {
 
 export interface Structure {
   name: string;
-  bytes: string;
-  hex: string;
-  hex_one: string;
+  bytes_record: string;
+  hex_record: string;
+  hex_record_full: string;
   length: number;
-  repr: string;
-  repr_full: string;
+  length_unit: string;
+  representation: string;
+  representation_full: string;
   tshark_name: string;
   tshark_raw_summary: string[];
   chksum_status: StructureChksumStatus;
