@@ -1,8 +1,7 @@
 # build stage (frontend)
-FROM node:16-buster as build-stage
-
+FROM node:lts-alpine as build-stage
 WORKDIR /app
-COPY package.json yarn.lock ./
+COPY package*.json ./
 
 RUN yarn -g install
 COPY . .
@@ -17,20 +16,20 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get -y install wireshar
 
 RUN apt-get update && apt-get install -y --allow-change-held-packages --force-yes tshark
 
+
 # Install Python stuff
 RUN pip install cython
 ADD ./requirements.txt /tmp/requirements.txt
 
 RUN pip install --no-cache-dir -q -r /tmp/requirements.txt
 
-# Copy files (only ph/ module is required)
-ADD ph /opt/packet_server/ph 
+
+# Copy files
+ADD . /opt/packet_server/
 RUN mkdir -p /opt/packet_server/tmp
 RUN mkdir -p /opt/packet_server/static
 
 WORKDIR /opt/packet_server
-
-# Copy only built ui
 COPY --from=build-stage /app/dist/static static
 COPY --from=build-stage /app/dist/index.html static
 
